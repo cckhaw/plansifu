@@ -208,7 +208,7 @@ async function viaBrowserAndLlm(
 ): Promise<{ raw: RawPlan[]; textChars: number }> {
   let text = "";
   for (let attempt = 0; attempt < 2 && text.length < 300; attempt++) {
-    text = cleanPageText(await renderPageText(target.url));
+    text = cleanPageText(await renderPageText(target.url, 800, "nodes", target.relay));
   }
   // Blocked, empty or still-loading pages must fail loudly instead of "succeeding" with nothing.
   if (text.length < 300) throw new Error(`page rendered only ${text.length} characters (blocked or not loaded)`);

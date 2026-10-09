@@ -12,6 +12,8 @@ const bb = "broadband" as const;
 
 /** Shorthand: t(category, url) */
 export const t = {
+  /** Same target, HTML fetched through our Vercel relay (for sites that block the CI network). */
+  relay: (target: ScrapeTarget): ScrapeTarget => ({ ...target, relay: true }),
   post: (url: string, hint?: string): ScrapeTarget => ({ url, category: post, hint }),
   pre: (url: string): ScrapeTarget => ({ url, category: pre }),
   bb: (url: string): ScrapeTarget => ({ url, category: bb }),
