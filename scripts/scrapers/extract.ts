@@ -81,9 +81,15 @@ export function normalizePlans(
     if (!title || price === null || price <= 0 || price > 2000) continue;
     const category =
       opts.mixed && (CATEGORIES as readonly string[]).includes(r.category ?? "") ? (r.category as PlanCategory) : opts.category;
-    if (!isPlausibleTitle(title, category)) continue;
+    if (!isPlausibleTitle(title, category)) {
+      if (process.env.SCRAPE_DEBUG) console.log(`[debug] dropped by title filter (${category}): "${title}"`);
+      continue;
+    }
     // Real consumer plans: nothing under ~2 (call/SMS rates, add-on lines); mobile plans above ~600 are phones.
-    if (price < 2 || (category !== "broadband" && price > 600 && !/year|12 ?months?/i.test(title))) continue;
+    if (price < 2 || (category !== "broadband" && price > 600 && !/year|12 ?months?/i.test(title))) {
+      if (process.env.SCRAPE_DEBUG) console.log(`[debug] dropped by price filter: "${title}" ${price}`);
+      continue;
+    }
     seen.set(title.toLowerCase(), {
       title,
       category,
@@ -177,7 +183,11 @@ async function viaBrowserAndLlm(target: ScrapeTarget, country: Country, provider
   }
   // Blocked, empty or still-loading pages must fail loudly instead of "succeeding" with nothing.
   if (text.length < 300) throw new Error(`page rendered only ${text.length} characters (blocked or not loaded)`);
-  return extractPlansWithLlm({ provider, country, url: target.url, category: target.category, pageText: text });
+  const raw = await extractPlansWithLlm({ provider, country, url: target.url, category: target.category, pageText: text });
+  if (process.env.SCRAPE_DEBUG && raw.length === 0) {
+    console.log(`[debug] 0 plans from ${text.length} chars at ${target.url}; text starts: ${text.slice(0, 700).replace(/\n/g, " | ")}`);
+  }
+  return raw;
 }
 
 /**
