@@ -14,7 +14,9 @@ const PLAN_SCHEMA = {
           category: {
             type: "string",
             enum: ["mobile_postpaid", "mobile_prepaid", "broadband"],
-            description: "mobile_postpaid = monthly bill SIM/phone plan; mobile_prepaid = top-up/pack/tourist SIM; broadband = home fibre/wireless internet",
+            description:
+              "mobile_prepaid ONLY if the page calls it prepaid / tourist SIM / top-up / pay-as-you-go / daily-weekly pass. " +
+              "mobile_postpaid = monthly-billed SIM-only or phone plan (the default for monthly SIM-only plans). broadband = home fibre/wireless internet",
           },
           monthly_price: { type: "number", description: "Monthly fee as a number, no currency symbol" },
           data_gb: { type: "number", description: "Data in GB; -1 if unlimited; omit if unknown" },
@@ -44,14 +46,15 @@ function num(v: unknown): number | null {
 /** Normalise raw extractor output into rows safe to upsert. Drops invalid entries, dedupes by title. */
 export function normalizePlans(
   raw: RawPlan[],
-  opts: { country: Country; category: PlanCategory; fallbackUrl: string },
+  opts: { country: Country; category: PlanCategory; fallbackUrl: string; mixed?: boolean },
 ): ScrapedPlan[] {
   const seen = new Map<string, ScrapedPlan>();
   for (const r of raw) {
     const title = r.title?.trim().replace(/\s+/g, " ");
     const price = num(r.monthly_price);
     if (!title || price === null || price <= 0 || price > 2000) continue;
-    const category = (CATEGORIES as readonly string[]).includes(r.category ?? "") ? (r.category as PlanCategory) : opts.category;
+    const category =
+      opts.mixed && (CATEGORIES as readonly string[]).includes(r.category ?? "") ? (r.category as PlanCategory) : opts.category;
     seen.set(title.toLowerCase(), {
       title,
       category,
@@ -109,7 +112,9 @@ async function firecrawlOnce(url: string): Promise<RawPlan[]> {
         schema: PLAN_SCHEMA,
         prompt:
           "Extract every consumer mobile (postpaid, prepaid, SIM-only, eSIM) or home broadband plan listed on this page. " +
-          "monthly_price is the recurring price per month, or the pack price for prepaid packs. Skip business/enterprise plans, devices, add-ons and roaming-only passes. " +
+          "monthly_price is the recurring price per month, or the pack price for prepaid packs. " +
+          "Skip: business/enterprise plans, devices, smartwatch / wearable / tablet / device bundles, add-ons, roaming-only passes, " +
+          "and any plan shown only inside a comparison table against OTHER telcos (competitors). " +
           "Set category for each plan.",
       },
     ],
@@ -162,7 +167,7 @@ async function viaPlaywright(url: string): Promise<RawPlan[]> {
 
 /** Scrape one page: Firecrawl first, Playwright heuristic fallback. */
 export async function scrapeTarget(target: ScrapeTarget, country: Country): Promise<ScrapedPlan[]> {
-  const opts = { country, category: target.category, fallbackUrl: target.url };
+  const opts = { country, category: target.category, fallbackUrl: target.url, mixed: target.mixed };
   try {
     const plans = normalizePlans(await viaFirecrawl(target.url), opts);
     console.log(`[extract] firecrawl ${plans.length} plans  ${target.url}`);

@@ -4,6 +4,11 @@ export interface ScrapeTarget {
   url: string;
   /** Default category; extraction may override per plan when the page says otherwise. */
   category: PlanCategory;
+  /**
+   * True for pages that list several categories (e.g. a homepage or store front).
+   * Otherwise the target's category is authoritative and the extractor can't override it.
+   */
+  mixed?: boolean;
 }
 
 export interface ProviderScraper {

@@ -27,7 +27,7 @@ export const malaysiaProviders = [
   defineProvider("TuneTalk", "MY", "https://www.tunetalk.com", [t.pre("https://www.tunetalk.com/prepaid/epik-plans/")]),
   defineProvider("XOX", "MY", "https://xox.com.my", [
     t.post("https://onlinestore.xox.com.my/postpaid/postpaid5g"),
-    t.post("https://onlinestore.xox.com.my/"),
+    t.mixed("https://onlinestore.xox.com.my/"),
   ]),
   defineProvider("Ansar", "MY", "https://www.ansarmobile.com.my", [t.pre("https://www.ansarmobile.com.my/our-plans/")]),
   defineProvider("Eastel", "MY", "https://eastel.com.my", [t.pre("https://eastel.com.my/mobile-plan/")]),
