@@ -32,13 +32,12 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run scrapers
-        run: xvfb-run -a npm run scrape
+        run: npm run scrape
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }} # only used when SCRAPE_ENGINE=firecrawl
-          SCRAPE_HEADED: "1"
           SCRAPE_ONLY: ${{ inputs.providers }}
           SCRAPE_DEBUG: ${{ inputs.providers != '' && '1' || '' }}
 
