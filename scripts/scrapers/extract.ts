@@ -43,6 +43,20 @@ function num(v: unknown): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
+/** Devices / wearables sold alongside a line - not plans. */
+const NOT_A_PLAN = /\b(watch|ipad|tablet|smartphone|iphone|galaxy (?:s|z|a)\d)/i;
+/** Broadband items that show up on mobile pages (cross-sell banners, bundles). */
+const BROADBAND_WORDS = /\b(broadband|fib(?:re|er)|gbps|router|wi-?fi|home)\b/i;
+/** Marketing copy / calls to action picked up as a "title". */
+const MARKETING_TITLE = /^(buy|get|sign ?up|order|apply|learn|shop|rollover|free|join|switch)\b|\b(for just|free \d+ months?|buy online)\b|[$]\s?\d/i;
+
+export function isPlausibleTitle(title: string, category: PlanCategory): boolean {
+  if (title.length < 3 || title.length > 70) return false;
+  if (NOT_A_PLAN.test(title) || MARKETING_TITLE.test(title)) return false;
+  if (category !== "broadband" && BROADBAND_WORDS.test(title)) return false;
+  return true;
+}
+
 /** Normalise raw extractor output into rows safe to upsert. Drops invalid entries, dedupes by title. */
 export function normalizePlans(
   raw: RawPlan[],
@@ -55,6 +69,7 @@ export function normalizePlans(
     if (!title || price === null || price <= 0 || price > 2000) continue;
     const category =
       opts.mixed && (CATEGORIES as readonly string[]).includes(r.category ?? "") ? (r.category as PlanCategory) : opts.category;
+    if (!isPlausibleTitle(title, category)) continue;
     seen.set(title.toLowerCase(), {
       title,
       category,
