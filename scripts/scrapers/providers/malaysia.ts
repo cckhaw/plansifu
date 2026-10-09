@@ -13,8 +13,9 @@ export const malaysiaProviders = [
     t.bb("https://www.yes.my/yes-fibre/"),
   ]),
   defineProvider("U Mobile", "MY", "https://www.u.com.my", [
-    t.post("https://www.u.com.my/en/personal/mobile-plans/postpaid/postpaid-plans"),
-    t.pre("https://www.u.com.my/en/personal/mobile-plans/prepaid"),
+    // The page is tabbed; the fragment selects the individual-plans tab (the default tab is Family).
+    t.post("https://www.u.com.my/en/personal/mobile-plans/postpaid/postpaid-plans#postpaid-plans"),
+    t.pre("https://www.u.com.my/en/personal/mobile-plans/prepaid/data-plans"),
     t.bb("https://www.u.com.my/en/personal/broadband"),
   ]),
   defineProvider("CMLink", "MY", "https://my.cmlink.com/en/", [t.pre("https://my.cmlink.com/en/plans/")]),
