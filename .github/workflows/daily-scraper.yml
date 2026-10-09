@@ -1,0 +1,45 @@
+name: Daily Scraper
+
+on:
+  schedule:
+    - cron: "0 16 * * *" # 00:00 MYT/SGT (UTC+8)
+  workflow_dispatch:
+
+concurrency:
+  group: daily-scraper
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Install Playwright Chromium (scraper fallback)
+        run: npx playwright install --with-deps chromium
+
+      - name: Run scrapers
+        run: npm run scrape
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+
+      - name: Trigger Vercel deploy
+        if: success()
+        env:
+          VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$VERCEL_DEPLOY_HOOK_URL" ]; then
+            echo "VERCEL_DEPLOY_HOOK_URL not set; skipping"
+          else
+            curl -fsS -X POST "$VERCEL_DEPLOY_HOOK_URL"
+          fi
