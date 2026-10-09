@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: "0 16 * * *" # 00:00 MYT/SGT (UTC+8)
   workflow_dispatch:
+    inputs:
+      providers:
+        description: "Optional comma-separated provider names to scrape (default: all)"
+        required: false
+        default: ""
 
 concurrency:
   group: daily-scraper
@@ -32,6 +37,7 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+          SCRAPE_ONLY: ${{ inputs.providers }}
 
       - name: Trigger Vercel deploy
         if: success()

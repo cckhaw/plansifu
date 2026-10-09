@@ -1,13 +1,6 @@
-import { scrapeTargets } from "../extract";
-import type { ProviderScraper, ScrapeTarget } from "../types";
+import { defineProvider, t } from "./define";
 
-const targets: ScrapeTarget[] = [
-  { url: "https://www.celcomdigi.com/postpaid", category: "mobile_postpaid" },
-  { url: "https://www.celcomdigi.com/home/fibre", category: "broadband" },
-];
-
-export const celcomdigi: ProviderScraper = {
-  name: "CelcomDigi",
-  country: "MY",
-  scrape: () => scrapeTargets(targets, "MY"),
-};
+export const celcomdigi = defineProvider("CelcomDigi", "MY", "https://www.celcomdigi.com", [
+  t.post("https://www.celcomdigi.com/postpaid"),
+  t.bb("https://www.celcomdigi.com/home/fibre"),
+]);

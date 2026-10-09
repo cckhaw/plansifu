@@ -16,7 +16,8 @@ inspired by CompareHero.my.
   PlanCard, DealBadge, ProviderLogo
 - `src/lib` — Supabase clients, currency helpers, plan queries, filtering, seed data
 - `src/types/database.ts` — TS interfaces mirroring the DB tables
-- `scripts/scrapers` — Node scraping scripts (`db-upsert.ts`, `run-scrapers.ts`, `providers/*`)
+- `scripts/scrapers` — Node scraping scripts (`db-upsert.ts`, `run-scrapers.ts`, `extract.ts`);
+  providers are declared with `defineProvider` in `providers/*` (add a provider = add a row with its plan-page URLs)
 - `supabase/migrations` — SQL migrations (numbered `NN_name.sql`)
 
 ## Commands

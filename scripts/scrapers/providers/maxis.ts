@@ -1,13 +1,7 @@
-import { scrapeTargets } from "../extract";
-import type { ProviderScraper, ScrapeTarget } from "../types";
+import { defineProvider, t } from "./define";
 
-const targets: ScrapeTarget[] = [
-  { url: "https://www.maxis.com.my/en/personal/postpaid/", category: "mobile_postpaid" },
-  { url: "https://www.maxis.com.my/en/personal/fibre/", category: "broadband" },
-];
-
-export const maxis: ProviderScraper = {
-  name: "Maxis",
-  country: "MY",
-  scrape: () => scrapeTargets(targets, "MY"),
-};
+export const maxis = defineProvider("Maxis", "MY", "https://www.maxis.com.my", [
+  t.post("https://www.maxis.com.my/en/mobile-plans/"),
+  t.post("https://www.maxis.com.my/en/mobile-plans/connect-plans/"),
+  t.bb("https://www.maxis.com.my/en/broadband/"),
+]);

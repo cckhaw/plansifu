@@ -2,12 +2,14 @@ import type { Country, PlanCategory, ScrapedPlan } from "../../src/types/databas
 
 export interface ScrapeTarget {
   url: string;
+  /** Default category; extraction may override per plan when the page says otherwise. */
   category: PlanCategory;
 }
 
 export interface ProviderScraper {
   name: string;
   country: Country;
+  website: string;
   scrape(): Promise<ScrapedPlan[]>;
 }
 
@@ -20,6 +22,7 @@ export interface RawPlan {
   talktime_mins?: number | string | null;
   sms_count?: number | string | null;
   contract_months?: number | string | null;
+  category?: string | null;
   features?: string[] | null;
   promotion_badge?: string | null;
   affiliate_url?: string | null;

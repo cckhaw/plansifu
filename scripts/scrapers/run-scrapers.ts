@@ -1,16 +1,23 @@
 import { errorMessage, logCrawl, resolveProviderId, upsertPlans } from "./db-upsert";
 import { celcomdigi } from "./providers/celcomdigi";
 import { m1 } from "./providers/m1";
+import { malaysiaProviders } from "./providers/malaysia";
 import { maxis } from "./providers/maxis";
+import { singaporeProviders } from "./providers/singapore";
 import { singtel } from "./providers/singtel";
 import type { ProviderScraper } from "./types";
 
-const scrapers: ProviderScraper[] = [maxis, singtel, celcomdigi, m1];
+const scrapers: ProviderScraper[] = [maxis, singtel, celcomdigi, m1, ...malaysiaProviders, ...singaporeProviders];
+
+/** Providers run in parallel, capped so Firecrawl rate limits and headless browsers aren't swamped. */
+const CONCURRENCY = Number(process.env.SCRAPE_CONCURRENCY ?? 4);
+/** Optional: SCRAPE_ONLY="Maxis,M1" limits a run to named providers (handy when debugging). */
+const only = process.env.SCRAPE_ONLY?.split(",").map((s) => s.trim().toLowerCase()).filter(Boolean);
 
 async function runOne(s: ProviderScraper): Promise<boolean> {
   let providerId: string | null = null;
   try {
-    providerId = await resolveProviderId(s.name, s.country);
+    providerId = await resolveProviderId(s.name, s.country, s.website);
     const plans = await s.scrape();
     if (!plans.length) throw new Error("No plans extracted");
     const count = await upsertPlans(providerId, plans);
@@ -25,11 +32,26 @@ async function runOne(s: ProviderScraper): Promise<boolean> {
   }
 }
 
+async function runPool<T>(items: T[], limit: number, fn: (item: T) => Promise<boolean>): Promise<boolean[]> {
+  const results: boolean[] = new Array(items.length);
+  let next = 0;
+  await Promise.all(
+    Array.from({ length: Math.min(limit, items.length) }, async () => {
+      while (next < items.length) {
+        const i = next++;
+        results[i] = await fn(items[i]);
+      }
+    }),
+  );
+  return results;
+}
+
 async function main() {
   for (const key of ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY"]) {
     if (!process.env[key]) throw new Error(`${key} must be set`);
   }
-  const results = await Promise.all(scrapers.map(runOne));
+  const selected = only?.length ? scrapers.filter((s) => only.includes(s.name.toLowerCase())) : scrapers;
+  const results = await runPool(selected, CONCURRENCY, runOne);
   const failed = results.filter((ok) => !ok).length;
   console.log(`Done: ${results.length - failed}/${results.length} providers succeeded`);
   // Fail the job only if everything failed, so one broken site doesn't block the deploy hook.

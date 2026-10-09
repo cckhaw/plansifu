@@ -26,7 +26,7 @@ export function getAdminClient(): SupabaseClient {
   return client;
 }
 
-export async function resolveProviderId(name: string, country: Country): Promise<string> {
+export async function resolveProviderId(name: string, country: Country, website?: string): Promise<string> {
   const db = getAdminClient();
   const { data, error } = await db
     .from("providers")
@@ -38,7 +38,7 @@ export async function resolveProviderId(name: string, country: Country): Promise
   if (data) return data.id as string;
   const { data: created, error: insertErr } = await db
     .from("providers")
-    .insert({ name, country })
+    .insert({ name, country, website_url: website ?? null })
     .select("id")
     .single();
   if (insertErr) throw insertErr;
@@ -59,6 +59,8 @@ export async function upsertPlans(providerId: string, plans: ScrapedPlan[]): Pro
   const prev = new Map((existing ?? []).map((p) => [p.title as string, p]));
 
   const now = new Date().toISOString();
+  // (provider_id, title) is the conflict key: one row per title in a batch.
+  plans = [...new Map(plans.map((p) => [p.title.toLowerCase(), p])).values()];
   const rows = plans.map((p) => {
     const old = prev.get(p.title);
     return {
