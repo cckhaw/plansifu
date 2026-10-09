@@ -139,7 +139,7 @@ async function firecrawlOnce(url: string): Promise<RawPlan[]> {
         schema: PLAN_SCHEMA,
         prompt:
           "Extract every consumer mobile (postpaid, prepaid, SIM-only, eSIM) or home broadband plan listed on this page. " +
-          "monthly_price is the recurring price per month, or the pack price for prepaid packs (for a yearly or multi-month pack give the full pack price shown - never divide it into a monthly figure). " +
+          "monthly_price is the recurring price per month, or the pack price for prepaid packs. " +
           "Skip: business/enterprise plans, devices, smartwatch / wearable / tablet / device bundles, add-ons, roaming-only passes, " +
           "and any plan shown only inside a comparison table against OTHER telcos (competitors). " +
           "Set category for each plan.",
