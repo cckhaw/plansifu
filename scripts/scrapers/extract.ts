@@ -145,10 +145,15 @@ async function firecrawlOnce(url: string): Promise<RawPlan[]> {
           "Set category for each plan.",
       },
     ],
-    waitFor: 2000,
+    waitFor: 4000,
+    maxAge: 0, // bypass Firecrawl's result cache so each crawl sees the live page
   });
   const json = doc.json as { plans?: RawPlan[] } | undefined;
-  return json?.plans ?? [];
+  const plans = json?.plans ?? [];
+  if (process.env.SCRAPE_DEBUG) {
+    console.log(`[debug] ${url} -> ${plans.length} raw: ` + plans.slice(0, 12).map((p) => `${p.title} (${p.monthly_price})`).join("; "));
+  }
+  return plans;
 }
 
 /** Heuristic text parser used when Firecrawl is unavailable or returns nothing. */
