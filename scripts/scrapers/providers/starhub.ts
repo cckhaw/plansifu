@@ -1,6 +1,6 @@
 import { renderPageText, scrapeTargets } from "../extract";
 import type { ScrapedPlan } from "../../../src/types/database";
-import type { ProviderScraper } from "../types";
+import type { ProviderScraper, ScrapeResult } from "../types";
 import { t } from "./define";
 
 const POSTPAID_URL = "https://consumer.starhub.com/personal/store/mobile-plans";
@@ -56,7 +56,7 @@ export const starhub: ProviderScraper = {
   name: "StarHub",
   country: "SG",
   website: "https://www.starhub.com",
-  async scrape() {
+  async scrape(): Promise<ScrapeResult> {
     const [postpaid, rest] = await Promise.allSettled([
       renderPageText(POSTPAID_URL).then(parseStarhubPostpaid),
       scrapeTargets(
@@ -69,12 +69,14 @@ export const starhub: ProviderScraper = {
     ]);
     const plans = [
       ...(postpaid.status === "fulfilled" ? postpaid.value : []),
-      ...(rest.status === "fulfilled" ? rest.value : []),
+      ...(rest.status === "fulfilled" ? rest.value.plans : []),
     ];
+    const complete =
+      postpaid.status === "fulfilled" && postpaid.value.length > 0 && rest.status === "fulfilled" && rest.value.complete;
     if (postpaid.status === "rejected") console.warn(`[starhub] postpaid page failed: ${postpaid.reason}`);
     if (rest.status === "rejected") console.warn(`[starhub] prepaid/broadband failed: ${rest.reason}`);
     if (postpaid.status === "fulfilled" && postpaid.value.length === 0) console.warn("[starhub] postpaid page parsed 0 plans");
     if (!plans.length) throw new Error("StarHub: no plans extracted");
-    return plans;
+    return { plans, complete };
   },
 };

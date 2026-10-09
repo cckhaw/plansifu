@@ -1,6 +1,6 @@
 import Firecrawl from "@mendable/firecrawl-js";
 import type { Country, Currency, PlanCategory, ScrapedPlan } from "../../src/types/database";
-import type { RawPlan, ScrapeTarget } from "./types";
+import type { RawPlan, ScrapeResult, ScrapeTarget } from "./types";
 
 const PLAN_SCHEMA = {
   type: "object",
@@ -112,6 +112,10 @@ async function firecrawlSlot(): Promise<void> {
   if (start > now) await sleep(start - now);
 }
 
+/** Once Firecrawl reports no credits, stop calling it for the rest of the run. */
+let outOfCredits = false;
+const isOutOfCredits = (err: unknown) => /insufficient credits|payment required|\b402\b/i.test(err instanceof Error ? err.message : String(err));
+
 const isRateLimit = (err: unknown) => /rate limit|429/i.test(err instanceof Error ? err.message : String(err));
 
 async function viaFirecrawl(url: string): Promise<RawPlan[]> {
@@ -120,6 +124,10 @@ async function viaFirecrawl(url: string): Promise<RawPlan[]> {
     try {
       return await firecrawlOnce(url);
     } catch (err) {
+      if (isOutOfCredits(err)) {
+        outOfCredits = true;
+        throw new Error("Firecrawl credits exhausted - top up your plan at firecrawl.dev");
+      }
       if (!isRateLimit(err) || attempt >= 3) throw err;
       const wait = Number(String(err).match(/retry after (\d+)s/i)?.[1] ?? 15);
       console.warn(`[extract] rate limited on ${url}; waiting ${wait + 2}s (attempt ${attempt + 1})`);
@@ -129,6 +137,7 @@ async function viaFirecrawl(url: string): Promise<RawPlan[]> {
 }
 
 async function firecrawlOnce(url: string): Promise<RawPlan[]> {
+  if (outOfCredits) throw new Error("Firecrawl credits exhausted - top up your plan at firecrawl.dev");
   const apiKey = process.env.FIRECRAWL_API_KEY;
   if (!apiKey) throw new Error("FIRECRAWL_API_KEY not set");
   const app = new Firecrawl({ apiKey });
@@ -146,7 +155,6 @@ async function firecrawlOnce(url: string): Promise<RawPlan[]> {
       },
     ],
     waitFor: 4000,
-    maxAge: 0, // bypass Firecrawl's result cache so each crawl sees the live page
   });
   const json = doc.json as { plans?: RawPlan[] } | undefined;
   const plans = json?.plans ?? [];
@@ -154,33 +162,6 @@ async function firecrawlOnce(url: string): Promise<RawPlan[]> {
     console.log(`[debug] ${url} -> ${plans.length} raw: ` + plans.slice(0, 12).map((p) => `${p.title} (${p.monthly_price})`).join("; "));
   }
   return plans;
-}
-
-/** Heuristic text parser used when Firecrawl is unavailable or returns nothing. */
-export function parsePlansFromText(text: string): RawPlan[] {
-  const lines = text.split("\n").map((l) => l.trim()).filter(Boolean);
-  const priceRe = /(?:RM|S\$|SGD|\$)\s?(\d{1,4}(?:\.\d{1,2})?)/i;
-  const out: RawPlan[] = [];
-  for (let i = 0; i < lines.length; i++) {
-    const m = lines[i].match(priceRe);
-    if (!m) continue;
-    // Specs usually sit between this price and the next one.
-    let end = i + 1;
-    while (end < lines.length && end < i + 8 && !priceRe.test(lines[end])) end++;
-    const window = lines.slice(Math.max(0, i - 1), end).join(" ");
-    const title = [...lines.slice(Math.max(0, i - 3), i + 1)].reverse().find((l) => !priceRe.test(l) && l.length > 3 && l.length < 60);
-    if (!title) continue;
-    const gb = window.match(/(\d{1,4})\s?GB\b/i);
-    const gbps = window.match(/(\d(?:\.\d)?)\s?Gbps/i);
-    const mbps = window.match(/(\d{2,4})\s?Mbps/i);
-    out.push({
-      title,
-      monthly_price: Number(m[1]),
-      data_gb: /unlimited data/i.test(window) ? -1 : gb ? Number(gb[1]) : null,
-      speed_mbps: gbps ? Number(gbps[1]) * 1000 : mbps ? Number(mbps[1]) : null,
-    });
-  }
-  return out;
 }
 
 /**
@@ -210,27 +191,19 @@ export async function renderPageText(url: string, minChars = 800): Promise<strin
   }
 }
 
-async function viaPlaywright(url: string): Promise<RawPlan[]> {
-  return parsePlansFromText(await renderPageText(url));
-}
-
-/** Scrape one page: Firecrawl first, Playwright heuristic fallback. */
+/**
+ * Scrape one page with Firecrawl. There is deliberately no fallback to a generic text parser:
+ * it produced junk rows (page furniture, call rates) that replaced good data. A failed page
+ * throws, and the provider keeps its existing plans.
+ */
 export async function scrapeTarget(target: ScrapeTarget, country: Country): Promise<ScrapedPlan[]> {
   const opts = { country, category: target.category, fallbackUrl: target.url, mixed: target.mixed };
-  try {
-    const plans = normalizePlans(await viaFirecrawl(target.url), opts);
-    console.log(`[extract] firecrawl ${plans.length} plans  ${target.url}`);
-    if (plans.length) return plans;
-    console.warn(`[extract] Firecrawl returned no plans for ${target.url}; trying Playwright`);
-  } catch (err) {
-    console.warn(`[extract] Firecrawl failed for ${target.url}: ${(err as Error).message}; trying Playwright`);
-  }
-  const fallback = normalizePlans(await viaPlaywright(target.url), opts);
-  console.log(`[extract] playwright ${fallback.length} plans  ${target.url}`);
-  return fallback;
+  const plans = normalizePlans(await viaFirecrawl(target.url), opts);
+  console.log(`[extract] firecrawl ${plans.length} plans  ${target.url}`);
+  return plans;
 }
 
-export async function scrapeTargets(targets: ScrapeTarget[], country: Country): Promise<ScrapedPlan[]> {
+export async function scrapeTargets(targets: ScrapeTarget[], country: Country): Promise<ScrapeResult> {
   const results: ScrapedPlan[] = [];
   const errors: string[] = [];
   for (const t of targets) {
@@ -241,12 +214,10 @@ export async function scrapeTargets(targets: ScrapeTarget[], country: Country): 
       console.warn(`[extract] failed ${t.url}: ${(err as Error).message}`);
     }
   }
+  // Every page failed: nothing to save (and nothing should be hidden).
+  if (!results.length && errors.length) throw new Error(errors.join(" | "));
   // The same plan can appear on several pages of one site; keep the first.
   const unique = new Map<string, ScrapedPlan>();
   for (const p of results) if (!unique.has(p.title.toLowerCase())) unique.set(p.title.toLowerCase(), p);
-  results.length = 0;
-  results.push(...unique.values());
-  // Only fail the provider if every target failed; partial results are still useful.
-  if (!results.length && errors.length) throw new Error(errors.join(" | "));
-  return results;
+  return { plans: [...unique.values()], complete: errors.length === 0 };
 }

@@ -1,6 +1,6 @@
 import { renderPageText } from "../extract";
 import type { ScrapedPlan } from "../../../src/types/database";
-import type { ProviderScraper } from "../types";
+import type { ProviderScraper, ScrapeResult } from "../types";
 
 /**
  * Zym's home page shows banners only; each plan's details and price live on its own order page
@@ -47,7 +47,7 @@ export const zym: ProviderScraper = {
   name: "Zym",
   country: "SG",
   website: "https://zym.sg",
-  async scrape() {
+  async scrape(): Promise<ScrapeResult> {
     const plans: ScrapedPlan[] = [];
     for (const url of ORDER_PAGES) {
       try {
@@ -59,6 +59,6 @@ export const zym: ProviderScraper = {
       }
     }
     if (!plans.length) throw new Error("Zym: no plans extracted");
-    return plans;
+    return { plans, complete: plans.length === ORDER_PAGES.length };
   },
 };

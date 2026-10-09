@@ -11,11 +11,17 @@ export interface ScrapeTarget {
   mixed?: boolean;
 }
 
+/** `complete` is false when any page failed: keep existing plans active rather than hiding them. */
+export interface ScrapeResult {
+  plans: ScrapedPlan[];
+  complete: boolean;
+}
+
 export interface ProviderScraper {
   name: string;
   country: Country;
   website: string;
-  scrape(): Promise<ScrapedPlan[]>;
+  scrape(): Promise<ScrapeResult>;
 }
 
 /** Loose shape returned by LLM extraction / heuristic parsing, before normalisation. */

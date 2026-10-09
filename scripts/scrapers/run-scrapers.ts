@@ -20,9 +20,10 @@ async function runOne(s: ProviderScraper): Promise<boolean> {
   let providerId: string | null = null;
   try {
     providerId = await resolveProviderId(s.name, s.country, s.website);
-    const plans = await s.scrape();
+    const { plans, complete } = await s.scrape();
     if (!plans.length) throw new Error("No plans extracted");
-    const count = await upsertPlans(providerId, plans);
+    const count = await upsertPlans(providerId, plans, { deactivateMissing: complete });
+    if (!complete) console.warn(`⚠ ${s.name}: some pages failed; existing plans were kept active`);
     await logCrawl(providerId, "success", count);
     console.log(`✔ ${s.name} (${s.country}): ${count} plans`);
     return true;
