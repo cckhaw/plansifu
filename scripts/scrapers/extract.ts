@@ -76,7 +76,11 @@ export function normalizePlans(
 ): ScrapedPlan[] {
   const seen = new Map<string, ScrapedPlan>();
   for (const r of raw) {
-    const title = r.title?.trim().replace(/\s+/g, " ");
+    // Models sometimes copy the price into the name ("hi! by Singtel $15/30 days Best Value"): strip it.
+    const title = r.title
+      ?.replace(/(?:RM|S\$|\$)\s?\d[\d.,]*(?:\s?\/\s?\w+(?: \w+)?)?/gi, " ")
+      .replace(/\s+/g, " ")
+      .replace(/^[\s\-–:|,]+|[\s\-–:|,]+$/g, "");
     const price = num(r.monthly_price);
     if (!title || price === null || price <= 0 || price > 2000) continue;
     const category =
@@ -197,7 +201,7 @@ async function viaBrowserAndLlm(target: ScrapeTarget, country: Country, provider
  */
 export async function scrapeTarget(target: ScrapeTarget, country: Country, provider = "the provider"): Promise<ScrapedPlan[]> {
   const opts = { country, category: target.category, fallbackUrl: target.url, mixed: target.mixed };
-  const engine = process.env.SCRAPE_ENGINE === "firecrawl" ? "firecrawl" : "browser+llm";
+  const engine = target.engine === "firecrawl" || process.env.SCRAPE_ENGINE === "firecrawl" ? "firecrawl" : "browser+llm";
   const raw = engine === "firecrawl" ? await viaFirecrawl(target.url) : await viaBrowserAndLlm(target, country, provider);
   const plans = normalizePlans(raw, opts);
   console.log(`[extract] ${engine} ${plans.length}/${raw.length} plans  ${target.url}`);

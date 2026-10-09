@@ -59,7 +59,7 @@ export const starhub: ProviderScraper = {
   website: "https://www.starhub.com",
   async scrape(): Promise<ScrapeResult> {
     const [postpaid, rest] = await Promise.allSettled([
-      renderPageText(POSTPAID_URL).then(parseStarhubPostpaid),
+      renderPageText(POSTPAID_URL, 800, "inner").then(parseStarhubPostpaid),
       scrapeTargets(
         [
           t.pre("https://www.starhub.com/personal/mobile/starhub-prepaid.html"),

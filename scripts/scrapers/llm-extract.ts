@@ -39,6 +39,12 @@ let client: Anthropic | null = null;
 const usage = { calls: 0, inputTokens: 0, outputTokens: 0 };
 let unavailable: string | null = null;
 
+function track(r: { usage: { input_tokens: number; output_tokens: number } }) {
+  usage.calls++;
+  usage.inputTokens += r.usage.input_tokens;
+  usage.outputTokens += r.usage.output_tokens;
+}
+
 export function llmUsageSummary(): string {
   const cost = (usage.inputTokens * PRICE_IN + usage.outputTokens * PRICE_OUT) / 1_000_000;
   return `${usage.calls} calls, ${usage.inputTokens.toLocaleString()} input + ${usage.outputTokens.toLocaleString()} output tokens (~$${cost.toFixed(3)} at ${MODEL} list price)`;
@@ -68,15 +74,24 @@ export async function extractPlansWithLlm(opts: {
     `This page is mainly about: ${opts.category.replace("_", " ")} plans (use it as the default category).\n\n` +
     `<page_text>\n${opts.pageText}\n</page_text>`;
 
-  let response;
-  try {
-    response = await client.messages.parse({
+  const priceMentions = (opts.pageText.match(/(?:RM|S?\$)\s?\d/g) ?? []).length;
+  const ask = (effort: "medium" | "high") =>
+    client!.messages.parse({
       model: MODEL,
       max_tokens: 12_000,
       system: SYSTEM,
       messages: [{ role: "user", content: user }],
-      output_config: { effort: "low", format: zodOutputFormat(ResultSchema) },
+      output_config: { effort, format: zodOutputFormat(ResultSchema) },
     });
+
+  let response;
+  try {
+    response = await ask("medium");
+    // A page full of prices that yields nothing is more likely a miss than a plan-less page: think harder once.
+    if (response.parsed_output?.plans.length === 0 && priceMentions >= 6) {
+      track(response);
+      response = await ask("high");
+    }
   } catch (err) {
     if (isFatal(err)) {
       unavailable = `Anthropic API unavailable: ${(err as Error).message}`;
@@ -85,9 +100,7 @@ export async function extractPlansWithLlm(opts: {
     throw err;
   }
 
-  usage.calls++;
-  usage.inputTokens += response.usage.input_tokens;
-  usage.outputTokens += response.usage.output_tokens;
+  track(response);
   if (response.stop_reason === "refusal" || response.stop_reason === "max_tokens") {
     throw new Error(`model stopped with ${response.stop_reason}`);
   }

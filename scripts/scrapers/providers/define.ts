@@ -15,6 +15,8 @@ export const t = {
   post: (url: string): ScrapeTarget => ({ url, category: post }),
   pre: (url: string): ScrapeTarget => ({ url, category: pre }),
   bb: (url: string): ScrapeTarget => ({ url, category: bb }),
+  /** Same target, fetched through Firecrawl (its proxies get past sites that block our browser). */
+  viaFirecrawl: (target: ScrapeTarget): ScrapeTarget => ({ ...target, engine: "firecrawl" }),
   /** Page listing several categories; the extractor may label each plan, falling back to `category`. */
   mixed: (url: string, category: ScrapeTarget["category"] = post): ScrapeTarget => ({ url, category, mixed: true }),
 };

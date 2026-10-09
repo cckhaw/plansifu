@@ -51,7 +51,7 @@ export const zym: ProviderScraper = {
     const plans: ScrapedPlan[] = [];
     for (const url of ORDER_PAGES) {
       try {
-        const plan = parseZymOrderPage(await renderPageText(url, 300), url);
+        const plan = parseZymOrderPage(await renderPageText(url, 300, "inner"), url);
         if (plan) plans.push(plan);
         else console.warn(`[zym] could not parse ${url}`);
       } catch (err) {
