@@ -13,6 +13,10 @@ async function getBrowser(): Promise<Browser> {
   browserPromise = chromium.launch({
     // Optional override for sandboxes where Playwright's bundled browser version isn't installed.
     executablePath: process.env.CHROMIUM_PATH || undefined,
+    // Full Chromium (not the stripped headless shell) looks much more like a real browser to bot
+    // filters. SCRAPE_HEADED=1 runs it with a display (xvfb in CI) for the strictest sites.
+    channel: process.env.CHROMIUM_PATH ? undefined : "chromium",
+    headless: process.env.SCRAPE_HEADED !== "1",
     args: ["--disable-blink-features=AutomationControlled"],
   });
   return browserPromise;
