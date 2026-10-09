@@ -14,7 +14,10 @@ export const malaysiaProviders = [
   ]),
   defineProvider("U Mobile", "MY", "https://www.u.com.my", [
     // The page is tabbed; the fragment selects the individual-plans tab (the default tab is Family).
-    t.post("https://www.u.com.my/en/personal/mobile-plans/postpaid/postpaid-plans#postpaid-plans"),
+    t.post(
+      "https://www.u.com.my/en/personal/mobile-plans/postpaid/postpaid-plans#postpaid-plans",
+      "The monthly price is not shown as text on this page; the number at the end of each plan name is its price in RM per month (e.g. 'ULTRA Postpaid 68' costs RM68, 'ULTRA Global 98' RM98). Skip the Family plan card unless it states its own price.",
+    ),
     t.pre("https://www.u.com.my/en/personal/mobile-plans/prepaid/data-plans"),
     t.bb("https://www.u.com.my/en/personal/broadband"),
   ]),

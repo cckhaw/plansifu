@@ -11,6 +11,8 @@ export interface ScrapeTarget {
   mixed?: boolean;
   /** Use Firecrawl for this page (e.g. sites that block datacenter browsers). Needs FIRECRAWL_API_KEY and credits. */
   engine?: "firecrawl";
+  /** Extra guidance for the model about this specific page. */
+  hint?: string;
 }
 
 /** `complete` is false when any page failed: keep existing plans active rather than hiding them. */

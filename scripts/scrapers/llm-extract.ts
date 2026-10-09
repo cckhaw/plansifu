@@ -61,6 +61,7 @@ export async function extractPlansWithLlm(opts: {
   url: string;
   category: PlanCategory;
   pageText: string;
+  hint?: string;
 }): Promise<RawPlan[]> {
   if (unavailable) throw new Error(unavailable);
   const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -71,7 +72,9 @@ export async function extractPlansWithLlm(opts: {
   const user =
     `Provider: ${opts.provider} (${opts.country}, prices in ${currency})\n` +
     `Page: ${opts.url}\n` +
-    `This page is mainly about: ${opts.category.replace("_", " ")} plans (use it as the default category).\n\n` +
+    `This page is mainly about: ${opts.category.replace("_", " ")} plans (use it as the default category).\n` +
+    (opts.hint ? `Note about this page: ${opts.hint}\n` : "") +
+    "\n" +
     `<page_text>\n${opts.pageText}\n</page_text>`;
 
   const priceMentions = (opts.pageText.match(/(?:RM|S?\$)\s?\d/g) ?? []).length;

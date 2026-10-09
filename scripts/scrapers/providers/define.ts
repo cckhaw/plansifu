@@ -12,7 +12,7 @@ const bb = "broadband" as const;
 
 /** Shorthand: t(category, url) */
 export const t = {
-  post: (url: string): ScrapeTarget => ({ url, category: post }),
+  post: (url: string, hint?: string): ScrapeTarget => ({ url, category: post, hint }),
   pre: (url: string): ScrapeTarget => ({ url, category: pre }),
   bb: (url: string): ScrapeTarget => ({ url, category: bb }),
   /** Same target, fetched through Firecrawl (its proxies get past sites that block our browser). */
