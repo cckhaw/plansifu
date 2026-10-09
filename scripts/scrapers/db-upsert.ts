@@ -77,11 +77,16 @@ export async function logCrawl(
   itemsScraped: number,
   errorMessage?: string,
 ): Promise<void> {
-  const { error } = await getAdminClient().from("crawling_logs").insert({
-    provider_id: providerId,
-    status,
-    items_scraped: itemsScraped,
-    error_message: errorMessage ?? null,
-  });
-  if (error) console.error(`[log] failed to write crawling_logs: ${error.message}`);
+  try {
+    const { error } = await getAdminClient().from("crawling_logs").insert({
+      provider_id: providerId,
+      status,
+      items_scraped: itemsScraped,
+      error_message: errorMessage ?? null,
+    });
+    if (error) throw error;
+  } catch (err) {
+    // Logging must never mask the real result or abort other providers.
+    console.error(`[log] failed to write crawling_logs: ${err instanceof Error ? err.message : String(err)}`);
+  }
 }
