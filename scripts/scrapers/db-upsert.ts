@@ -59,6 +59,8 @@ export async function upsertPlans(providerId: string, plans: ScrapedPlan[]): Pro
   const prev = new Map((existing ?? []).map((p) => [p.title as string, p]));
 
   const now = new Date().toISOString();
+  // (provider_id, title) is the conflict key: one row per title in a batch.
+  plans = [...new Map(plans.map((p) => [p.title.toLowerCase(), p])).values()];
   const rows = plans.map((p) => {
     const old = prev.get(p.title);
     return {

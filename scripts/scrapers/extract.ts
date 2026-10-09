@@ -52,7 +52,7 @@ export function normalizePlans(
     const price = num(r.monthly_price);
     if (!title || price === null || price <= 0 || price > 2000) continue;
     const category = (CATEGORIES as readonly string[]).includes(r.category ?? "") ? (r.category as PlanCategory) : opts.category;
-    seen.set(`${category}:${title.toLowerCase()}`, {
+    seen.set(title.toLowerCase(), {
       title,
       category,
       monthly_price: Math.round(price * 100) / 100,
@@ -70,7 +70,35 @@ export function normalizePlans(
   return [...seen.values()];
 }
 
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/** Firecrawl's plan allows ~10 req/min; space request starts out across all providers. */
+const FIRECRAWL_GAP_MS = Number(process.env.FIRECRAWL_GAP_MS ?? 6500);
+let nextSlot = 0;
+async function firecrawlSlot(): Promise<void> {
+  const now = Date.now();
+  const start = Math.max(now, nextSlot);
+  nextSlot = start + FIRECRAWL_GAP_MS;
+  if (start > now) await sleep(start - now);
+}
+
+const isRateLimit = (err: unknown) => /rate limit|429/i.test(err instanceof Error ? err.message : String(err));
+
 async function viaFirecrawl(url: string): Promise<RawPlan[]> {
+  for (let attempt = 0; ; attempt++) {
+    await firecrawlSlot();
+    try {
+      return await firecrawlOnce(url);
+    } catch (err) {
+      if (!isRateLimit(err) || attempt >= 3) throw err;
+      const wait = Number(String(err).match(/retry after (\d+)s/i)?.[1] ?? 15);
+      console.warn(`[extract] rate limited on ${url}; waiting ${wait + 2}s (attempt ${attempt + 1})`);
+      nextSlot = Math.max(nextSlot, Date.now() + (wait + 2) * 1000);
+    }
+  }
+}
+
+async function firecrawlOnce(url: string): Promise<RawPlan[]> {
   const apiKey = process.env.FIRECRAWL_API_KEY;
   if (!apiKey) throw new Error("FIRECRAWL_API_KEY not set");
   const app = new Firecrawl({ apiKey });
@@ -123,7 +151,8 @@ async function viaPlaywright(url: string): Promise<RawPlan[]> {
   const browser = await chromium.launch();
   try {
     const page = await browser.newPage();
-    await page.goto(url, { waitUntil: "networkidle", timeout: 45_000 });
+    await page.goto(url, { waitUntil: "domcontentloaded", timeout: 45_000 });
+    await page.waitForTimeout(3000);
     const text = await page.evaluate(() => document.body.innerText);
     return parsePlansFromText(text);
   } finally {
@@ -159,7 +188,8 @@ export async function scrapeTargets(targets: ScrapeTarget[], country: Country): 
     }
   }
   // The same plan can appear on several pages of one site; keep the first.
-  const unique = new Map(results.map((p) => [`${p.category}:${p.title.toLowerCase()}`, p]));
+  const unique = new Map<string, ScrapedPlan>();
+  for (const p of results) if (!unique.has(p.title.toLowerCase())) unique.set(p.title.toLowerCase(), p);
   results.length = 0;
   results.push(...unique.values());
   // Only fail the provider if every target failed; partial results are still useful.
