@@ -1,5 +1,5 @@
 import { renderPageText } from "../browser";
-import type { ScrapedPlan } from "../../../src/types/database";
+import type { CrawlPageReport, ScrapedPlan } from "../../../src/types/database";
 import type { ProviderScraper, ScrapeResult } from "../types";
 
 /**
@@ -49,16 +49,25 @@ export const zym: ProviderScraper = {
   website: "https://zym.sg",
   async scrape(): Promise<ScrapeResult> {
     const plans: ScrapedPlan[] = [];
+    const pages: CrawlPageReport[] = [];
     for (const url of ORDER_PAGES) {
+      const started = Date.now();
+      const page: CrawlPageReport = { url, engine: "custom parser", raw_count: 0, kept_count: 0, dropped: [] };
       try {
         const plan = parseZymOrderPage(await renderPageText(url, 300, "inner"), url);
-        if (plan) plans.push(plan);
-        else console.warn(`[zym] could not parse ${url}`);
+        if (plan) {
+          plans.push(plan);
+          page.raw_count = page.kept_count = 1;
+        } else {
+          page.error = "could not parse the order page (layout changed?)";
+        }
       } catch (err) {
-        console.warn(`[zym] ${url}: ${(err as Error).message}`);
+        page.error = (err as Error).message;
       }
+      if (page.error) console.warn(`[zym] ${url}: ${page.error}`);
+      page.ms = Date.now() - started;
+      pages.push(page);
     }
-    if (!plans.length) throw new Error("Zym: no plans extracted");
-    return { plans, complete: plans.length === ORDER_PAGES.length };
+    return { plans, complete: plans.length === ORDER_PAGES.length, pages };
   },
 };

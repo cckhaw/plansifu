@@ -50,6 +50,13 @@ function track(r: { usage: { input_tokens: number; output_tokens: number } }) {
   usage.outputTokens += r.usage.output_tokens;
 }
 
+export function llmUsage(): { calls: number; inputTokens: number; outputTokens: number; costUsd: number } {
+  return {
+    ...usage,
+    costUsd: (usage.inputTokens * PRICE_IN + usage.outputTokens * PRICE_OUT) / 1_000_000,
+  };
+}
+
 export function llmUsageSummary(): string {
   const cost = (usage.inputTokens * PRICE_IN + usage.outputTokens * PRICE_OUT) / 1_000_000;
   return `${usage.calls} calls, ${usage.inputTokens.toLocaleString()} input + ${usage.outputTokens.toLocaleString()} output tokens (~$${cost.toFixed(3)} at ${MODEL} list price)`;

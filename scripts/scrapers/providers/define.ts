@@ -15,6 +15,8 @@ export const t = {
   post: (url: string, hint?: string): ScrapeTarget => ({ url, category: post, hint }),
   pre: (url: string): ScrapeTarget => ({ url, category: pre }),
   bb: (url: string): ScrapeTarget => ({ url, category: bb }),
+  /** The page is known to list no plans (e.g. prices sit behind a configurator): an empty result is not a warning. */
+  expectEmpty: (target: ScrapeTarget): ScrapeTarget => ({ ...target, expectEmpty: true }),
   /** Same target, fetched through Firecrawl (its proxies get past sites that block our browser). */
   viaFirecrawl: (target: ScrapeTarget): ScrapeTarget => ({ ...target, engine: "firecrawl" }),
   /** Page listing several categories; the extractor may label each plan, falling back to `category`. */

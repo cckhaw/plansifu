@@ -13,7 +13,7 @@ export const malaysiaProviders = [
     ),
     t.pre("https://www.yes.my/yes-prepaid-plans/"),
     t.bb("https://www.yes.my/yes-5g-broadband/"),
-    t.bb("https://www.yes.my/yes-fibre/"),
+    t.expectEmpty(t.bb("https://www.yes.my/yes-fibre/")),
   ]),
   defineProvider("U Mobile", "MY", "https://www.u.com.my", [
     // The page is tabbed; the fragment selects the individual-plans tab (the default tab is Family).
@@ -37,12 +37,12 @@ export const malaysiaProviders = [
   defineProvider("TuneTalk", "MY", "https://www.tunetalk.com", [t.pre("https://www.tunetalk.com/prepaid/epik-plans/")]),
   defineProvider("XOX", "MY", "https://xox.com.my", [
     t.post("https://onlinestore.xox.com.my/postpaid/postpaid5g"),
-    t.mixed("https://onlinestore.xox.com.my/"),
+    t.expectEmpty(t.mixed("https://onlinestore.xox.com.my/")),
   ]),
   defineProvider("Ansar", "MY", "https://www.ansarmobile.com.my", [t.pre("https://www.ansarmobile.com.my/our-plans/")]),
   defineProvider("Eastel", "MY", "https://eastel.com.my", [t.pre("https://eastel.com.my/mobile-plan/")]),
   defineProvider("HelloSIM", "MY", "https://hellosim.com.my", [
-    t.pre("https://hellosim.com.my/sim-packs"),
+    t.expectEmpty(t.pre("https://hellosim.com.my/sim-packs")),
     t.pre("https://hellosim.com.my/data"),
   ]),
 ];
