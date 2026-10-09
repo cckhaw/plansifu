@@ -33,8 +33,9 @@ export type TextMode = "nodes" | "inner";
  * - "inner": what a user sees, with layout-aware lines (StarHub/Zym parsers rely on this).
  * Also waits for client-side apps to render, scrolls to trigger lazy loading, and clicks tabs.
  */
-export async function renderPageText(url: string, minChars = 800, mode: TextMode = "nodes"): Promise<string> {
+export async function renderPageText(url: string, minChars = 800, mode: TextMode = "nodes", relay = false): Promise<string> {
   const browser = await getBrowser();
+  if (relay) return renderViaRelay(browser, url);
   const context = await browser.newContext({
     userAgent:
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
@@ -117,4 +118,43 @@ export function cleanPageText(text: string, maxChars = 90_000): string {
     if (line && line !== out[out.length - 1]) out.push(line);
   }
   return out.join("\n").slice(0, maxChars);
+}
+
+const RELAY_PATH = "/api/fetch-page";
+
+/**
+ * For sites that block the CI network (CloudFront 403 on GitHub's IPs): the site's own Vercel deployment
+ * fetches the HTML (src/app/api/fetch-page, authenticated with the Supabase service-role key), and we read the
+ * text from that server-rendered HTML in a script-free browser context.
+ */
+async function renderViaRelay(browser: Browser, url: string): Promise<string> {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!key) throw new Error("relay needs SUPABASE_SERVICE_ROLE_KEY");
+  const base = (process.env.SITE_URL || "https://plansifu.vercel.app").replace(/\/$/, "");
+  const res = await fetch(`${base}${RELAY_PATH}?url=${encodeURIComponent(url)}`, {
+    headers: { authorization: `Bearer ${key}` },
+    signal: AbortSignal.timeout(60_000),
+  });
+  const html = await res.text();
+  if (!res.ok) throw new Error(`relay ${res.status}: ${html.slice(0, 120)}`);
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  try {
+    const page = await context.newPage();
+    await page.setContent(html, { waitUntil: "domcontentloaded" });
+    return await page
+      .evaluate(() => {
+        const out: string[] = [];
+        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+        for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+          const el = n.parentElement;
+          if (!el || /^(SCRIPT|STYLE|NOSCRIPT|TEMPLATE)$/.test(el.tagName)) continue;
+          const t = (n.textContent || "").replace(/\s+/g, " ").trim();
+          if (t) out.push(t);
+        }
+        return out.join("\n");
+      })
+      .then((t) => t.replace(/\u00a0/g, " "));
+  } finally {
+    await context.close().catch(() => undefined);
+  }
 }

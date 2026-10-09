@@ -9,6 +9,8 @@ export interface ScrapeTarget {
    * Otherwise the target's category is authoritative and the extractor can't override it.
    */
   mixed?: boolean;
+  /** Fetch the HTML through our Vercel relay (sites that 403 the CI network); see browser.ts. */
+  relay?: boolean;
   /** Extra guidance for the model about this specific page. */
   hint?: string;
   /** The page is known to list no plans; an empty result should not raise a warning. */

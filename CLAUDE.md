@@ -9,6 +9,7 @@ inspired by CompareHero.my.
 - Scraping: Playwright renders each page (free, runs in GitHub Actions) and Claude Haiku
   (`claude-haiku-5-5`, via `@anthropic-ai/sdk` structured outputs) extracts plans from the page text.
   Firecrawl (`@mendable/firecrawl-js`) is only a backup, used per page when Playwright + Haiku errors or finds nothing (`SCRAPE_ENGINE=firecrawl` flips the order).
+  Sites that 403 GitHub's network (CelcomDigi) use `t.relay(...)`: HTML is fetched by `/api/fetch-page` on our Vercel deployment (Singapore region, auth = service-role key, host allowlist).
   Sites with a regular layout get a dedicated parser instead (StarHub, Zym - no model needed).
 - Scripts run with `tsx`
 
