@@ -1,6 +1,8 @@
 import Firecrawl from "@mendable/firecrawl-js";
 import type { Country, Currency, PlanCategory, ScrapedPlan } from "../../src/types/database";
-import type { RawPlan, ScrapeTarget } from "./types";
+import { cleanPageText, renderPageText } from "./browser";
+import { extractPlansWithLlm } from "./llm-extract";
+import type { RawPlan, ScrapeResult, ScrapeTarget } from "./types";
 
 const PLAN_SCHEMA = {
   type: "object",
@@ -46,14 +48,24 @@ function num(v: unknown): number | null {
 /** Devices / wearables sold alongside a line - not plans. */
 const NOT_A_PLAN = /\b(watch|ipad|tablet|smartphone|iphone|galaxy (?:s|z|a)\d)/i;
 /** Broadband items that show up on mobile pages (cross-sell banners, bundles). */
-const BROADBAND_WORDS = /\b(broadband|fib(?:re|er)|gbps|router|wi-?fi|home)\b/i;
+const BROADBAND_WORDS = /\b(broadband|fib(?:re|er)|router|wi-?fi|home)\b|gbps/i;
 /** Marketing copy / calls to action picked up as a "title". */
 const MARKETING_TITLE = /^(buy|get|sign ?up|order|apply|learn|shop|rollover|free|join|switch)\b|\b(for just|free \d+ months?|buy online)\b|[$]\s?\d/i;
 
+/** Page furniture and call/SMS rate rows that get parsed as plans. */
+const JUNK_TITLE =
+  /\?$|\b(add-?ons?|eligible|my account|promotions? valid|limited time offer|online exclusive|main difference|call rates?|streaming app|roam the world|power up)\b|^(sms|voice|to all)\b|\bvalue of$/i;
+
+/** Section headings rather than a specific plan, e.g. "Postpaid Plans", "SIM Only Plans", "eSIM". */
+const GENERIC_TITLE = /^(esim|sim)$|\bplans$/i;
+
 export function isPlausibleTitle(title: string, category: PlanCategory): boolean {
   if (title.length < 3 || title.length > 70) return false;
-  if (NOT_A_PLAN.test(title) || MARKETING_TITLE.test(title)) return false;
+  if (NOT_A_PLAN.test(title) || MARKETING_TITLE.test(title) || GENERIC_TITLE.test(title) || JUNK_TITLE.test(title)) return false;
   if (category !== "broadband" && BROADBAND_WORDS.test(title)) return false;
+  // Upsell tiles for the other billing type (e.g. a postpaid plan advertised on a prepaid page).
+  if (category === "mobile_prepaid" && /\bpostpaid\b/i.test(title)) return false;
+  if (category === "mobile_postpaid" && (/\bprepaid\b/i.test(title) || /^hi!/i.test(title))) return false;
   return true;
 }
 
@@ -64,12 +76,24 @@ export function normalizePlans(
 ): ScrapedPlan[] {
   const seen = new Map<string, ScrapedPlan>();
   for (const r of raw) {
-    const title = r.title?.trim().replace(/\s+/g, " ");
+    // Models sometimes copy the price into the name ("hi! by Singtel $15/30 days Best Value"): strip it.
+    const title = r.title
+      ?.replace(/(?:RM|S\$|\$)\s?\d[\d.,]*(?:\s?\/\s?\w+(?: \w+)?)?/gi, " ")
+      .replace(/\s+/g, " ")
+      .replace(/^[\s\-–:|,]+|[\s\-–:|,]+$/g, "");
     const price = num(r.monthly_price);
     if (!title || price === null || price <= 0 || price > 2000) continue;
     const category =
       opts.mixed && (CATEGORIES as readonly string[]).includes(r.category ?? "") ? (r.category as PlanCategory) : opts.category;
-    if (!isPlausibleTitle(title, category)) continue;
+    if (!isPlausibleTitle(title, category)) {
+      if (process.env.SCRAPE_DEBUG) console.log(`[debug] dropped by title filter (${category}): "${title}"`);
+      continue;
+    }
+    // Real consumer plans: nothing under ~2 (call/SMS rates, add-on lines); mobile plans above ~600 are phones.
+    if (price < 2 || (category !== "broadband" && price > 600 && !/year|12 ?months?/i.test(title))) {
+      if (process.env.SCRAPE_DEBUG) console.log(`[debug] dropped by price filter: "${title}" ${price}`);
+      continue;
+    }
     seen.set(title.toLowerCase(), {
       title,
       category,
@@ -100,6 +124,10 @@ async function firecrawlSlot(): Promise<void> {
   if (start > now) await sleep(start - now);
 }
 
+/** Once Firecrawl reports no credits, stop calling it for the rest of the run. */
+let outOfCredits = false;
+const isOutOfCredits = (err: unknown) => /insufficient credits|payment required|\b402\b/i.test(err instanceof Error ? err.message : String(err));
+
 const isRateLimit = (err: unknown) => /rate limit|429/i.test(err instanceof Error ? err.message : String(err));
 
 async function viaFirecrawl(url: string): Promise<RawPlan[]> {
@@ -108,6 +136,10 @@ async function viaFirecrawl(url: string): Promise<RawPlan[]> {
     try {
       return await firecrawlOnce(url);
     } catch (err) {
+      if (isOutOfCredits(err)) {
+        outOfCredits = true;
+        throw new Error("Firecrawl credits exhausted - top up your plan at firecrawl.dev");
+      }
       if (!isRateLimit(err) || attempt >= 3) throw err;
       const wait = Number(String(err).match(/retry after (\d+)s/i)?.[1] ?? 15);
       console.warn(`[extract] rate limited on ${url}; waiting ${wait + 2}s (attempt ${attempt + 1})`);
@@ -117,6 +149,7 @@ async function viaFirecrawl(url: string): Promise<RawPlan[]> {
 }
 
 async function firecrawlOnce(url: string): Promise<RawPlan[]> {
+  if (outOfCredits) throw new Error("Firecrawl credits exhausted - top up your plan at firecrawl.dev");
   const apiKey = process.env.FIRECRAWL_API_KEY;
   if (!apiKey) throw new Error("FIRECRAWL_API_KEY not set");
   const app = new Firecrawl({ apiKey });
@@ -133,103 +166,63 @@ async function firecrawlOnce(url: string): Promise<RawPlan[]> {
           "Set category for each plan.",
       },
     ],
-    waitFor: 2000,
+    waitFor: 4000,
   });
   const json = doc.json as { plans?: RawPlan[] } | undefined;
-  return json?.plans ?? [];
-}
-
-/** Heuristic text parser used when Firecrawl is unavailable or returns nothing. */
-export function parsePlansFromText(text: string): RawPlan[] {
-  const lines = text.split("\n").map((l) => l.trim()).filter(Boolean);
-  const priceRe = /(?:RM|S\$|SGD|\$)\s?(\d{1,4}(?:\.\d{1,2})?)/i;
-  const out: RawPlan[] = [];
-  for (let i = 0; i < lines.length; i++) {
-    const m = lines[i].match(priceRe);
-    if (!m) continue;
-    // Specs usually sit between this price and the next one.
-    let end = i + 1;
-    while (end < lines.length && end < i + 8 && !priceRe.test(lines[end])) end++;
-    const window = lines.slice(Math.max(0, i - 1), end).join(" ");
-    const title = [...lines.slice(Math.max(0, i - 3), i + 1)].reverse().find((l) => !priceRe.test(l) && l.length > 3 && l.length < 60);
-    if (!title) continue;
-    const gb = window.match(/(\d{1,4})\s?GB\b/i);
-    const gbps = window.match(/(\d(?:\.\d)?)\s?Gbps/i);
-    const mbps = window.match(/(\d{2,4})\s?Mbps/i);
-    out.push({
-      title,
-      monthly_price: Number(m[1]),
-      data_gb: /unlimited data/i.test(window) ? -1 : gb ? Number(gb[1]) : null,
-      speed_mbps: gbps ? Number(gbps[1]) * 1000 : mbps ? Number(mbps[1]) : null,
-    });
+  const plans = json?.plans ?? [];
+  if (process.env.SCRAPE_DEBUG) {
+    console.log(`[debug] ${url} -> ${plans.length} raw: ` + plans.slice(0, 12).map((p) => `${p.title} (${p.monthly_price})`).join("; "));
   }
-  return out;
+  return plans;
 }
 
 /**
- * Render a page in headless Chromium with a realistic browser profile and wait for client-side
- * apps (e.g. OutSystems) to fill in the content. Returns the visible text, newlines preserved.
+ * Default engine: render the page in our own headless browser (free) and have Claude Haiku turn
+ * the visible text into structured plans. `SCRAPE_ENGINE=firecrawl` selects the Firecrawl engine.
  */
-export async function renderPageText(url: string, minChars = 800): Promise<string> {
-  const { chromium } = await import("playwright");
-  const browser = await chromium.launch({ args: ["--disable-blink-features=AutomationControlled"] });
-  try {
-    const context = await browser.newContext({
-      userAgent:
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
-      locale: "en-SG",
-      viewport: { width: 1366, height: 900 },
-    });
-    await context.addInitScript(() => Object.defineProperty(navigator, "webdriver", { get: () => false }));
-    const page = await context.newPage();
-    await page.goto(url, { waitUntil: "load", timeout: 45_000 }).catch(() => undefined);
-    await page
-      .waitForFunction((n) => document.body.innerText.length > n, minChars, { timeout: 30_000 })
-      .catch(() => undefined);
-    await page.waitForTimeout(3000);
-    return await page.evaluate(() => document.body.innerText);
-  } finally {
-    await browser.close();
+async function viaBrowserAndLlm(target: ScrapeTarget, country: Country, provider: string): Promise<RawPlan[]> {
+  let text = "";
+  for (let attempt = 0; attempt < 2 && text.length < 300; attempt++) {
+    text = cleanPageText(await renderPageText(target.url));
   }
+  // Blocked, empty or still-loading pages must fail loudly instead of "succeeding" with nothing.
+  if (text.length < 300) throw new Error(`page rendered only ${text.length} characters (blocked or not loaded)`);
+  const raw = await extractPlansWithLlm({ provider, country, url: target.url, category: target.category, pageText: text, hint: target.hint });
+  if (process.env.SCRAPE_DEBUG && raw.length === 0) {
+    console.log(`[debug] 0 plans from ${text.length} chars at ${target.url}; text starts: ${text.slice(0, 700).replace(/\n/g, " | ")}`);
+  }
+  return raw;
 }
 
-async function viaPlaywright(url: string): Promise<RawPlan[]> {
-  return parsePlansFromText(await renderPageText(url));
-}
-
-/** Scrape one page: Firecrawl first, Playwright heuristic fallback. */
-export async function scrapeTarget(target: ScrapeTarget, country: Country): Promise<ScrapedPlan[]> {
+/**
+ * Scrape one page. There is deliberately no fallback to a generic text parser: it produced junk
+ * rows (page furniture, call rates) that replaced good data. A failed page throws, and the
+ * provider keeps its existing plans.
+ */
+export async function scrapeTarget(target: ScrapeTarget, country: Country, provider = "the provider"): Promise<ScrapedPlan[]> {
   const opts = { country, category: target.category, fallbackUrl: target.url, mixed: target.mixed };
-  try {
-    const plans = normalizePlans(await viaFirecrawl(target.url), opts);
-    console.log(`[extract] firecrawl ${plans.length} plans  ${target.url}`);
-    if (plans.length) return plans;
-    console.warn(`[extract] Firecrawl returned no plans for ${target.url}; trying Playwright`);
-  } catch (err) {
-    console.warn(`[extract] Firecrawl failed for ${target.url}: ${(err as Error).message}; trying Playwright`);
-  }
-  const fallback = normalizePlans(await viaPlaywright(target.url), opts);
-  console.log(`[extract] playwright ${fallback.length} plans  ${target.url}`);
-  return fallback;
+  const engine = target.engine === "firecrawl" || process.env.SCRAPE_ENGINE === "firecrawl" ? "firecrawl" : "browser+llm";
+  const raw = engine === "firecrawl" ? await viaFirecrawl(target.url) : await viaBrowserAndLlm(target, country, provider);
+  const plans = normalizePlans(raw, opts);
+  console.log(`[extract] ${engine} ${plans.length}/${raw.length} plans  ${target.url}`);
+  return plans;
 }
 
-export async function scrapeTargets(targets: ScrapeTarget[], country: Country): Promise<ScrapedPlan[]> {
+export async function scrapeTargets(targets: ScrapeTarget[], country: Country, provider?: string): Promise<ScrapeResult> {
   const results: ScrapedPlan[] = [];
   const errors: string[] = [];
   for (const t of targets) {
     try {
-      results.push(...(await scrapeTarget(t, country)));
+      results.push(...(await scrapeTarget(t, country, provider)));
     } catch (err) {
       errors.push(`${t.url}: ${(err as Error).message}`);
       console.warn(`[extract] failed ${t.url}: ${(err as Error).message}`);
     }
   }
+  // Every page failed: nothing to save (and nothing should be hidden).
+  if (!results.length && errors.length) throw new Error(errors.join(" | "));
   // The same plan can appear on several pages of one site; keep the first.
   const unique = new Map<string, ScrapedPlan>();
   for (const p of results) if (!unique.has(p.title.toLowerCase())) unique.set(p.title.toLowerCase(), p);
-  results.length = 0;
-  results.push(...unique.values());
-  // Only fail the provider if every target failed; partial results are still useful.
-  if (!results.length && errors.length) throw new Error(errors.join(" | "));
-  return results;
+  return { plans: [...unique.values()], complete: errors.length === 0 };
 }

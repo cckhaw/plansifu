@@ -6,8 +6,10 @@ inspired by CompareHero.my.
 ## Stack
 - Next.js 15 (App Router), React 19, TypeScript (strict), Tailwind CSS v4
 - Supabase Postgres via `@supabase/supabase-js`
-- Firecrawl via `@mendable/firecrawl-js` (the published npm name of the Firecrawl SDK;
-  `@firecrawl/sdk` does not exist on npm) with Playwright as fallback
+- Scraping: Playwright renders each page (free, runs in GitHub Actions) and Claude Haiku
+  (`claude-haiku-5-5`, via `@anthropic-ai/sdk` structured outputs) extracts plans from the page text.
+  Firecrawl (`@mendable/firecrawl-js`) is an optional alternative engine: `SCRAPE_ENGINE=firecrawl`.
+  Sites with a regular layout get a dedicated parser instead (StarHub, Zym - no model needed).
 - Scripts run with `tsx`
 
 ## Structure
@@ -23,7 +25,8 @@ inspired by CompareHero.my.
 ## Commands
 - `npm run dev` / `npm run build` / `npm run lint` / `npm run typecheck`
 - `npm run scrape` — run all provider scrapers (needs `SUPABASE_URL`,
-  `SUPABASE_SERVICE_ROLE_KEY`, `FIRECRAWL_API_KEY`)
+  `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`). `SCRAPE_ONLY="Maxis,M1"` limits providers;
+  `SCRAPE_DEBUG=1` logs the raw model output; the run ends with a token/cost summary.
 
 ## Conventions
 - Server Components by default; add `"use client"` only for interactive components.

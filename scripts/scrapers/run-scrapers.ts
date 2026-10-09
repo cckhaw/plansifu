@@ -1,3 +1,5 @@
+import { closeBrowser } from "./browser";
+import { llmUsageSummary } from "./llm-extract";
 import { errorMessage, logCrawl, resolveProviderId, upsertPlans } from "./db-upsert";
 import { celcomdigi } from "./providers/celcomdigi";
 import { m1 } from "./providers/m1";
@@ -6,9 +8,10 @@ import { maxis } from "./providers/maxis";
 import { singaporeProviders } from "./providers/singapore";
 import { singtel } from "./providers/singtel";
 import { starhub } from "./providers/starhub";
+import { zym } from "./providers/zym";
 import type { ProviderScraper } from "./types";
 
-const scrapers: ProviderScraper[] = [maxis, singtel, celcomdigi, m1, ...malaysiaProviders, starhub, ...singaporeProviders];
+const scrapers: ProviderScraper[] = [maxis, singtel, celcomdigi, m1, ...malaysiaProviders, starhub, zym, ...singaporeProviders];
 
 /** Providers run in parallel, capped so Firecrawl rate limits and headless browsers aren't swamped. */
 const CONCURRENCY = Number(process.env.SCRAPE_CONCURRENCY ?? 4);
@@ -19,9 +22,10 @@ async function runOne(s: ProviderScraper): Promise<boolean> {
   let providerId: string | null = null;
   try {
     providerId = await resolveProviderId(s.name, s.country, s.website);
-    const plans = await s.scrape();
+    const { plans, complete } = await s.scrape();
     if (!plans.length) throw new Error("No plans extracted");
-    const count = await upsertPlans(providerId, plans);
+    const count = await upsertPlans(providerId, plans, { deactivateMissing: complete });
+    if (!complete) console.warn(`⚠ ${s.name}: some pages failed; existing plans were kept active`);
     await logCrawl(providerId, "success", count);
     console.log(`✔ ${s.name} (${s.country}): ${count} plans`);
     return true;
@@ -52,7 +56,8 @@ async function main() {
     if (!process.env[key]) throw new Error(`${key} must be set`);
   }
   const selected = only?.length ? scrapers.filter((s) => only.includes(s.name.toLowerCase())) : scrapers;
-  const results = await runPool(selected, CONCURRENCY, runOne);
+  const results = await runPool(selected, CONCURRENCY, runOne).finally(closeBrowser);
+  console.log(`LLM usage: ${llmUsageSummary()}`);
   const failed = results.filter((ok) => !ok).length;
   console.log(`Done: ${results.length - failed}/${results.length} providers succeeded`);
   // Fail the job only if everything failed, so one broken site doesn't block the deploy hook.

@@ -45,7 +45,11 @@ export async function resolveProviderId(name: string, country: Country, website?
   return created.id as string;
 }
 
-export async function upsertPlans(providerId: string, plans: ScrapedPlan[]): Promise<number> {
+export async function upsertPlans(
+  providerId: string,
+  plans: ScrapedPlan[],
+  opts: { deactivateMissing: boolean } = { deactivateMissing: true },
+): Promise<number> {
   if (!plans.length) return 0;
   const db = getAdminClient();
 
@@ -76,7 +80,9 @@ export async function upsertPlans(providerId: string, plans: ScrapedPlan[]): Pro
   const { error } = await db.from("plans").upsert(rows, { onConflict: "provider_id,title" });
   if (error) throw error;
 
-  // Plans that vanished from the provider's site are hidden, not deleted.
+  // Plans that vanished from the provider's site are hidden, not deleted - but only after a
+  // complete scrape; if any page failed we can't tell "gone" from "not fetched".
+  if (!opts.deactivateMissing) return rows.length;
   const { error: staleErr } = await db
     .from("plans")
     .update({ is_active: false })
