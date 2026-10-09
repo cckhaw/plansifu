@@ -5,9 +5,10 @@ import { malaysiaProviders } from "./providers/malaysia";
 import { maxis } from "./providers/maxis";
 import { singaporeProviders } from "./providers/singapore";
 import { singtel } from "./providers/singtel";
+import { starhub } from "./providers/starhub";
 import type { ProviderScraper } from "./types";
 
-const scrapers: ProviderScraper[] = [maxis, singtel, celcomdigi, m1, ...malaysiaProviders, ...singaporeProviders];
+const scrapers: ProviderScraper[] = [maxis, singtel, celcomdigi, m1, ...malaysiaProviders, starhub, ...singaporeProviders];
 
 /** Providers run in parallel, capped so Firecrawl rate limits and headless browsers aren't swamped. */
 const CONCURRENCY = Number(process.env.SCRAPE_CONCURRENCY ?? 4);

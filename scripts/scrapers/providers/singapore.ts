@@ -5,11 +5,6 @@ export const singaporeProviders = [
     t.pre("https://www.singtel.com/personal/products-services/mobile/hi"),
     t.pre("https://www.singtel.com/personal/mobile/plans/prepaid-new"),
   ]),
-  defineProvider("StarHub", "SG", "https://www.starhub.com", [
-    t.post("https://www.starhub.com/personal/mobile.html"),
-    t.pre("https://www.starhub.com/personal/mobile/starhub-prepaid.html"),
-    t.bb("https://www.starhub.com/personal/broadband.html"),
-  ]),
   defineProvider("SIMBA", "SG", "https://simba.sg", [t.mixed("https://simba.sg/")]),
   defineProvider("Giga", "SG", "https://www.giga.com.sg", [t.mixed("https://www.giga.com.sg/")]),
   defineProvider("Maxx", "SG", "https://maxxonline.sg", [t.mixed("https://maxxonline.sg")]),

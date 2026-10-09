@@ -43,6 +43,20 @@ function num(v: unknown): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
+/** Devices / wearables sold alongside a line - not plans. */
+const NOT_A_PLAN = /\b(watch|ipad|tablet|smartphone|iphone|galaxy (?:s|z|a)\d)/i;
+/** Broadband items that show up on mobile pages (cross-sell banners, bundles). */
+const BROADBAND_WORDS = /\b(broadband|fib(?:re|er)|gbps|router|wi-?fi|home)\b/i;
+/** Marketing copy / calls to action picked up as a "title". */
+const MARKETING_TITLE = /^(buy|get|sign ?up|order|apply|learn|shop|rollover|free|join|switch)\b|\b(for just|free \d+ months?|buy online)\b|[$]\s?\d/i;
+
+export function isPlausibleTitle(title: string, category: PlanCategory): boolean {
+  if (title.length < 3 || title.length > 70) return false;
+  if (NOT_A_PLAN.test(title) || MARKETING_TITLE.test(title)) return false;
+  if (category !== "broadband" && BROADBAND_WORDS.test(title)) return false;
+  return true;
+}
+
 /** Normalise raw extractor output into rows safe to upsert. Drops invalid entries, dedupes by title. */
 export function normalizePlans(
   raw: RawPlan[],
@@ -55,6 +69,7 @@ export function normalizePlans(
     if (!title || price === null || price <= 0 || price > 2000) continue;
     const category =
       opts.mixed && (CATEGORIES as readonly string[]).includes(r.category ?? "") ? (r.category as PlanCategory) : opts.category;
+    if (!isPlausibleTitle(title, category)) continue;
     seen.set(title.toLowerCase(), {
       title,
       category,
@@ -151,18 +166,35 @@ export function parsePlansFromText(text: string): RawPlan[] {
   return out;
 }
 
-async function viaPlaywright(url: string): Promise<RawPlan[]> {
+/**
+ * Render a page in headless Chromium with a realistic browser profile and wait for client-side
+ * apps (e.g. OutSystems) to fill in the content. Returns the visible text, newlines preserved.
+ */
+export async function renderPageText(url: string, minChars = 800): Promise<string> {
   const { chromium } = await import("playwright");
-  const browser = await chromium.launch();
+  const browser = await chromium.launch({ args: ["--disable-blink-features=AutomationControlled"] });
   try {
-    const page = await browser.newPage();
-    await page.goto(url, { waitUntil: "domcontentloaded", timeout: 45_000 });
+    const context = await browser.newContext({
+      userAgent:
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
+      locale: "en-SG",
+      viewport: { width: 1366, height: 900 },
+    });
+    await context.addInitScript(() => Object.defineProperty(navigator, "webdriver", { get: () => false }));
+    const page = await context.newPage();
+    await page.goto(url, { waitUntil: "load", timeout: 45_000 }).catch(() => undefined);
+    await page
+      .waitForFunction((n) => document.body.innerText.length > n, minChars, { timeout: 30_000 })
+      .catch(() => undefined);
     await page.waitForTimeout(3000);
-    const text = await page.evaluate(() => document.body.innerText);
-    return parsePlansFromText(text);
+    return await page.evaluate(() => document.body.innerText);
   } finally {
     await browser.close();
   }
+}
+
+async function viaPlaywright(url: string): Promise<RawPlan[]> {
+  return parsePlansFromText(await renderPageText(url));
 }
 
 /** Scrape one page: Firecrawl first, Playwright heuristic fallback. */
