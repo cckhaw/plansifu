@@ -9,7 +9,7 @@ export const malaysiaProviders = [
   defineProvider("Yes", "MY", "https://www.yes.my", [
     t.post(
       "https://www.yes.my/yes-postpaid-plans/",
-      "Skip any card that is a Supplementary Line product (extra line for an existing account); return only standalone plans. If a plan is shown both with and without a 12-month contract, return both as separate entries and set contract_months.",
+      "Skip any card that is a Supplementary Line product (extra line for an existing account); return only standalone plans. If the same plan is shown both without a contract and with a 12-month contract (at a lower price), return both as separate entries: the no-contract one under its plain name with contract_months 0, and the other named '<plan name> (12-month contract)' with contract_months 12.",
     ),
     t.pre("https://www.yes.my/yes-prepaid-plans/"),
     t.bb("https://www.yes.my/yes-5g-broadband/"),

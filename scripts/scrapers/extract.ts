@@ -99,6 +99,8 @@ export function normalizePlans(
       if (process.env.SCRAPE_DEBUG) console.log(`[debug] dropped by price filter: "${title}" ${price}`);
       continue;
     }
+    // First occurrence wins: pages list the regular/principal version before promo or variant copies.
+    if (seen.has(title.toLowerCase())) continue;
     seen.set(title.toLowerCase(), {
       title,
       category,
