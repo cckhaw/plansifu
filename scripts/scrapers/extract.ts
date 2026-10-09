@@ -1,5 +1,7 @@
 import Firecrawl from "@mendable/firecrawl-js";
 import type { Country, Currency, PlanCategory, ScrapedPlan } from "../../src/types/database";
+import { cleanPageText, renderPageText } from "./browser";
+import { extractPlansWithLlm } from "./llm-extract";
 import type { RawPlan, ScrapeResult, ScrapeTarget } from "./types";
 
 const PLAN_SCHEMA = {
@@ -165,50 +167,39 @@ async function firecrawlOnce(url: string): Promise<RawPlan[]> {
 }
 
 /**
- * Render a page in headless Chromium with a realistic browser profile and wait for client-side
- * apps (e.g. OutSystems) to fill in the content. Returns the visible text, newlines preserved.
+ * Default engine: render the page in our own headless browser (free) and have Claude Haiku turn
+ * the visible text into structured plans. `SCRAPE_ENGINE=firecrawl` selects the Firecrawl engine.
  */
-export async function renderPageText(url: string, minChars = 800): Promise<string> {
-  const { chromium } = await import("playwright");
-  const browser = await chromium.launch({ args: ["--disable-blink-features=AutomationControlled"] });
-  try {
-    const context = await browser.newContext({
-      userAgent:
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
-      locale: "en-SG",
-      viewport: { width: 1366, height: 900 },
-    });
-    await context.addInitScript(() => Object.defineProperty(navigator, "webdriver", { get: () => false }));
-    const page = await context.newPage();
-    await page.goto(url, { waitUntil: "load", timeout: 45_000 }).catch(() => undefined);
-    await page
-      .waitForFunction((n) => document.body.innerText.length > n, minChars, { timeout: 30_000 })
-      .catch(() => undefined);
-    await page.waitForTimeout(3000);
-    return (await page.evaluate(() => document.body.innerText)).replace(/\u00a0/g, " ");
-  } finally {
-    await browser.close();
+async function viaBrowserAndLlm(target: ScrapeTarget, country: Country, provider: string): Promise<RawPlan[]> {
+  let text = "";
+  for (let attempt = 0; attempt < 2 && text.length < 300; attempt++) {
+    text = cleanPageText(await renderPageText(target.url));
   }
+  // Blocked, empty or still-loading pages must fail loudly instead of "succeeding" with nothing.
+  if (text.length < 300) throw new Error(`page rendered only ${text.length} characters (blocked or not loaded)`);
+  return extractPlansWithLlm({ provider, country, url: target.url, category: target.category, pageText: text });
 }
 
 /**
- * Scrape one page with Firecrawl. There is deliberately no fallback to a generic text parser:
- * it produced junk rows (page furniture, call rates) that replaced good data. A failed page
- * throws, and the provider keeps its existing plans.
+ * Scrape one page. There is deliberately no fallback to a generic text parser: it produced junk
+ * rows (page furniture, call rates) that replaced good data. A failed page throws, and the
+ * provider keeps its existing plans.
  */
-export async function scrapeTarget(target: ScrapeTarget, country: Country): Promise<ScrapedPlan[]> {
+export async function scrapeTarget(target: ScrapeTarget, country: Country, provider = "the provider"): Promise<ScrapedPlan[]> {
   const opts = { country, category: target.category, fallbackUrl: target.url, mixed: target.mixed };
-  const plans = normalizePlans(await viaFirecrawl(target.url), opts);
-  console.log(`[extract] firecrawl ${plans.length} plans  ${target.url}`);
+  const engine = process.env.SCRAPE_ENGINE === "firecrawl" ? "firecrawl" : "browser+llm";
+  const raw = engine === "firecrawl" ? await viaFirecrawl(target.url) : await viaBrowserAndLlm(target, country, provider);
+  const plans = normalizePlans(raw, opts);
+  console.log(`[extract] ${engine} ${plans.length}/${raw.length} plans  ${target.url}`);
   return plans;
 }
 
-export async function scrapeTargets(targets: ScrapeTarget[], country: Country): Promise<ScrapeResult> {
+export async function scrapeTargets(targets: ScrapeTarget[], country: Country, provider?: string): Promise<ScrapeResult> {
   const results: ScrapedPlan[] = [];
   const errors: string[] = [];
   for (const t of targets) {
     try {
-      results.push(...(await scrapeTarget(t, country)));
+      results.push(...(await scrapeTarget(t, country, provider)));
     } catch (err) {
       errors.push(`${t.url}: ${(err as Error).message}`);
       console.warn(`[extract] failed ${t.url}: ${(err as Error).message}`);

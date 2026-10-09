@@ -1,7 +1,7 @@
 # PlanSifu
 
 Compare mobile (postpaid / prepaid) and home fibre broadband plans across Malaysia 🇲🇾 and Singapore 🇸🇬.
-Next.js 15 · React 19 · Tailwind v4 · Supabase · Firecrawl + Playwright · GitHub Actions · Vercel.
+Next.js 15 · React 19 · Tailwind v4 · Supabase · Playwright + Claude Haiku · GitHub Actions · Vercel.
 
 See [`CLAUDE.md`](./CLAUDE.md) for architecture and conventions.
 
@@ -26,18 +26,20 @@ Without Supabase env vars the site renders built-in sample plans (`src/lib/sampl
 |---|---|---|
 | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Next.js (read plans) | Safe for the browser |
 | `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` | Scrapers, `/api/redirect` | **Secret** – server only |
-| `FIRECRAWL_API_KEY` | Scrapers | From [firecrawl.dev](https://firecrawl.dev) |
+| `ANTHROPIC_API_KEY` | Scrapers | From [console.anthropic.com](https://console.anthropic.com); Claude Haiku extracts plans (about $0.10 per full crawl) |
+| `FIRECRAWL_API_KEY` | Scrapers (optional) | Only with `SCRAPE_ENGINE=firecrawl` |
 | `VERCEL_DEPLOY_HOOK_URL` | GitHub Action | Triggers a rebuild after each crawl |
 
 ## 2. Run the scrapers
 
 ```bash
-npx playwright install chromium   # one-time, for the fallback
+npx playwright install chromium   # one-time
 npm run scrape
 ```
 
-Each provider (Maxis, Singtel, CelcomDigi, M1) is extracted with Firecrawl's JSON extraction, falling back to a
-Playwright text heuristic. Results are upserted on `(provider_id, title)`, plans that disappear are marked
+Each page is rendered in headless Chromium (Playwright) and its text is sent to Claude Haiku, which returns
+structured plans. StarHub and Zym have dedicated parsers (no model call). A page that fails to load or extract makes
+that provider fail without touching its existing plans. Results are upserted on `(provider_id, title)`, plans that disappear are marked
 inactive, and every run is recorded in `crawling_logs`. Hand-edited `affiliate_url`s are preserved, so
 **set your real affiliate links in the `plans.affiliate_url` column** — scrapers only supply the landing page as default.
 
@@ -50,7 +52,7 @@ Scraper selectors/URLs are in `scripts/scrapers/providers/*.ts`; provider sites 
 (**Actions → Daily Scraper → Run workflow**).
 
 Add under **Settings → Secrets and variables → Actions → Repository secrets**:
-`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `FIRECRAWL_API_KEY`, `VERCEL_DEPLOY_HOOK_URL`.
+`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`, `VERCEL_DEPLOY_HOOK_URL`.
 
 ## 4. Deploy to Vercel
 

@@ -28,7 +28,7 @@ jobs:
 
       - run: npm ci
 
-      - name: Install Playwright Chromium (scraper fallback)
+      - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
       - name: Run scrapers
@@ -36,7 +36,8 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }} # only used when SCRAPE_ENGINE=firecrawl
           SCRAPE_ONLY: ${{ inputs.providers }}
           SCRAPE_DEBUG: ${{ inputs.providers != '' && '1' || '' }}
 

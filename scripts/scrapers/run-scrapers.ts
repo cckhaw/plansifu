@@ -1,3 +1,5 @@
+import { closeBrowser } from "./browser";
+import { llmUsageSummary } from "./llm-extract";
 import { errorMessage, logCrawl, resolveProviderId, upsertPlans } from "./db-upsert";
 import { celcomdigi } from "./providers/celcomdigi";
 import { m1 } from "./providers/m1";
@@ -54,7 +56,8 @@ async function main() {
     if (!process.env[key]) throw new Error(`${key} must be set`);
   }
   const selected = only?.length ? scrapers.filter((s) => only.includes(s.name.toLowerCase())) : scrapers;
-  const results = await runPool(selected, CONCURRENCY, runOne);
+  const results = await runPool(selected, CONCURRENCY, runOne).finally(closeBrowser);
+  console.log(`LLM usage: ${llmUsageSummary()}`);
   const failed = results.filter((ok) => !ok).length;
   console.log(`Done: ${results.length - failed}/${results.length} providers succeeded`);
   // Fail the job only if everything failed, so one broken site doesn't block the deploy hook.

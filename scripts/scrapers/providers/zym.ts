@@ -1,4 +1,4 @@
-import { renderPageText } from "../extract";
+import { renderPageText } from "../browser";
 import type { ScrapedPlan } from "../../../src/types/database";
 import type { ProviderScraper, ScrapeResult } from "../types";
 

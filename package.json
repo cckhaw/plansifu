@@ -11,13 +11,15 @@
     "scrape": "tsx scripts/scrapers/run-scrapers.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.132.1",
     "@mendable/firecrawl-js": "^4.46.0",
     "@supabase/supabase-js": "^2.117.3",
     "next": "^15.5.27",
     "playwright": "^1.64.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
-    "server-only": "^0.0.1"
+    "server-only": "^0.0.1",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.7",

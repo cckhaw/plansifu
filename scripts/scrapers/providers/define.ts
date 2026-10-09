@@ -3,7 +3,7 @@ import type { Country } from "../../../src/types/database";
 import type { ProviderScraper, ScrapeTarget } from "../types";
 
 export function defineProvider(name: string, country: Country, website: string, targets: ScrapeTarget[]): ProviderScraper {
-  return { name, country, website, scrape: () => scrapeTargets(targets, country) };
+  return { name, country, website, scrape: () => scrapeTargets(targets, country, name) };
 }
 
 const pre = "mobile_prepaid" as const;

@@ -1,4 +1,5 @@
-import { renderPageText, scrapeTargets } from "../extract";
+import { renderPageText } from "../browser";
+import { scrapeTargets } from "../extract";
 import type { ScrapedPlan } from "../../../src/types/database";
 import type { ProviderScraper, ScrapeResult } from "../types";
 import { t } from "./define";
@@ -65,6 +66,7 @@ export const starhub: ProviderScraper = {
           t.bb("https://www.starhub.com/personal/broadband.html"),
         ],
         "SG",
+        "StarHub",
       ),
     ]);
     const plans = [
