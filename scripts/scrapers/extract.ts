@@ -166,18 +166,35 @@ export function parsePlansFromText(text: string): RawPlan[] {
   return out;
 }
 
-async function viaPlaywright(url: string): Promise<RawPlan[]> {
+/**
+ * Render a page in headless Chromium with a realistic browser profile and wait for client-side
+ * apps (e.g. OutSystems) to fill in the content. Returns the visible text, newlines preserved.
+ */
+export async function renderPageText(url: string, minChars = 800): Promise<string> {
   const { chromium } = await import("playwright");
-  const browser = await chromium.launch();
+  const browser = await chromium.launch({ args: ["--disable-blink-features=AutomationControlled"] });
   try {
-    const page = await browser.newPage();
-    await page.goto(url, { waitUntil: "domcontentloaded", timeout: 45_000 });
+    const context = await browser.newContext({
+      userAgent:
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
+      locale: "en-SG",
+      viewport: { width: 1366, height: 900 },
+    });
+    await context.addInitScript(() => Object.defineProperty(navigator, "webdriver", { get: () => false }));
+    const page = await context.newPage();
+    await page.goto(url, { waitUntil: "load", timeout: 45_000 }).catch(() => undefined);
+    await page
+      .waitForFunction((n) => document.body.innerText.length > n, minChars, { timeout: 30_000 })
+      .catch(() => undefined);
     await page.waitForTimeout(3000);
-    const text = await page.evaluate(() => document.body.innerText);
-    return parsePlansFromText(text);
+    return await page.evaluate(() => document.body.innerText);
   } finally {
     await browser.close();
   }
+}
+
+async function viaPlaywright(url: string): Promise<RawPlan[]> {
+  return parsePlansFromText(await renderPageText(url));
 }
 
 /** Scrape one page: Firecrawl first, Playwright heuristic fallback. */
