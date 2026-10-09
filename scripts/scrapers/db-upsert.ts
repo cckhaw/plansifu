@@ -3,6 +3,18 @@ import type { Country, ScrapedPlan } from "../../src/types/database";
 
 let client: SupabaseClient | null = null;
 
+/** Supabase errors are plain objects (PostgrestError), not Error instances. */
+export function errorMessage(err: unknown): string {
+  if (err instanceof Error) return err.message;
+  if (err && typeof err === "object") {
+    const e = err as { message?: string; code?: string; details?: string; hint?: string };
+    const parts = [e.message, e.code && `code=${e.code}`, e.details, e.hint].filter(Boolean);
+    if (parts.length) return parts.join(" | ");
+    return JSON.stringify(err);
+  }
+  return String(err);
+}
+
 export function getAdminClient(): SupabaseClient {
   if (client) return client;
   const url = process.env.SUPABASE_URL;
@@ -75,18 +87,18 @@ export async function logCrawl(
   providerId: string | null,
   status: "success" | "error",
   itemsScraped: number,
-  errorMessage?: string,
+  message?: string,
 ): Promise<void> {
   try {
     const { error } = await getAdminClient().from("crawling_logs").insert({
       provider_id: providerId,
       status,
       items_scraped: itemsScraped,
-      error_message: errorMessage ?? null,
+      error_message: message ?? null,
     });
     if (error) throw error;
   } catch (err) {
     // Logging must never mask the real result or abort other providers.
-    console.error(`[log] failed to write crawling_logs: ${err instanceof Error ? err.message : String(err)}`);
+    console.error(`[log] failed to write crawling_logs: ${errorMessage(err)}`);
   }
 }

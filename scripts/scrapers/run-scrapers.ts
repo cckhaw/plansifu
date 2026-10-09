@@ -1,4 +1,4 @@
-import { logCrawl, resolveProviderId, upsertPlans } from "./db-upsert";
+import { errorMessage, logCrawl, resolveProviderId, upsertPlans } from "./db-upsert";
 import { celcomdigi } from "./providers/celcomdigi";
 import { m1 } from "./providers/m1";
 import { maxis } from "./providers/maxis";
@@ -18,7 +18,7 @@ async function runOne(s: ProviderScraper): Promise<boolean> {
     console.log(`✔ ${s.name} (${s.country}): ${count} plans`);
     return true;
   } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
+    const message = errorMessage(err);
     console.error(`✘ ${s.name} (${s.country}): ${message}`);
     await logCrawl(providerId, "error", 0, message);
     return false;
