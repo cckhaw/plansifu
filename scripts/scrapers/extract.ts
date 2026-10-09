@@ -46,14 +46,20 @@ function num(v: unknown): number | null {
 /** Devices / wearables sold alongside a line - not plans. */
 const NOT_A_PLAN = /\b(watch|ipad|tablet|smartphone|iphone|galaxy (?:s|z|a)\d)/i;
 /** Broadband items that show up on mobile pages (cross-sell banners, bundles). */
-const BROADBAND_WORDS = /\b(broadband|fib(?:re|er)|gbps|router|wi-?fi|home)\b/i;
+const BROADBAND_WORDS = /\b(broadband|fib(?:re|er)|router|wi-?fi|home)\b|gbps/i;
 /** Marketing copy / calls to action picked up as a "title". */
 const MARKETING_TITLE = /^(buy|get|sign ?up|order|apply|learn|shop|rollover|free|join|switch)\b|\b(for just|free \d+ months?|buy online)\b|[$]\s?\d/i;
 
+/** Section headings rather than a specific plan, e.g. "Postpaid Plans", "SIM Only Plans", "eSIM". */
+const GENERIC_TITLE = /^(esim|sim)$|\bplans$/i;
+
 export function isPlausibleTitle(title: string, category: PlanCategory): boolean {
   if (title.length < 3 || title.length > 70) return false;
-  if (NOT_A_PLAN.test(title) || MARKETING_TITLE.test(title)) return false;
+  if (NOT_A_PLAN.test(title) || MARKETING_TITLE.test(title) || GENERIC_TITLE.test(title)) return false;
   if (category !== "broadband" && BROADBAND_WORDS.test(title)) return false;
+  // Upsell tiles for the other billing type (e.g. a postpaid plan advertised on a prepaid page).
+  if (category === "mobile_prepaid" && /\bpostpaid\b/i.test(title)) return false;
+  if (category === "mobile_postpaid" && (/\bprepaid\b/i.test(title) || /^hi!/i.test(title))) return false;
   return true;
 }
 
@@ -127,7 +133,8 @@ async function firecrawlOnce(url: string): Promise<RawPlan[]> {
         schema: PLAN_SCHEMA,
         prompt:
           "Extract every consumer mobile (postpaid, prepaid, SIM-only, eSIM) or home broadband plan listed on this page. " +
-          "monthly_price is the recurring price per month, or the pack price for prepaid packs. " +
+          "monthly_price is the price exactly as displayed for that plan or pack (monthly fee for monthly plans; the full pack price for daily/weekly/yearly prepaid packs). " +
+          "Never divide, convert or average prices, and do not use promo/discounted-only prices unless it is the only price shown. " +
           "Skip: business/enterprise plans, devices, smartwatch / wearable / tablet / device bundles, add-ons, roaming-only passes, " +
           "and any plan shown only inside a comparison table against OTHER telcos (competitors). " +
           "Set category for each plan.",
@@ -187,7 +194,7 @@ export async function renderPageText(url: string, minChars = 800): Promise<strin
       .waitForFunction((n) => document.body.innerText.length > n, minChars, { timeout: 30_000 })
       .catch(() => undefined);
     await page.waitForTimeout(3000);
-    return await page.evaluate(() => document.body.innerText);
+    return (await page.evaluate(() => document.body.innerText)).replace(/\u00a0/g, " ");
   } finally {
     await browser.close();
   }
