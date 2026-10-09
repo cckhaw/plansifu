@@ -8,5 +8,7 @@ export const celcomdigi = defineProvider("CelcomDigi", "MY", "https://www.celcom
       "The page has Principle line / Supplementary line views of the same plans. Return only the principal-line plans and prices; supplementary-line (discounted) prices go in supplementary_line_price, never as separate plans.",
     ),
   ),
-  t.relay(t.bb("https://www.celcomdigi.com/home/fibre")),
+  // /home/fibre no longer exists (404); fibre and Home WiFi plans live under /fibre.
+  t.relay(t.bb("https://www.celcomdigi.com/fibre/home-fibre")),
+  t.relay(t.bb("https://www.celcomdigi.com/fibre/home-wifi")),
 ]);
