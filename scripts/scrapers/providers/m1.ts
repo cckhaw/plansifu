@@ -1,13 +1,7 @@
-import { scrapeTargets } from "../extract";
-import type { ProviderScraper, ScrapeTarget } from "../types";
+import { defineProvider, t } from "./define";
 
-const targets: ScrapeTarget[] = [
-  { url: "https://www.m1.com.sg/personal/mobile/postpaid-plans", category: "mobile_postpaid" },
-  { url: "https://www.m1.com.sg/personal/broadband", category: "broadband" },
-];
-
-export const m1: ProviderScraper = {
-  name: "M1",
-  country: "SG",
-  scrape: () => scrapeTargets(targets, "SG"),
-};
+export const m1 = defineProvider("M1", "SG", "https://www.m1.com.sg", [
+  t.post("https://www.m1.com.sg/personal/sim-plan"),
+  t.pre("https://www.m1.com.sg/mobile/prepaid-plans"),
+  t.bb("https://www.m1.com.sg/home-broadband"),
+]);

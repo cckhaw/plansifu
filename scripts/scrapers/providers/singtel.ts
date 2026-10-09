@@ -1,13 +1,7 @@
-import { scrapeTargets } from "../extract";
-import type { ProviderScraper, ScrapeTarget } from "../types";
+import { defineProvider, t } from "./define";
 
-const targets: ScrapeTarget[] = [
-  { url: "https://www.singtel.com/personal/products-services/mobile/mobile-plans", category: "mobile_postpaid" },
-  { url: "https://www.singtel.com/personal/products-services/broadband", category: "broadband" },
-];
-
-export const singtel: ProviderScraper = {
-  name: "Singtel",
-  country: "SG",
-  scrape: () => scrapeTargets(targets, "SG"),
-};
+export const singtel = defineProvider("Singtel", "SG", "https://www.singtel.com", [
+  t.post("https://www.singtel.com/personal/products-services/mobile/mobile-plans"),
+  t.post("https://www.singtel.com/personal/mobile/plans/sim-only"),
+  t.bb("https://www.singtel.com/personal/products-services/broadband"),
+]);

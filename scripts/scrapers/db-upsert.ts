@@ -26,7 +26,7 @@ export function getAdminClient(): SupabaseClient {
   return client;
 }
 
-export async function resolveProviderId(name: string, country: Country): Promise<string> {
+export async function resolveProviderId(name: string, country: Country, website?: string): Promise<string> {
   const db = getAdminClient();
   const { data, error } = await db
     .from("providers")
@@ -38,7 +38,7 @@ export async function resolveProviderId(name: string, country: Country): Promise
   if (data) return data.id as string;
   const { data: created, error: insertErr } = await db
     .from("providers")
-    .insert({ name, country })
+    .insert({ name, country, website_url: website ?? null })
     .select("id")
     .single();
   if (insertErr) throw insertErr;
