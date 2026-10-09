@@ -40,5 +40,6 @@ export interface RawPlan {
   category?: string | null;
   features?: string[] | null;
   promotion_badge?: string | null;
+  supplementary_line_price?: number | null;
   affiliate_url?: string | null;
 }

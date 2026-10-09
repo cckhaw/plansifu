@@ -28,6 +28,7 @@ const PLAN_SCHEMA = {
           contract_months: { type: "number", description: "0 if no contract" },
           features: { type: "array", items: { type: "string" }, description: "Perks, e.g. Free Router, Disney+" },
           promotion_badge: { type: "string", description: "Headline promotion / rebate / voucher" },
+          supplementary_line_price: { type: "number", description: "Price of an extra/supplementary line on this plan, if stated" },
         },
         required: ["title", "monthly_price"],
       },
@@ -38,6 +39,7 @@ const PLAN_SCHEMA = {
 
 const CATEGORIES = ["mobile_postpaid", "mobile_prepaid", "broadband"] as const;
 const CURRENCY: Record<Country, Currency> = { MY: "MYR", SG: "SGD" };
+const CURRENCY_SYMBOL: Record<Country, string> = { MY: "RM", SG: "S$" };
 
 function num(v: unknown): number | null {
   if (v === null || v === undefined || v === "") return null;
@@ -57,11 +59,14 @@ const JUNK_TITLE =
   /\?$|\b(add-?ons?|eligible|my account|promotions? valid|limited time offer|online exclusive|main difference|call rates?|streaming app|roam the world|power up)\b|^(sms|voice|to all)\b|\bvalue of$/i;
 
 /** Section headings rather than a specific plan, e.g. "Postpaid Plans", "SIM Only Plans", "eSIM". */
+/** Products that only exist as an extra line on someone else's account are not standalone plans. */
+const SUPPLEMENTARY_TITLE = /\b(supplementary|additional line|extra line|second line|sub-?line|dependent line)\b/i;
+
 const GENERIC_TITLE = /^(esim|sim)$|\bplans$/i;
 
 export function isPlausibleTitle(title: string, category: PlanCategory): boolean {
   if (title.length < 3 || title.length > 70) return false;
-  if (NOT_A_PLAN.test(title) || MARKETING_TITLE.test(title) || GENERIC_TITLE.test(title) || JUNK_TITLE.test(title)) return false;
+  if (NOT_A_PLAN.test(title) || MARKETING_TITLE.test(title) || GENERIC_TITLE.test(title) || JUNK_TITLE.test(title) || SUPPLEMENTARY_TITLE.test(title)) return false;
   if (category !== "broadband" && BROADBAND_WORDS.test(title)) return false;
   // Upsell tiles for the other billing type (e.g. a postpaid plan advertised on a prepaid page).
   if (category === "mobile_prepaid" && /\bpostpaid\b/i.test(title)) return false;
@@ -104,7 +109,10 @@ export function normalizePlans(
       talktime_mins: num(r.talktime_mins) === null ? null : Math.round(num(r.talktime_mins)!),
       sms_count: num(r.sms_count) === null ? null : Math.round(num(r.sms_count)!),
       contract_months: Math.max(0, Math.round(num(r.contract_months) ?? 0)),
-      features: Array.isArray(r.features) ? r.features.filter(Boolean).map((f) => f.trim()).slice(0, 8) : [],
+      features: [
+        ...(Array.isArray(r.features) ? r.features.filter(Boolean).map((f) => f.trim()).slice(0, 8) : []),
+        ...(num(r.supplementary_line_price) ? [`Extra line ${CURRENCY_SYMBOL[opts.country]}${num(r.supplementary_line_price)}/mth`] : []),
+      ],
       affiliate_url: r.affiliate_url || opts.fallbackUrl,
       promotion_badge: r.promotion_badge?.trim() || null,
     });
@@ -130,11 +138,11 @@ const isOutOfCredits = (err: unknown) => /insufficient credits|payment required|
 
 const isRateLimit = (err: unknown) => /rate limit|429/i.test(err instanceof Error ? err.message : String(err));
 
-async function viaFirecrawl(url: string): Promise<RawPlan[]> {
+async function viaFirecrawl(url: string, hint?: string): Promise<RawPlan[]> {
   for (let attempt = 0; ; attempt++) {
     await firecrawlSlot();
     try {
-      return await firecrawlOnce(url);
+      return await firecrawlOnce(url, hint);
     } catch (err) {
       if (isOutOfCredits(err)) {
         outOfCredits = true;
@@ -148,7 +156,7 @@ async function viaFirecrawl(url: string): Promise<RawPlan[]> {
   }
 }
 
-async function firecrawlOnce(url: string): Promise<RawPlan[]> {
+async function firecrawlOnce(url: string, hint?: string): Promise<RawPlan[]> {
   if (outOfCredits) throw new Error("Firecrawl credits exhausted - top up your plan at firecrawl.dev");
   const apiKey = process.env.FIRECRAWL_API_KEY;
   if (!apiKey) throw new Error("FIRECRAWL_API_KEY not set");
@@ -163,7 +171,9 @@ async function firecrawlOnce(url: string): Promise<RawPlan[]> {
           "monthly_price is the recurring price per month, or the pack price for prepaid packs. " +
           "Skip: business/enterprise plans, devices, smartwatch / wearable / tablet / device bundles, add-ons, roaming-only passes, " +
           "and any plan shown only inside a comparison table against OTHER telcos (competitors). " +
-          "Set category for each plan.",
+          "Postpaid pages often show PRINCIPAL LINE and SUPPLEMENTARY LINE views: return only principal-line standalone plans, and put a stated supplementary-line price in supplementary_line_price instead of listing it as a plan. " +
+          "Set category for each plan." +
+          (hint ? ` Note about this page: ${hint}` : ""),
       },
     ],
     waitFor: 4000,
@@ -202,7 +212,7 @@ async function viaBrowserAndLlm(target: ScrapeTarget, country: Country, provider
 export async function scrapeTarget(target: ScrapeTarget, country: Country, provider = "the provider"): Promise<ScrapedPlan[]> {
   const opts = { country, category: target.category, fallbackUrl: target.url, mixed: target.mixed };
   const engine = target.engine === "firecrawl" || process.env.SCRAPE_ENGINE === "firecrawl" ? "firecrawl" : "browser+llm";
-  const raw = engine === "firecrawl" ? await viaFirecrawl(target.url) : await viaBrowserAndLlm(target, country, provider);
+  const raw = engine === "firecrawl" ? await viaFirecrawl(target.url, target.hint) : await viaBrowserAndLlm(target, country, provider);
   const plans = normalizePlans(raw, opts);
   console.log(`[extract] ${engine} ${plans.length}/${raw.length} plans  ${target.url}`);
   return plans;

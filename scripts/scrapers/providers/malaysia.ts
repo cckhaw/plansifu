@@ -7,7 +7,10 @@ export const malaysiaProviders = [
     t.pre("https://unifi.com.my/mobile/prepaid"),
   ]),
   defineProvider("Yes", "MY", "https://www.yes.my", [
-    t.post("https://www.yes.my/yes-postpaid-plans/"),
+    t.post(
+      "https://www.yes.my/yes-postpaid-plans/",
+      "Skip any card that is a Supplementary Line product (extra line for an existing account); return only standalone plans. If a plan is shown both with and without a 12-month contract, return both as separate entries and set contract_months.",
+    ),
     t.pre("https://www.yes.my/yes-prepaid-plans/"),
     t.bb("https://www.yes.my/yes-5g-broadband/"),
     t.bb("https://www.yes.my/yes-fibre/"),
@@ -24,7 +27,10 @@ export const malaysiaProviders = [
   defineProvider("CMLink", "MY", "https://my.cmlink.com/en/", [t.pre("https://my.cmlink.com/en/plans/")]),
   defineProvider("Vibe", "MY", "https://www.vibemobile.com.my", [t.pre("https://www.vibemobile.com.my/prepaid/prepaid-plans/")]),
   defineProvider("redONE", "MY", "https://www.redonemobile.com.my/en/", [
-    t.post("https://www.redonemobile.com.my/en/hot-selling-postpaid-plans/"),
+    t.post(
+      "https://www.redonemobile.com.my/en/hot-selling-postpaid-plans/",
+      "The page lists plans under several filters, including one called Supplementary. Return only standalone principal-line plans; skip any plan that exists only as a supplementary / additional line (a note that a supplementary line can be added to a plan does not make it a supplementary plan). postpaidFAMILY is a multi-line family plan: keep it, with its total price.",
+    ),
     t.pre("https://www.redonemobile.com.my/en/theoneprepaid/"),
     t.bb("https://www.redonemobile.com.my/en/redonehome"),
   ]),
