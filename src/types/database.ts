@@ -31,6 +31,29 @@ export interface Plan {
   updated_at: string;
 }
 
+export type CrawlEngine = "browser+llm" | "firecrawl" | "custom parser";
+
+export interface CrawlPageReport {
+  url: string;
+  engine: CrawlEngine;
+  /** Plans the extractor returned before our filters. */
+  raw_count: number;
+  /** Plans kept after filtering. */
+  kept_count: number;
+  dropped: { title: string; reason: string }[];
+  /** Characters of page text sent to the model (browser+llm only). */
+  text_chars?: number;
+  error?: string;
+  /** True for pages known to list no plans (an empty result is not a warning). */
+  expect_empty?: boolean;
+  ms?: number;
+}
+
+export interface CrawlWarning {
+  level: "error" | "warn" | "info";
+  message: string;
+}
+
 export interface CrawlingLog {
   id: string;
   provider_id: string | null;
@@ -38,6 +61,32 @@ export interface CrawlingLog {
   items_scraped: number;
   error_message: string | null;
   executed_at: string;
+  run_id?: string | null;
+  engine?: string | null;
+  pages?: CrawlPageReport[];
+  warnings?: CrawlWarning[];
+  previous_count?: number | null;
+  plans_added?: number | null;
+  plans_removed?: number | null;
+  plans_changed?: number | null;
+  duration_ms?: number | null;
+}
+
+export interface CrawlRun {
+  id: string;
+  started_at: string;
+  finished_at: string | null;
+  trigger: string | null;
+  scope: string | null;
+  git_sha: string | null;
+  run_url: string | null;
+  providers_total: number;
+  providers_ok: number;
+  providers_failed: number;
+  warnings_count: number;
+  llm_calls: number | null;
+  llm_cost_usd: number | null;
+  llm_summary: string | null;
 }
 
 export interface AffiliateClick {

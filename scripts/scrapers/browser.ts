@@ -97,7 +97,11 @@ export async function renderPageText(url: string, minChars = 800, mode: TextMode
       }
       const extra = (await read()).split("\n").filter((l) => l.trim() && !seen.has(l));
       extra.forEach((l) => seen.add(l));
-      if (extra.length) text += "\n" + extra.join("\n");
+      if (extra.length) {
+        // Label what the tab revealed so the model knows e.g. "SUPPLEMENTARY LINE" plans from "PRINCIPAL LINE" ones.
+        const label = ((await tab.innerText({ timeout: 1000 }).catch(() => "")) || "").replace(/\s+/g, " ").trim().slice(0, 60);
+        text += `\n[Content that appears when the tab "${label}" is selected]\n` + extra.join("\n");
+      }
     }
     return text;
   } finally {

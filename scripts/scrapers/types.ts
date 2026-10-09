@@ -1,4 +1,4 @@
-import type { Country, PlanCategory, ScrapedPlan } from "../../src/types/database";
+import type { Country, CrawlPageReport, PlanCategory, ScrapedPlan } from "../../src/types/database";
 
 export interface ScrapeTarget {
   url: string;
@@ -13,12 +13,16 @@ export interface ScrapeTarget {
   engine?: "firecrawl";
   /** Extra guidance for the model about this specific page. */
   hint?: string;
+  /** The page is known to list no plans; an empty result should not raise a warning. */
+  expectEmpty?: boolean;
 }
 
 /** `complete` is false when any page failed: keep existing plans active rather than hiding them. */
 export interface ScrapeResult {
   plans: ScrapedPlan[];
   complete: boolean;
+  /** What happened on each page, for the crawl report. */
+  pages: CrawlPageReport[];
 }
 
 export interface ProviderScraper {
@@ -40,5 +44,6 @@ export interface RawPlan {
   category?: string | null;
   features?: string[] | null;
   promotion_badge?: string | null;
+  supplementary_line_price?: number | null;
   affiliate_url?: string | null;
 }

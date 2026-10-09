@@ -1,5 +1,5 @@
 import Firecrawl from "@mendable/firecrawl-js";
-import type { Country, Currency, PlanCategory, ScrapedPlan } from "../../src/types/database";
+import type { Country, CrawlEngine, CrawlPageReport, Currency, PlanCategory, ScrapedPlan } from "../../src/types/database";
 import { cleanPageText, renderPageText } from "./browser";
 import { extractPlansWithLlm } from "./llm-extract";
 import type { RawPlan, ScrapeResult, ScrapeTarget } from "./types";
@@ -28,6 +28,7 @@ const PLAN_SCHEMA = {
           contract_months: { type: "number", description: "0 if no contract" },
           features: { type: "array", items: { type: "string" }, description: "Perks, e.g. Free Router, Disney+" },
           promotion_badge: { type: "string", description: "Headline promotion / rebate / voucher" },
+          supplementary_line_price: { type: "number", description: "Price of an extra/supplementary line on this plan, if stated" },
         },
         required: ["title", "monthly_price"],
       },
@@ -38,6 +39,7 @@ const PLAN_SCHEMA = {
 
 const CATEGORIES = ["mobile_postpaid", "mobile_prepaid", "broadband"] as const;
 const CURRENCY: Record<Country, Currency> = { MY: "MYR", SG: "SGD" };
+const CURRENCY_SYMBOL: Record<Country, string> = { MY: "RM", SG: "S$" };
 
 function num(v: unknown): number | null {
   if (v === null || v === undefined || v === "") return null;
@@ -57,11 +59,14 @@ const JUNK_TITLE =
   /\?$|\b(add-?ons?|eligible|my account|promotions? valid|limited time offer|online exclusive|main difference|call rates?|streaming app|roam the world|power up)\b|^(sms|voice|to all)\b|\bvalue of$/i;
 
 /** Section headings rather than a specific plan, e.g. "Postpaid Plans", "SIM Only Plans", "eSIM". */
+/** Products that only exist as an extra line on someone else's account are not standalone plans. */
+const SUPPLEMENTARY_TITLE = /\b(supplementary|additional line|extra line|second line|sub-?line|dependent line)\b/i;
+
 const GENERIC_TITLE = /^(esim|sim)$|\bplans$/i;
 
 export function isPlausibleTitle(title: string, category: PlanCategory): boolean {
   if (title.length < 3 || title.length > 70) return false;
-  if (NOT_A_PLAN.test(title) || MARKETING_TITLE.test(title) || GENERIC_TITLE.test(title) || JUNK_TITLE.test(title)) return false;
+  if (NOT_A_PLAN.test(title) || MARKETING_TITLE.test(title) || GENERIC_TITLE.test(title) || JUNK_TITLE.test(title) || SUPPLEMENTARY_TITLE.test(title)) return false;
   if (category !== "broadband" && BROADBAND_WORDS.test(title)) return false;
   // Upsell tiles for the other billing type (e.g. a postpaid plan advertised on a prepaid page).
   if (category === "mobile_prepaid" && /\bpostpaid\b/i.test(title)) return false;
@@ -73,8 +78,9 @@ export function isPlausibleTitle(title: string, category: PlanCategory): boolean
 export function normalizePlans(
   raw: RawPlan[],
   opts: { country: Country; category: PlanCategory; fallbackUrl: string; mixed?: boolean },
-): ScrapedPlan[] {
+): { plans: ScrapedPlan[]; dropped: { title: string; reason: string }[] } {
   const seen = new Map<string, ScrapedPlan>();
+  const dropped: { title: string; reason: string }[] = [];
   for (const r of raw) {
     // Models sometimes copy the price into the name ("hi! by Singtel $15/30 days Best Value"): strip it.
     const title = r.title
@@ -82,16 +88,26 @@ export function normalizePlans(
       .replace(/\s+/g, " ")
       .replace(/^[\s\-–:|,]+|[\s\-–:|,]+$/g, "");
     const price = num(r.monthly_price);
-    if (!title || price === null || price <= 0 || price > 2000) continue;
+    if (!title || price === null || price <= 0 || price > 2000) {
+      dropped.push({ title: title || "(no title)", reason: price === null ? "no price" : `price out of range (${price})` });
+      continue;
+    }
     const category =
       opts.mixed && (CATEGORIES as readonly string[]).includes(r.category ?? "") ? (r.category as PlanCategory) : opts.category;
     if (!isPlausibleTitle(title, category)) {
+      dropped.push({ title, reason: "title filter" });
       if (process.env.SCRAPE_DEBUG) console.log(`[debug] dropped by title filter (${category}): "${title}"`);
       continue;
     }
     // Real consumer plans: nothing under ~2 (call/SMS rates, add-on lines); mobile plans above ~600 are phones.
     if (price < 2 || (category !== "broadband" && price > 600 && !/year|12 ?months?/i.test(title))) {
+      dropped.push({ title, reason: `price filter (${price})` });
       if (process.env.SCRAPE_DEBUG) console.log(`[debug] dropped by price filter: "${title}" ${price}`);
+      continue;
+    }
+    // First occurrence wins: pages list the regular/principal version before promo or variant copies.
+    if (seen.has(title.toLowerCase())) {
+      dropped.push({ title, reason: "duplicate title" });
       continue;
     }
     seen.set(title.toLowerCase(), {
@@ -104,12 +120,15 @@ export function normalizePlans(
       talktime_mins: num(r.talktime_mins) === null ? null : Math.round(num(r.talktime_mins)!),
       sms_count: num(r.sms_count) === null ? null : Math.round(num(r.sms_count)!),
       contract_months: Math.max(0, Math.round(num(r.contract_months) ?? 0)),
-      features: Array.isArray(r.features) ? r.features.filter(Boolean).map((f) => f.trim()).slice(0, 8) : [],
+      features: [
+        ...(Array.isArray(r.features) ? r.features.filter(Boolean).map((f) => f.trim()).slice(0, 8) : []),
+        ...(num(r.supplementary_line_price) ? [`Extra line ${CURRENCY_SYMBOL[opts.country]}${num(r.supplementary_line_price)}/mth`] : []),
+      ],
       affiliate_url: r.affiliate_url || opts.fallbackUrl,
       promotion_badge: r.promotion_badge?.trim() || null,
     });
   }
-  return [...seen.values()];
+  return { plans: [...seen.values()], dropped };
 }
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -130,11 +149,11 @@ const isOutOfCredits = (err: unknown) => /insufficient credits|payment required|
 
 const isRateLimit = (err: unknown) => /rate limit|429/i.test(err instanceof Error ? err.message : String(err));
 
-async function viaFirecrawl(url: string): Promise<RawPlan[]> {
+async function viaFirecrawl(url: string, hint?: string): Promise<RawPlan[]> {
   for (let attempt = 0; ; attempt++) {
     await firecrawlSlot();
     try {
-      return await firecrawlOnce(url);
+      return await firecrawlOnce(url, hint);
     } catch (err) {
       if (isOutOfCredits(err)) {
         outOfCredits = true;
@@ -148,7 +167,7 @@ async function viaFirecrawl(url: string): Promise<RawPlan[]> {
   }
 }
 
-async function firecrawlOnce(url: string): Promise<RawPlan[]> {
+async function firecrawlOnce(url: string, hint?: string): Promise<RawPlan[]> {
   if (outOfCredits) throw new Error("Firecrawl credits exhausted - top up your plan at firecrawl.dev");
   const apiKey = process.env.FIRECRAWL_API_KEY;
   if (!apiKey) throw new Error("FIRECRAWL_API_KEY not set");
@@ -163,7 +182,9 @@ async function firecrawlOnce(url: string): Promise<RawPlan[]> {
           "monthly_price is the recurring price per month, or the pack price for prepaid packs. " +
           "Skip: business/enterprise plans, devices, smartwatch / wearable / tablet / device bundles, add-ons, roaming-only passes, " +
           "and any plan shown only inside a comparison table against OTHER telcos (competitors). " +
-          "Set category for each plan.",
+          "Postpaid pages often show PRINCIPAL LINE and SUPPLEMENTARY LINE views: return only principal-line standalone plans, and put a stated supplementary-line price in supplementary_line_price instead of listing it as a plan. " +
+          "Set category for each plan." +
+          (hint ? ` Note about this page: ${hint}` : ""),
       },
     ],
     waitFor: 4000,
@@ -180,7 +201,11 @@ async function firecrawlOnce(url: string): Promise<RawPlan[]> {
  * Default engine: render the page in our own headless browser (free) and have Claude Haiku turn
  * the visible text into structured plans. `SCRAPE_ENGINE=firecrawl` selects the Firecrawl engine.
  */
-async function viaBrowserAndLlm(target: ScrapeTarget, country: Country, provider: string): Promise<RawPlan[]> {
+async function viaBrowserAndLlm(
+  target: ScrapeTarget,
+  country: Country,
+  provider: string,
+): Promise<{ raw: RawPlan[]; textChars: number }> {
   let text = "";
   for (let attempt = 0; attempt < 2 && text.length < 300; attempt++) {
     text = cleanPageText(await renderPageText(target.url));
@@ -191,38 +216,64 @@ async function viaBrowserAndLlm(target: ScrapeTarget, country: Country, provider
   if (process.env.SCRAPE_DEBUG && raw.length === 0) {
     console.log(`[debug] 0 plans from ${text.length} chars at ${target.url}; text starts: ${text.slice(0, 700).replace(/\n/g, " | ")}`);
   }
-  return raw;
+  return { raw, textChars: text.length };
 }
 
 /**
  * Scrape one page. There is deliberately no fallback to a generic text parser: it produced junk
- * rows (page furniture, call rates) that replaced good data. A failed page throws, and the
- * provider keeps its existing plans.
+ * rows (page furniture, call rates) that replaced good data. A failed page is reported with its
+ * error, and the provider keeps its existing plans.
  */
-export async function scrapeTarget(target: ScrapeTarget, country: Country, provider = "the provider"): Promise<ScrapedPlan[]> {
+export async function scrapeTarget(
+  target: ScrapeTarget,
+  country: Country,
+  provider = "the provider",
+): Promise<{ plans: ScrapedPlan[]; page: CrawlPageReport }> {
   const opts = { country, category: target.category, fallbackUrl: target.url, mixed: target.mixed };
-  const engine = target.engine === "firecrawl" || process.env.SCRAPE_ENGINE === "firecrawl" ? "firecrawl" : "browser+llm";
-  const raw = engine === "firecrawl" ? await viaFirecrawl(target.url) : await viaBrowserAndLlm(target, country, provider);
-  const plans = normalizePlans(raw, opts);
-  console.log(`[extract] ${engine} ${plans.length}/${raw.length} plans  ${target.url}`);
-  return plans;
+  const engine: CrawlEngine =
+    target.engine === "firecrawl" || process.env.SCRAPE_ENGINE === "firecrawl" ? "firecrawl" : "browser+llm";
+  const started = Date.now();
+  const page: CrawlPageReport = {
+    url: target.url,
+    engine,
+    raw_count: 0,
+    kept_count: 0,
+    dropped: [],
+    expect_empty: target.expectEmpty || undefined,
+  };
+  try {
+    let raw: RawPlan[];
+    if (engine === "firecrawl") {
+      raw = await viaFirecrawl(target.url, target.hint);
+    } else {
+      const r = await viaBrowserAndLlm(target, country, provider);
+      raw = r.raw;
+      page.text_chars = r.textChars;
+    }
+    const { plans, dropped } = normalizePlans(raw, opts);
+    page.raw_count = raw.length;
+    page.kept_count = plans.length;
+    page.dropped = dropped;
+    console.log(`[extract] ${engine} ${plans.length}/${raw.length} plans  ${target.url}`);
+    return { plans, page: { ...page, ms: Date.now() - started } };
+  } catch (err) {
+    const message = (err as Error).message;
+    console.warn(`[extract] failed ${target.url}: ${message}`);
+    return { plans: [], page: { ...page, error: message, ms: Date.now() - started } };
+  }
 }
 
 export async function scrapeTargets(targets: ScrapeTarget[], country: Country, provider?: string): Promise<ScrapeResult> {
   const results: ScrapedPlan[] = [];
-  const errors: string[] = [];
+  const pages: CrawlPageReport[] = [];
   for (const t of targets) {
-    try {
-      results.push(...(await scrapeTarget(t, country, provider)));
-    } catch (err) {
-      errors.push(`${t.url}: ${(err as Error).message}`);
-      console.warn(`[extract] failed ${t.url}: ${(err as Error).message}`);
-    }
+    const r = await scrapeTarget(t, country, provider);
+    results.push(...r.plans);
+    pages.push(r.page);
   }
-  // Every page failed: nothing to save (and nothing should be hidden).
-  if (!results.length && errors.length) throw new Error(errors.join(" | "));
   // The same plan can appear on several pages of one site; keep the first.
   const unique = new Map<string, ScrapedPlan>();
   for (const p of results) if (!unique.has(p.title.toLowerCase())) unique.set(p.title.toLowerCase(), p);
-  return { plans: [...unique.values()], complete: errors.length === 0 };
+  // A failed page makes the scrape incomplete, so missing plans are kept active rather than hidden.
+  return { plans: [...unique.values()], complete: pages.every((p) => !p.error), pages };
 }

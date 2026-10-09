@@ -1,6 +1,6 @@
 import { renderPageText } from "../browser";
 import { scrapeTargets } from "../extract";
-import type { ScrapedPlan } from "../../../src/types/database";
+import type { CrawlPageReport, ScrapedPlan } from "../../../src/types/database";
 import type { ProviderScraper, ScrapeResult } from "../types";
 import { t } from "./define";
 
@@ -58,27 +58,30 @@ export const starhub: ProviderScraper = {
   country: "SG",
   website: "https://www.starhub.com",
   async scrape(): Promise<ScrapeResult> {
-    const [postpaid, rest] = await Promise.allSettled([
-      renderPageText(POSTPAID_URL, 800, "inner").then(parseStarhubPostpaid),
-      scrapeTargets(
-        [
-          t.pre("https://www.starhub.com/personal/mobile/starhub-prepaid.html"),
-          t.bb("https://www.starhub.com/personal/broadband.html"),
-        ],
-        "SG",
-        "StarHub",
-      ),
-    ]);
-    const plans = [
-      ...(postpaid.status === "fulfilled" ? postpaid.value : []),
-      ...(rest.status === "fulfilled" ? rest.value.plans : []),
-    ];
-    const complete =
-      postpaid.status === "fulfilled" && postpaid.value.length > 0 && rest.status === "fulfilled" && rest.value.complete;
-    if (postpaid.status === "rejected") console.warn(`[starhub] postpaid page failed: ${postpaid.reason}`);
-    if (rest.status === "rejected") console.warn(`[starhub] prepaid/broadband failed: ${rest.reason}`);
-    if (postpaid.status === "fulfilled" && postpaid.value.length === 0) console.warn("[starhub] postpaid page parsed 0 plans");
-    if (!plans.length) throw new Error("StarHub: no plans extracted");
-    return { plans, complete };
+    const started = Date.now();
+    const pages: CrawlPageReport[] = [];
+    let postpaid: ScrapedPlan[] = [];
+    const postpaidPage: CrawlPageReport = { url: POSTPAID_URL, engine: "custom parser", raw_count: 0, kept_count: 0, dropped: [] };
+    try {
+      postpaid = parseStarhubPostpaid(await renderPageText(POSTPAID_URL, 800, "inner"));
+      postpaidPage.raw_count = postpaidPage.kept_count = postpaid.length;
+      if (postpaid.length === 0) console.warn("[starhub] postpaid page parsed 0 plans");
+    } catch (err) {
+      postpaidPage.error = (err as Error).message;
+      console.warn(`[starhub] postpaid page failed: ${postpaidPage.error}`);
+    }
+    postpaidPage.ms = Date.now() - started;
+    pages.push(postpaidPage);
+
+    const rest = await scrapeTargets(
+      [
+        t.pre("https://www.starhub.com/personal/mobile/starhub-prepaid.html"),
+        t.bb("https://www.starhub.com/personal/broadband.html"),
+      ],
+      "SG",
+      "StarHub",
+    );
+    pages.push(...rest.pages);
+    return { plans: [...postpaid, ...rest.plans], complete: !postpaidPage.error && postpaid.length > 0 && rest.complete, pages };
   },
 };

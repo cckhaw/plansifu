@@ -20,6 +20,10 @@ const PlanSchema = z.object({
   contract_months: z.number().describe("Contract length in months; 0 if none"),
   features: z.array(z.string()).describe("Up to 6 short perks, e.g. 'Free router', '5G', 'Disney+'"),
   promotion_badge: z.string().nullable().describe("Headline promotion/voucher/rebate, if any"),
+  supplementary_line_price: z
+    .number()
+    .nullable()
+    .describe("Monthly price of an extra/supplementary line added to this postpaid plan, if the page states it; else null"),
 });
 const ResultSchema = z.object({ plans: z.array(PlanSchema) });
 
@@ -31,6 +35,7 @@ Return every distinct consumer plan on the page: mobile postpaid, mobile prepaid
 Rules:
 - monthly_price: the recurring monthly fee for monthly plans. For prepaid packs (daily, weekly, yearly, top-up) use the full pack price as displayed. Never divide, convert or average prices. If a regular price and a limited-time promo price are both shown, use the regular price and describe the promo in promotion_badge.
 - Skip: business/enterprise plans, phones and other devices, smartwatches/wearables, device bundles, add-ons and extra data packs, roaming- or IDD-only products, call/SMS rate tables, anything shown only in a comparison against OTHER telcos, and navigation, FAQ or legal text.
+- Postpaid pages often show a PRINCIPAL LINE view and a SUPPLEMENTARY (additional / extra / second line) view. Return only principal-line, standalone plans with their principal-line price. Never return plans or products that exist only for supplementary/additional lines (including plans a page labels as supplementary-line plans, or that appear under a supplementary tab), nor family/group add-ons priced per extra line. If the page states what a supplementary line costs for a plan, put that in supplementary_line_price.
 - One entry per plan. If the same plan appears twice, return it once.
 - category: mobile_prepaid only if the page calls it prepaid / tourist SIM / top-up / pay-as-you-go / daily-weekly pass. Monthly-billed SIM-only or phone plans are mobile_postpaid. Home fibre / wireless internet is broadband.
 - Use null for any figure the page does not state; do not guess.`;
@@ -43,6 +48,13 @@ function track(r: { usage: { input_tokens: number; output_tokens: number } }) {
   usage.calls++;
   usage.inputTokens += r.usage.input_tokens;
   usage.outputTokens += r.usage.output_tokens;
+}
+
+export function llmUsage(): { calls: number; inputTokens: number; outputTokens: number; costUsd: number } {
+  return {
+    ...usage,
+    costUsd: (usage.inputTokens * PRICE_IN + usage.outputTokens * PRICE_OUT) / 1_000_000,
+  };
 }
 
 export function llmUsageSummary(): string {
