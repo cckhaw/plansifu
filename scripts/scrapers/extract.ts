@@ -212,6 +212,9 @@ async function viaBrowserAndLlm(
   }
   // Blocked, empty or still-loading pages must fail loudly instead of "succeeding" with nothing.
   if (text.length < 300) throw new Error(`page rendered only ${text.length} characters (blocked or not loaded)`);
+  if (/^\s*403 ERROR|Request blocked|Access Denied/i.test(text.slice(0, 400))) {
+    throw new Error("blocked by the site (403 bot filter on the CI network)");
+  }
   const raw = await extractPlansWithLlm({ provider, country, url: target.url, category: target.category, pageText: text, hint: target.hint });
   if (process.env.SCRAPE_DEBUG && raw.length === 0) {
     console.log(`[debug] 0 plans from ${text.length} chars at ${target.url}; text starts: ${text.slice(0, 700).replace(/\n/g, " | ")}`);
@@ -230,37 +233,65 @@ export async function scrapeTarget(
   provider = "the provider",
 ): Promise<{ plans: ScrapedPlan[]; page: CrawlPageReport }> {
   const opts = { country, category: target.category, fallbackUrl: target.url, mixed: target.mixed };
-  const engine: CrawlEngine =
-    target.engine === "firecrawl" || process.env.SCRAPE_ENGINE === "firecrawl" ? "firecrawl" : "browser+llm";
   const started = Date.now();
   const page: CrawlPageReport = {
     url: target.url,
-    engine,
+    engine: "browser+llm",
     raw_count: 0,
     kept_count: 0,
     dropped: [],
     expect_empty: target.expectEmpty || undefined,
   };
-  try {
-    let raw: RawPlan[];
-    if (engine === "firecrawl") {
-      raw = await viaFirecrawl(target.url, target.hint);
-    } else {
-      const r = await viaBrowserAndLlm(target, country, provider);
-      raw = r.raw;
-      page.text_chars = r.textChars;
+  // Playwright + Haiku is the primary method. Firecrawl is only a backup, tried when the primary
+  // errors or finds nothing on a page that should have plans. SCRAPE_ENGINE=firecrawl flips the order.
+  const firecrawlFirst = process.env.SCRAPE_ENGINE === "firecrawl";
+  const attempts: CrawlEngine[] = firecrawlFirst ? ["firecrawl", "browser+llm"] : ["browser+llm", "firecrawl"];
+  const problems: string[] = [];
+  let best: { engine: CrawlEngine; raw: RawPlan[]; textChars?: number } | undefined;
+  for (const engine of attempts) {
+    if (engine === "firecrawl" && (!process.env.FIRECRAWL_API_KEY || outOfCredits)) {
+      if (best) break;
+      problems.push(outOfCredits ? "Firecrawl backup unavailable (credits exhausted)" : "Firecrawl backup not configured");
+      continue;
     }
-    const { plans, dropped } = normalizePlans(raw, opts);
-    page.raw_count = raw.length;
-    page.kept_count = plans.length;
-    page.dropped = dropped;
-    console.log(`[extract] ${engine} ${plans.length}/${raw.length} plans  ${target.url}`);
-    return { plans, page: { ...page, ms: Date.now() - started } };
-  } catch (err) {
-    const message = (err as Error).message;
+    try {
+      let raw: RawPlan[];
+      let textChars: number | undefined;
+      if (engine === "firecrawl") {
+        raw = await viaFirecrawl(target.url, target.hint);
+      } else {
+        const r = await viaBrowserAndLlm(target, country, provider);
+        raw = r.raw;
+        textChars = r.textChars;
+      }
+      best = { engine, raw, textChars };
+      if (raw.length > 0 || target.expectEmpty) break;
+      problems.push(`${engine === "firecrawl" ? "Firecrawl" : "Playwright + Haiku"} found no plans`);
+      best = undefined;
+    } catch (err) {
+      problems.push(`${engine === "firecrawl" ? "Firecrawl" : "Playwright + Haiku"}: ${(err as Error).message}`);
+    }
+  }
+  if (!best) {
+    const message = problems.join(" | ") || "no engine available";
     console.warn(`[extract] failed ${target.url}: ${message}`);
     return { plans: [], page: { ...page, error: message, ms: Date.now() - started } };
   }
+  const { plans, dropped } = normalizePlans(best.raw, opts);
+  const usedBackup = best.engine !== attempts[0];
+  console.log(`[extract] ${best.engine}${usedBackup ? " (backup)" : ""} ${plans.length}/${best.raw.length} plans  ${target.url}`);
+  return {
+    plans,
+    page: {
+      ...page,
+      engine: best.engine,
+      text_chars: best.textChars,
+      raw_count: best.raw.length,
+      kept_count: plans.length,
+      dropped: usedBackup ? [{ title: "(backup used)", reason: `primary method failed: ${problems.join(" | ")}` }, ...dropped] : dropped,
+      ms: Date.now() - started,
+    },
+  };
 }
 
 export async function scrapeTargets(targets: ScrapeTarget[], country: Country, provider?: string): Promise<ScrapeResult> {

@@ -8,7 +8,7 @@ inspired by CompareHero.my.
 - Supabase Postgres via `@supabase/supabase-js`
 - Scraping: Playwright renders each page (free, runs in GitHub Actions) and Claude Haiku
   (`claude-haiku-5-5`, via `@anthropic-ai/sdk` structured outputs) extracts plans from the page text.
-  Firecrawl (`@mendable/firecrawl-js`) is an optional alternative engine: `SCRAPE_ENGINE=firecrawl`.
+  Firecrawl (`@mendable/firecrawl-js`) is only a backup, used per page when Playwright + Haiku errors or finds nothing (`SCRAPE_ENGINE=firecrawl` flips the order).
   Sites with a regular layout get a dedicated parser instead (StarHub, Zym - no model needed).
 - Scripts run with `tsx`
 

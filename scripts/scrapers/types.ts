@@ -9,8 +9,6 @@ export interface ScrapeTarget {
    * Otherwise the target's category is authoritative and the extractor can't override it.
    */
   mixed?: boolean;
-  /** Use Firecrawl for this page (e.g. sites that block datacenter browsers). Needs FIRECRAWL_API_KEY and credits. */
-  engine?: "firecrawl";
   /** Extra guidance for the model about this specific page. */
   hint?: string;
   /** The page is known to list no plans; an empty result should not raise a warning. */
