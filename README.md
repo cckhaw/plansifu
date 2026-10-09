@@ -46,7 +46,7 @@ Scraper selectors/URLs are in `scripts/scrapers/providers/*.ts`; provider sites 
 
 ## 3. GitHub Actions (nightly crawl)
 
-`.github/workflows/daily-scraper.yml` runs at 00:00 MYT/SGT (`0 16 * * *` UTC) and can be run manually
+`.github/workflows/daily-scraper.yml` runs once a day at 03:00 MYT/SGT (`0 19 * * *` UTC) and can be run manually
 (**Actions → Daily Scraper → Run workflow**).
 
 Add under **Settings → Secrets and variables → Actions → Repository secrets**:
