@@ -26,12 +26,28 @@ jobs:
           node-version: 22
           cache: npm
 
+      - name: Probe
+        run: |
+          U=https://www.celcomdigi.com/postpaid
+          UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
+          echo "ip: $(curl -s https://api.ipify.org)"
+          echo "plain:   $(curl -s -o /dev/null -w '%{http_code}' $U)"
+          echo "ua:      $(curl -s -o /dev/null -w '%{http_code} %{size_download}' -A "$UA" $U)"
+          echo "ua+hdr:  $(curl -s -o /dev/null -w '%{http_code} %{size_download}' -A "$UA" -H 'Accept: text/html,application/xhtml+xml' -H 'Accept-Language: en-MY,en;q=0.9' $U)"
+          echo "http1.1: $(curl -s --http1.1 -o /dev/null -w '%{http_code}' -A "$UA" $U)"
+          echo "robots:  $(curl -s -o /dev/null -w '%{http_code}' -A "$UA" https://www.celcomdigi.com/robots.txt)"
+          echo "home:    $(curl -s -o /dev/null -w '%{http_code}' -A "$UA" https://www.celcomdigi.com/)"
+          echo "m:       $(curl -s -o /dev/null -w '%{http_code}' -A "$UA" https://celcomdigi.com/postpaid)"
+          echo "wayback: $(curl -s -o /dev/null -w '%{http_code} %{size_download}' -L 'https://web.archive.org/web/2/https://www.celcomdigi.com/postpaid')"
+
       - run: npm ci
 
       - name: Install Playwright Chromium
+        if: false
         run: npx playwright install --with-deps chromium
 
       - name: Run scrapers
+        if: false
         run: npm run scrape
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
