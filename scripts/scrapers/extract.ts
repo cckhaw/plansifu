@@ -212,6 +212,9 @@ async function viaBrowserAndLlm(
   }
   // Blocked, empty or still-loading pages must fail loudly instead of "succeeding" with nothing.
   if (text.length < 300) throw new Error(`page rendered only ${text.length} characters (blocked or not loaded)`);
+  if (/^\s*403 ERROR|Request blocked|Access Denied/i.test(text.slice(0, 400))) {
+    throw new Error("blocked by the site (403 bot filter on the CI network)");
+  }
   const raw = await extractPlansWithLlm({ provider, country, url: target.url, category: target.category, pageText: text, hint: target.hint });
   if (process.env.SCRAPE_DEBUG && raw.length === 0) {
     console.log(`[debug] 0 plans from ${text.length} chars at ${target.url}; text starts: ${text.slice(0, 700).replace(/\n/g, " | ")}`);
