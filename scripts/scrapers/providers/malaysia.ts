@@ -24,6 +24,10 @@ export const malaysiaProviders = [
     t.pre("https://www.u.com.my/en/personal/mobile-plans/prepaid/data-plans"),
     t.bb("https://www.u.com.my/en/personal/broadband"),
   ]),
+  defineProvider("Hotlink", "MY", "https://www.hotlink.com.my/en/home/", [
+    t.post("https://www.hotlink.com.my/en/products/postpaid/"),
+    t.pre("https://www.hotlink.com.my/en/products/prepaid/"),
+  ]),
   defineProvider("CMLink", "MY", "https://my.cmlink.com/en/", [t.pre("https://my.cmlink.com/en/plans/")]),
   defineProvider("Vibe", "MY", "https://www.vibemobile.com.my", [t.pre("https://www.vibemobile.com.my/prepaid/prepaid-plans/")]),
   defineProvider("redONE", "MY", "https://www.redonemobile.com.my/en/", [
