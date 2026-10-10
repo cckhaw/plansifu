@@ -7,6 +7,7 @@ interface Props {
   country: Country;
   dest: string;
   sort: string;
+  all: boolean;
   voice: boolean;
   number: boolean;
   minGb: number;
@@ -23,7 +24,7 @@ const groups = [
   { label: "Worldwide", type: "global" as const },
 ];
 
-export function EsimFilters({ country, dest, sort, voice, number, minGb, brand, brands, counts }: Props) {
+export function EsimFilters({ country, dest, sort, all, voice, number, minGb, brand, brands, counts }: Props) {
   const field = "rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium focus:border-sifu-gold focus:outline-none focus:ring-2 focus:ring-sifu-gold/30";
   return (
     <form method="get" action="/travel-esim" className="mb-6 grid gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm md:grid-cols-[2fr_1fr_1fr_1fr]">
@@ -72,6 +73,10 @@ export function EsimFilters({ country, dest, sort, voice, number, minGb, brand, 
         </select>
       </label>
       <div className="flex flex-wrap items-center gap-x-6 gap-y-2 md:col-span-4">
+        <label className="flex cursor-pointer items-center gap-2 text-sm font-medium">
+          <input type="checkbox" name="all" value="1" defaultChecked={all} onChange={submit} className="size-4 accent-sifu-gold" />
+          Show all plan sizes
+        </label>
         <label className="flex cursor-pointer items-center gap-2 text-sm font-medium">
           <input type="checkbox" name="voice" value="1" defaultChecked={voice} onChange={submit} className="size-4 accent-sifu-gold" />
           Includes voice or SMS

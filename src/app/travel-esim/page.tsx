@@ -10,7 +10,7 @@ import { destinationByKey, ESIM_DESTINATIONS } from "@/lib/esim-destinations";
 export const metadata: Metadata = { title: "Compare Travel eSIMs", description: "Compare travel eSIM brands by destination: price, cost per GB, voice/SMS, phone number and perks, in MYR or SGD." };
 export const revalidate = 3600;
 
-type Params = { country?: string; dest?: string; sort?: string; voice?: string; number?: string; min?: string; brand?: string };
+type Params = { all?: string; country?: string; dest?: string; sort?: string; voice?: string; number?: string; min?: string; brand?: string };
 const SORTS: EsimSort[] = ["gb", "price", "day", "data"];
 
 export default async function TravelEsimPage({ searchParams }: { searchParams: Promise<Params> }) {
@@ -18,15 +18,16 @@ export default async function TravelEsimPage({ searchParams }: { searchParams: P
   const country = parseCountry(sp.country);
   const destination = destinationByKey(sp.dest) ?? ESIM_DESTINATIONS[0];
   const sort = SORTS.includes(sp.sort as EsimSort) ? (sp.sort as EsimSort) : "gb";
-  const filters = { voice: sp.voice === "1", number: sp.number === "1", minGb: Number(sp.min) || 0, brand: sp.brand || null };
+  const filters = { all: sp.all === "1", voice: sp.voice === "1", number: sp.number === "1", minGb: Number(sp.min) || 0, brand: sp.brand || null };
 
   const [plans, { rates, updatedAt }, counts] = await Promise.all([getEsimPlans(destination.key), getFxRates(), getEsimDestinationCounts()]);
   const all = plans.map((p) => toRowView(p, country, rates));
-  const rows = filterAndSort(all, filters, sort);
+  const { rows, hidden } = filterAndSort(all, filters, sort);
   const brands = [...new Set(plans.map((p) => p.provider.name))].sort((a, b) => a.localeCompare(b));
   const bestGb = [...rows].filter((r) => r.perGb !== null).sort((a, b) => a.perGb! - b.perGb!)[0];
   const cheapest = [...rows].filter((r) => r.price !== null).sort((a, b) => a.price! - b.price!)[0];
   const query = new URLSearchParams({ dest: destination.key, sort });
+  if (filters.all) query.set("all", "1");
   if (filters.voice) query.set("voice", "1");
   if (filters.number) query.set("number", "1");
   if (filters.minGb) query.set("min", String(filters.minGb));
@@ -41,7 +42,7 @@ export default async function TravelEsimPage({ searchParams }: { searchParams: P
           Compare eSIM brands by destination or multi-country pass. Prices are shown in {COUNTRIES[country].currency}, converted from each brand&apos;s own currency.
         </p>
 
-        <EsimFilters country={country} dest={destination.key} sort={sort} voice={filters.voice} number={filters.number} minGb={filters.minGb} brand={filters.brand ?? ""} brands={brands} counts={counts} />
+        <EsimFilters country={country} dest={destination.key} sort={sort} all={filters.all} voice={filters.voice} number={filters.number} minGb={filters.minGb} brand={filters.brand ?? ""} brands={brands} counts={counts} />
 
         {rows.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-slate-600">
@@ -51,7 +52,9 @@ export default async function TravelEsimPage({ searchParams }: { searchParams: P
           </div>
         ) : (
           <>
-            <p className="mb-3 text-sm text-slate-500">{rows.length} plan{rows.length === 1 ? "" : "s"} from {new Set(rows.map((r) => r.plan.provider.name)).size} brands</p>
+            <p className="mb-3 text-sm text-slate-500">{rows.length} plan{rows.length === 1 ? "" : "s"} from {new Set(rows.map((r) => r.plan.provider.name)).size} brands
+              {hidden > 0 && ` · showing typical trip plans (1–20 GB, or unlimited up to 15 days); ${hidden} larger or longer plans hidden`}
+            </p>
             <EsimResults rows={rows} country={country} bestGbId={bestGb?.plan.id ?? null} cheapestId={cheapest?.plan.id ?? null} />
           </>
         )}

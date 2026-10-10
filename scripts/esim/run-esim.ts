@@ -18,6 +18,7 @@ function clean(raw: RawEsimPlan[], d: EsimDestination, url: string): { rows: Esi
   const rows: EsimRow[] = [];
   const dropped: { title: string; reason: string }[] = [];
   const seen = new Set<string>();
+  const offers = new Set<string>();
   for (const p of raw) {
     const title = p.title.replace(/\s+/g, " ").trim().slice(0, 80);
     const currency = (p.currency || "").trim().toUpperCase();
@@ -29,6 +30,13 @@ function clean(raw: RawEsimPlan[], d: EsimDestination, url: string): { rows: Esi
     else {
       // 999GB-style figures mean "unlimited" on some sites.
       const data = p.data_gb !== null && p.data_gb >= 900 && p.data_gb <= 1000 ? -1 : p.data_gb;
+      // The same offer listed twice (same data, validity, price and coverage) is one plan.
+      const offer = [data, p.validity_days, p.price, currency, p.coverage ?? ""].join("|");
+      if (offers.has(offer)) {
+        dropped.push({ title, reason: "duplicate offer" });
+        continue;
+      }
+      offers.add(offer);
       let t = title;
       if (seen.has(t.toLowerCase())) t = `${title} · ${p.coverage ?? `${currency} ${p.price}`}`.slice(0, 80);
       if (seen.has(t.toLowerCase())) t = `${title} · ${currency} ${p.price}`;
