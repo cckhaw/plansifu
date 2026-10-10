@@ -13,6 +13,11 @@ function dataLabel(r: EsimRowView): string {
   return `${Number(gb) < 1 ? Math.round(Number(gb) * 1000) + "MB" : Number(gb) + "GB"}`;
 }
 
+function validityLabel(r: EsimRowView): string {
+  if (r.plan.validity_days) return `${r.plan.validity_days} days`;
+  return r.plan.perks.some((x) => /never expire|no expiry|does not expire/i.test(x)) ? "no expiry" : "validity n/a";
+}
+
 function VoiceSms({ r }: { r: EsimRowView }) {
   const p = r.plan;
   if (p.voice_included || p.sms_included) {
@@ -87,7 +92,7 @@ export function EsimResults({ rows, country, bestGbId, cheapestId }: { rows: Esi
                   </div>
                 </td>
                 <td className="px-3 py-3">
-                  <div className="font-semibold">{dataLabel(r)} · {r.plan.validity_days ? `${r.plan.validity_days} days` : "—"}</div>
+                  <div className="font-semibold">{dataLabel(r)} · {validityLabel(r)}</div>
                   {r.plan.coverage && <div className="text-xs text-slate-500">{r.plan.coverage}</div>}
                   {r.plan.data_note && <div className="text-xs text-slate-500">{r.plan.data_note}</div>}
                   <div className="mt-1 flex gap-1">{tags(r)}</div>
@@ -115,7 +120,7 @@ export function EsimResults({ rows, country, bestGbId, cheapestId }: { rows: Esi
               <ProviderLogo provider={r.plan.provider} size={36} />
               <div className="min-w-0 flex-1">
                 <p className="text-xs font-medium text-slate-500">{r.plan.provider.name}</p>
-                <h3 className="font-bold">{dataLabel(r)} · {r.plan.validity_days ? `${r.plan.validity_days} days` : "—"}</h3>
+                <h3 className="font-bold">{dataLabel(r)} · {validityLabel(r)}</h3>
               </div>
               <div className="text-right text-xl font-extrabold text-sifu-gold">{money(r.price, currency)}{original(r)}</div>
             </header>

@@ -165,6 +165,7 @@ export async function extractEsimPlansWithLlm(opts: {
   destination: string;
   url: string;
   pageText: string;
+  hint?: string;
 }): Promise<RawEsimPlan[]> {
   if (unavailable) throw new Error(unavailable);
   const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -172,7 +173,9 @@ export async function extractEsimPlansWithLlm(opts: {
   client ??= new Anthropic({ apiKey, maxRetries: 4 });
 
   const user =
-    `Brand: ${opts.brand}\nDestination: ${opts.destination}\nPage: ${opts.url}\n\n` +
+    `Brand: ${opts.brand}\nDestination: ${opts.destination}\nPage: ${opts.url}\n` +
+    (opts.hint ? `Note about this brand's pages: ${opts.hint}\n` : "") +
+    "\n" +
     `<page_text>\n${opts.pageText}\n</page_text>`;
   let response;
   try {

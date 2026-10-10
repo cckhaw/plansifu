@@ -24,15 +24,18 @@ function clean(raw: RawEsimPlan[], d: EsimDestination, url: string): { rows: Esi
     if (!title) dropped.push({ title: "(empty)", reason: "no title" });
     else if (!/^[A-Z]{3}$/.test(currency)) dropped.push({ title, reason: `bad currency "${p.currency}"` });
     else if (!(p.price > 0) || p.price > 2000) dropped.push({ title, reason: `price out of range (${p.price})` });
-    else if (p.data_gb === null && p.validity_days === null) dropped.push({ title, reason: "no data or validity" });
+    else if (p.data_gb === null) dropped.push({ title, reason: "data amount not stated" });
     else if (p.data_gb !== null && p.data_gb !== -1 && (p.data_gb <= 0 || p.data_gb > 2000)) dropped.push({ title, reason: `data out of range (${p.data_gb})` });
     else {
+      // 999GB-style figures mean "unlimited" on some sites.
+      const data = p.data_gb !== null && p.data_gb >= 900 && p.data_gb <= 1000 ? -1 : p.data_gb;
       let t = title;
-      if (seen.has(t.toLowerCase())) t = `${title} (${currency} ${p.price})`;
+      if (seen.has(t.toLowerCase())) t = `${title} · ${p.coverage ?? `${currency} ${p.price}`}`.slice(0, 80);
+      if (seen.has(t.toLowerCase())) t = `${title} · ${currency} ${p.price}`;
       if (seen.has(t.toLowerCase())) dropped.push({ title, reason: "duplicate" });
       else {
         seen.add(t.toLowerCase());
-        rows.push({ ...p, title: t, currency, destination_key: d.key, perks: p.perks.slice(0, 6), affiliate_url: url });
+        rows.push({ ...p, data_gb: data, title: t, currency, destination_key: d.key, perks: p.perks.slice(0, 6), affiliate_url: url });
       }
     }
   }
@@ -61,7 +64,7 @@ async function scrapeBrand(b: EsimBrand, destinations: EsimDestination[]): Promi
           tried.push(`${short(url)}: no plan page`);
           continue;
         }
-        const raw = await extractEsimPlansWithLlm({ brand: b.name, destination: d.name, url, pageText: text });
+        const raw = await extractEsimPlansWithLlm({ brand: b.name, destination: d.name, url, pageText: text, hint: b.hint });
         const { rows, dropped } = clean(raw, d, url);
         Object.assign(page, { raw_count: raw.length, kept_count: rows.length, dropped, ms: Date.now() - started });
         if (rows.length === 0) {

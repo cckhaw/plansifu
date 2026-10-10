@@ -34,4 +34,44 @@ export const ESIM_BRANDS: EsimBrand[] = [
   { name: "Flexiroam", website: "https://www.flexiroam.com", pattern: (s) => `https://www.flexiroam.com/shop/esim-${s}` },
   { name: "Maya", website: "https://maya.net", pattern: (s) => `https://maya.net/esim/${s}` },
   { name: "BNESIM", website: "https://www.bnesim.com", urls: (d) => (d.iso2 ? [`https://www.bnesim.com/plans/${d.iso2}/`] : []) },
+  { name: "Truely", website: "https://truely.com", pattern: (s) => `https://truely.com/destinations/${s}` },
+  {
+    name: "GigSky",
+    website: "https://www.gigsky.com",
+    urls: (d) => d.slugs.flatMap((s) => (d.type === "country" ? [`https://www.gigsky.com/country/esim-in-${s}`] : [`https://www.gigsky.com/region/esim-in-${s}`, `https://www.gigsky.com/country/esim-in-${s}`])),
+  },
+  {
+    name: "aloSIM",
+    website: "https://alosim.com",
+    urls: (d) =>
+      d.type === "country"
+        ? d.slugs.map((s) => `https://alosim.com/destinations/${d.continent ?? "asia"}-esim/${s}-esim/`)
+        : d.slugs.map((s) => `https://alosim.com/destinations/${s}-esim/`),
+  },
+  {
+    name: "Ubigi",
+    website: "https://ubigi.com",
+    urls: (d) => (d.iso3 ? [`https://cellulardata.ubigi.com/data-plans-and-coverage/ubigi-esim-data-plans/?destination=${d.iso3}`] : d.slugs.map((s) => `https://cellulardata.ubigi.com/data-plans-and-coverage/ubigi-esim-data-plans/?region=${s}`)),
+  },
+  {
+    name: "Instabridge",
+    website: "https://store.instabridge.com",
+    urls: (d) => (d.iso2 ? [`https://store.instabridge.com/mobile-data/${d.iso2.toUpperCase()}/10gb`] : d.slugs.map((s) => `https://store.instabridge.com/mobile-data/${s}`)),
+  },
+  {
+    // A Malaysian reseller: pages group several countries, so the model is told to keep only plans for the destination.
+    name: "GogoRoaming",
+    website: "https://www.gogoroaming.my",
+    hint: "Each page lists eSIM products covering several countries. Keep only products that work in the requested destination. Prices are in MYR (RM). Unlimited 'per day' products: title them 'Unlimited / N days' only if a duration is stated.",
+    urls: (d) => {
+      const m: Record<string, string> = {
+        japan: "japan-taiwan-korea-esim", "south-korea": "japan-taiwan-korea-esim", taiwan: "japan-taiwan-korea-esim",
+        china: "china-hong-kong-macao-esim", "hong-kong": "china-hong-kong-macao-esim",
+        thailand: "southeast-asia-esim", vietnam: "southeast-asia-esim", indonesia: "southeast-asia-esim", singapore: "southeast-asia-esim", malaysia: "southeast-asia-esim",
+        europe: "europe-esim", "united-kingdom": "europe-esim", asia: "asia-esim-data-plan", global: "worldwide-travel-esim-simcard",
+        "united-states": "americas-esim", australia: "global-oceania-esim",
+      };
+      return m[d.key] ? [`https://www.gogoroaming.my/${m[d.key]}/`] : [];
+    },
+  },
 ];
