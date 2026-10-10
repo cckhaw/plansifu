@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -73,9 +74,10 @@ export function Header() {
   return (
     <>
       <header className={`material sticky top-0 z-40 border-b transition-colors duration-300 ${scrolled ? "border-sep" : "border-transparent"}`}>
-        <div className="mx-auto flex h-14 max-w-7xl items-center gap-4 px-4">
-          <Link href={withCountry("/", country)} className="press flex items-center gap-2" aria-label="PlanSifu home">
-            <span className="text-[19px] font-bold tracking-tight">Plan<span className="text-accent">Sifu</span></span>
+        <div className="mx-auto flex h-14 md:h-16 max-w-7xl items-center gap-4 px-4">
+          {/* The logo scales with the header: 32px tall on phones, 44px from md up. A light plate keeps the navy artwork legible in dark mode. */}
+          <Link href={withCountry("/", country)} className="press flex shrink-0 items-center rounded-xl dark:bg-white/95 dark:px-2 dark:py-1" aria-label="PlanSifu home">
+            <Image src="/logo.png" alt="PlanSifu 师傅" width={640} height={197} priority sizes="(min-width: 768px) 143px, 104px" className="h-8 w-auto md:h-11" />
           </Link>
 
           <nav aria-label="Categories" className="mx-auto hidden md:block">
