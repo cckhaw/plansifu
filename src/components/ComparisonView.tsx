@@ -10,7 +10,7 @@ import { PlanCard } from "./PlanCard";
 
 const MAX_COMPARE = 3;
 
-export function ComparisonView({ plans, initialQuery = "" }: { plans: PlanWithProvider[]; initialQuery?: string }) {
+export function ComparisonView({ plans, initialQuery = "", lead }: { plans: PlanWithProvider[]; initialQuery?: string; /** Content shown between the search/filter bar and the full list (e.g. the "Best for…" picks). */ lead?: React.ReactNode }) {
   const isBroadband = plans.length > 0 && plans.every((p) => p.category === "broadband");
   const priceCeiling = Math.max(10, Math.ceil(Math.max(0, ...plans.map((p) => p.monthly_price)) / 10) * 10);
   const currency = plans[0]?.currency ?? "MYR";
@@ -45,7 +45,7 @@ export function ComparisonView({ plans, initialQuery = "" }: { plans: PlanWithPr
         <FilterSidebar filters={filters} onChange={setFilters} providers={providers} currency={currency} priceCeiling={priceCeiling} isBroadband={isBroadband} onReset={() => setFilters(initial)} />
       </div>
 
-      <section aria-live="polite">
+      <section aria-live="polite" className="min-w-0">
         <div className="mb-4 flex items-center gap-2">
           <label className="flex min-w-0 flex-1 items-center gap-2 rounded-[12px] bg-fill-strong px-3 py-2.5 transition-shadow focus-within:shadow-[0_0_0_3px_color-mix(in_srgb,var(--accent)_40%,transparent)]">
             <SearchIcon className="size-[18px] shrink-0 text-label-3" />
@@ -62,14 +62,18 @@ export function ComparisonView({ plans, initialQuery = "" }: { plans: PlanWithPr
             Filters{activeFilters ? ` · ${activeFilters}` : ""}
           </button>
         </div>
-        <p className="mb-3 px-1 text-[13px] font-medium text-label-3">{visible.length} plan{visible.length === 1 ? "" : "s"}</p>
+        {lead && <div className="mb-10">{lead}</div>}
+        <div className="mb-3 flex items-baseline justify-between px-1">
+          <h2 className="text-[22px] font-bold tracking-tight md:text-[26px]">All plans</h2>
+          <p className="text-[13px] font-medium text-label-3">{visible.length} plan{visible.length === 1 ? "" : "s"}{activeFilters ? " · filtered" : ""}</p>
+        </div>
 
         {visible.length === 0 ? (
           <div className="pop rounded-[22px] bg-surface p-10 text-center text-label-2 shadow-card">
             No plans match your filters. <button className="press font-semibold text-accent" onClick={() => setFilters(initial)}>Reset filters</button>
           </div>
         ) : (
-          <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 2xl:grid-cols-3">
             {visible.map((p, i) => (
               <PlanCard key={p.id} index={i} plan={p} compare={{ selected: selected.includes(p.id), disabled: selected.length >= MAX_COMPARE, onToggle: () => toggle(p.id) }} />
             ))}
