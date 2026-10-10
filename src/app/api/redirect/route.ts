@@ -1,10 +1,11 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { sampleEsimPlans } from "@/lib/sample-esim";
 import { samplePlans } from "@/lib/sample-plans";
 import { getAdminClient } from "@/lib/supabase-admin";
 
 export const dynamic = "force-dynamic";
 
-const PLAN_ID = /^(sample-\d+|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i;
+const PLAN_ID = /^(sample-\d+|esim-sample-\d+|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i;
 
 function safeUrl(u: string | null | undefined): string | null {
   if (!u) return null;
@@ -26,7 +27,7 @@ export async function GET(req: NextRequest) {
   let target: string | null = null;
 
   if (!db) {
-    const sample = samplePlans.find((p) => p.id === planId);
+    const sample = samplePlans.find((p) => p.id === planId) ?? sampleEsimPlans.find((p) => p.id === planId);
     target = safeUrl(sample?.affiliate_url);
   } else {
     const { data: plan } = await db
@@ -34,14 +35,19 @@ export async function GET(req: NextRequest) {
       .select("id, affiliate_url, provider:providers(website_url)")
       .eq("id", planId)
       .maybeSingle();
-    if (!plan) return NextResponse.json({ error: "Plan not found" }, { status: 404 });
+    // Not a telco plan: it may be a travel eSIM plan.
+    const esim = plan
+      ? null
+      : (await db.from("esim_plans").select("id, affiliate_url, provider:providers(website_url)").eq("id", planId).maybeSingle()).data;
+    const found = plan ?? esim;
+    if (!found) return NextResponse.json({ error: "Plan not found" }, { status: 404 });
 
-    const provider = plan.provider as unknown as { website_url: string | null } | null;
-    target = safeUrl(plan.affiliate_url) ?? safeUrl(provider?.website_url);
+    const provider = found.provider as unknown as { website_url: string | null } | null;
+    target = safeUrl(found.affiliate_url) ?? safeUrl(provider?.website_url);
 
     // Log the click; never block the redirect on a logging failure.
     const { error } = await db.from("affiliate_clicks").insert({
-      plan_id: plan.id,
+      ...(plan ? { plan_id: plan.id } : { esim_plan_id: found.id }),
       user_agent: req.headers.get("user-agent"),
       referer: req.headers.get("referer"),
     });

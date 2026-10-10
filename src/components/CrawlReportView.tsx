@@ -2,7 +2,8 @@ import type { CrawlPageReport, CrawlRun, CrawlWarning } from "@/types/database";
 import type { CrawlReportData, ProviderCrawl } from "@/lib/crawl-report";
 import { STALE_HOURS } from "@/lib/crawl-report";
 
-const FLAG = { MY: "🇲🇾", SG: "🇸🇬" } as const;
+const FLAG = { MY: "🇲🇾", SG: "🇸🇬", GL: "✈️" } as const;
+const COUNTRY_ORDER = { MY: 0, SG: 1, GL: 2 } as const;
 const TZ = "Asia/Singapore"; // same offset as Malaysia (UTC+8)
 
 export function formatTime(iso: string | null | undefined): string {
@@ -170,11 +171,13 @@ function ProviderRow({ p, now }: { p: ProviderCrawl; now: number }) {
 
 export function CrawlReportView({ data, now }: { data: CrawlReportData; now: number }) {
   const providers = [...data.providers].sort(
-    (a, b) => ORDER[statusOf(a)] - ORDER[statusOf(b)] || a.provider.country.localeCompare(b.provider.country) || a.provider.name.localeCompare(b.provider.name),
+    (a, b) => ORDER[statusOf(a)] - ORDER[statusOf(b)] || COUNTRY_ORDER[a.provider.country] - COUNTRY_ORDER[b.provider.country] || a.provider.name.localeCompare(b.provider.name),
   );
   const counts = { failed: 0, stale: 0, warning: 0, ok: 0 } as Record<Status, number>;
   providers.forEach((p) => counts[statusOf(p)]++);
-  const totalPlans = providers.reduce((n, p) => n + (p.log.status === "success" ? p.log.items_scraped : 0), 0);
+  const plansOf = (gl: boolean) => providers.reduce((n, p) => n + ((p.provider.country === "GL") === gl && p.log.status === "success" ? p.log.items_scraped : 0), 0);
+  const totalPlans = plansOf(false);
+  const esimPlans = plansOf(true);
 
   const lastRun: CrawlRun | undefined = data.runs[0];
   const lastFullRun = data.runs.find((r) => !r.scope && r.finished_at);
@@ -219,7 +222,7 @@ export function CrawlReportView({ data, now }: { data: CrawlReportData; now: num
         <Tile label="Providers OK" value={`${counts.ok}/${providers.length}`} tone={counts.ok === providers.length ? "good" : undefined} />
         <Tile label="Failed" value={String(counts.failed)} tone={counts.failed ? "bad" : "good"} />
         <Tile label="Need a check" value={String(counts.warning + counts.stale)} sub={counts.stale ? `${counts.stale} stale` : undefined} tone={counts.warning + counts.stale ? "warn" : "good"} />
-        <Tile label="Plans live" value={String(totalPlans)} />
+        <Tile label="Plans live" value={String(totalPlans)} sub={esimPlans ? `+ ${esimPlans} travel eSIM` : undefined} />
         <Tile label="Model cost" value={refRun?.llm_cost_usd != null ? `$${Number(refRun.llm_cost_usd).toFixed(3)}` : "-"} sub={refRun?.llm_calls != null ? `${refRun.llm_calls} Haiku calls` : undefined} />
         <Tile label="Run time" value={refRun?.finished_at ? `${Math.round((new Date(refRun.finished_at).getTime() - new Date(refRun.started_at).getTime()) / 60_000)} min` : "-"} sub={refRun?.git_sha ? `commit ${refRun.git_sha.slice(0, 7)}` : undefined} />
       </section>
