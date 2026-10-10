@@ -90,6 +90,10 @@ async function main() {
     if (!process.env[key]) throw new Error(`${key} must be set`);
   }
   const selected = only?.length ? scrapers.filter((s) => only.includes(s.name.toLowerCase())) : scrapers;
+  if (!selected.length) {
+    console.log("No telco providers selected; skipping.");
+    return;
+  }
   const env = process.env;
   const runId = await startRun(
     {

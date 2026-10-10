@@ -2,12 +2,13 @@ import Link from "next/link";
 import { COUNTRIES } from "@/lib/currency";
 import type { Country } from "@/types/database";
 
-export type NavKey = "home" | "postpaid" | "prepaid" | "broadband";
+export type NavKey = "home" | "postpaid" | "prepaid" | "broadband" | "esim";
 
 const TABS: { key: Exclude<NavKey, "home">; label: string; path: string }[] = [
   { key: "postpaid", label: "Mobile Postpaid", path: "/mobile?type=postpaid" },
   { key: "prepaid", label: "Prepaid", path: "/mobile?type=prepaid" },
   { key: "broadband", label: "Home Fibre Broadband", path: "/broadband" },
+  { key: "esim", label: "✈️ Travel eSIM", path: "/travel-esim" },
 ];
 
 function withCountry(path: string, country: Country) {

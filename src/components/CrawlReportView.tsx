@@ -1,8 +1,9 @@
 import type { CrawlPageReport, CrawlRun, CrawlWarning } from "@/types/database";
 import type { CrawlReportData, ProviderCrawl } from "@/lib/crawl-report";
-import { STALE_HOURS } from "@/lib/crawl-report";
+import { ESIM_STALE_HOURS, STALE_HOURS } from "@/lib/crawl-report";
 
-const FLAG = { MY: "🇲🇾", SG: "🇸🇬" } as const;
+const FLAG = { MY: "🇲🇾", SG: "🇸🇬", GL: "✈️" } as const;
+const COUNTRY_ORDER = { MY: 0, SG: 1, GL: 2 } as const;
 const TZ = "Asia/Singapore"; // same offset as Malaysia (UTC+8)
 
 export function formatTime(iso: string | null | undefined): string {
@@ -136,7 +137,7 @@ function ProviderRow({ p, now }: { p: ProviderCrawl; now: number }) {
           {log.duration_ms ? ` · took ${(log.duration_ms / 1000).toFixed(0)}s` : ""}
           {log.status !== "success" && p.lastSuccessAt ? ` · last success ${formatTime(p.lastSuccessAt)} (${timeAgo(p.lastSuccessAt, now)})` : ""}
           {log.status !== "success" && !p.lastSuccessAt ? " · never succeeded" : ""}
-          {status === "stale" ? ` · last success is over ${STALE_HOURS} h old` : ""}
+          {status === "stale" ? ` · last success is over ${p.provider.country === "GL" ? ESIM_STALE_HOURS / 24 + " days" : STALE_HOURS + " h"} old` : ""}
         </p>
 
         {log.error_message && <p className="rounded-lg border border-red-300 bg-red-50 px-3 py-2 font-medium text-red-800">{log.error_message}</p>}
@@ -170,11 +171,13 @@ function ProviderRow({ p, now }: { p: ProviderCrawl; now: number }) {
 
 export function CrawlReportView({ data, now }: { data: CrawlReportData; now: number }) {
   const providers = [...data.providers].sort(
-    (a, b) => ORDER[statusOf(a)] - ORDER[statusOf(b)] || a.provider.country.localeCompare(b.provider.country) || a.provider.name.localeCompare(b.provider.name),
+    (a, b) => ORDER[statusOf(a)] - ORDER[statusOf(b)] || COUNTRY_ORDER[a.provider.country] - COUNTRY_ORDER[b.provider.country] || a.provider.name.localeCompare(b.provider.name),
   );
   const counts = { failed: 0, stale: 0, warning: 0, ok: 0 } as Record<Status, number>;
   providers.forEach((p) => counts[statusOf(p)]++);
-  const totalPlans = providers.reduce((n, p) => n + (p.log.status === "success" ? p.log.items_scraped : 0), 0);
+  const plansOf = (gl: boolean) => providers.reduce((n, p) => n + ((p.provider.country === "GL") === gl && p.log.status === "success" ? p.log.items_scraped : 0), 0);
+  const totalPlans = plansOf(false);
+  const esimPlans = plansOf(true);
 
   const lastRun: CrawlRun | undefined = data.runs[0];
   const lastFullRun = data.runs.find((r) => !r.scope && r.finished_at);
@@ -219,7 +222,7 @@ export function CrawlReportView({ data, now }: { data: CrawlReportData; now: num
         <Tile label="Providers OK" value={`${counts.ok}/${providers.length}`} tone={counts.ok === providers.length ? "good" : undefined} />
         <Tile label="Failed" value={String(counts.failed)} tone={counts.failed ? "bad" : "good"} />
         <Tile label="Need a check" value={String(counts.warning + counts.stale)} sub={counts.stale ? `${counts.stale} stale` : undefined} tone={counts.warning + counts.stale ? "warn" : "good"} />
-        <Tile label="Plans live" value={String(totalPlans)} />
+        <Tile label="Plans live" value={String(totalPlans)} sub={esimPlans ? `+ ${esimPlans} travel eSIM` : undefined} />
         <Tile label="Model cost" value={refRun?.llm_cost_usd != null ? `$${Number(refRun.llm_cost_usd).toFixed(3)}` : "-"} sub={refRun?.llm_calls != null ? `${refRun.llm_calls} Haiku calls` : undefined} />
         <Tile label="Run time" value={refRun?.finished_at ? `${Math.round((new Date(refRun.finished_at).getTime() - new Date(refRun.started_at).getTime()) / 60_000)} min` : "-"} sub={refRun?.git_sha ? `commit ${refRun.git_sha.slice(0, 7)}` : undefined} />
       </section>
@@ -262,7 +265,7 @@ export function CrawlReportView({ data, now }: { data: CrawlReportData; now: num
 
       <footer className="border-t border-slate-200 pt-4 text-xs text-slate-500">
         <strong>Check</strong> = something differs from the previous crawl or from what the page showed: a page failed or returned nothing, the plan count fell 30% or more, a plan&apos;s price moved 25% or more, or extracted plans were all filtered out.
-        &quot;Stale&quot; = no successful crawl in {STALE_HOURS} hours. Times are Malaysia/Singapore time.
+        &quot;Stale&quot; = no successful crawl in {STALE_HOURS} hours ({ESIM_STALE_HOURS / 24} days for weekly Travel eSIM brands). Times are Malaysia/Singapore time.
       </footer>
     </div>
   );

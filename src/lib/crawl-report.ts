@@ -5,9 +5,11 @@ import { getAdminClient } from "./supabase-admin";
 
 /** A provider is "stale" if its last successful crawl is older than this (the crawl runs daily). */
 export const STALE_HOURS = 30;
+/** Travel eSIM brands are crawled weekly, so they only count as stale after a missed week. */
+export const ESIM_STALE_HOURS = 8 * 24;
 
 export interface ProviderCrawl {
-  provider: { id: string; name: string; country: Country };
+  provider: { id: string; name: string; country: Country | "GL" };
   /** Latest crawl log for the provider (from any run). */
   log: CrawlingLog;
   /** Latest successful log, if different from `log` (shown when the latest attempt failed). */
@@ -51,7 +53,7 @@ export async function getCrawlReport(): Promise<CrawlReportData> {
   const runsRes = await db.from("crawl_runs").select("*").order("started_at", { ascending: false }).limit(10);
   const schemaReady = !runsRes.error;
 
-  type Row = CrawlingLog & { provider: { id: string; name: string; country: Country } | null };
+  type Row = CrawlingLog & { provider: { id: string; name: string; country: Country | "GL" } | null };
   const latest = new Map<string, Row>();
   const lastSuccess = new Map<string, string>();
   for (const row of (logsRes.data ?? []) as unknown as Row[]) {
@@ -67,7 +69,7 @@ export async function getCrawlReport(): Promise<CrawlReportData> {
       provider: log.provider!,
       log,
       lastSuccessAt: ok,
-      stale: !ok || now - new Date(ok).getTime() > STALE_HOURS * 3_600_000,
+      stale: !ok || now - new Date(ok).getTime() > (log.provider!.country === "GL" ? ESIM_STALE_HOURS : STALE_HOURS) * 3_600_000,
     };
   });
 
