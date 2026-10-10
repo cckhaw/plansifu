@@ -1,55 +1,119 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { COUNTRIES } from "@/lib/currency";
 import type { Country } from "@/types/database";
+import { HomeIcon, PhoneIcon, PlaneIcon, SimIcon, WifiIcon } from "./Icons";
 
-export type NavKey = "home" | "postpaid" | "prepaid" | "broadband" | "esim";
+type NavKey = "home" | "postpaid" | "prepaid" | "broadband" | "esim";
 
-const TABS: { key: Exclude<NavKey, "home">; label: string; path: string }[] = [
-  { key: "postpaid", label: "Mobile Postpaid", path: "/mobile?type=postpaid" },
-  { key: "prepaid", label: "Prepaid", path: "/mobile?type=prepaid" },
-  { key: "broadband", label: "Home Fibre Broadband", path: "/broadband" },
-  { key: "esim", label: "✈️ Travel eSIM", path: "/travel-esim" },
+const TABS: { key: NavKey; label: string; short: string; path: string; Icon: (p: { className?: string }) => React.ReactElement }[] = [
+  { key: "home", label: "Home", short: "Home", path: "/", Icon: HomeIcon },
+  { key: "postpaid", label: "Postpaid", short: "Postpaid", path: "/mobile?type=postpaid", Icon: PhoneIcon },
+  { key: "prepaid", label: "Prepaid", short: "Prepaid", path: "/mobile?type=prepaid", Icon: SimIcon },
+  { key: "broadband", label: "Broadband", short: "Fibre", path: "/broadband", Icon: WifiIcon },
+  { key: "esim", label: "Travel eSIM", short: "eSIM", path: "/travel-esim", Icon: PlaneIcon },
 ];
 
-function withCountry(path: string, country: Country) {
-  return `${path}${path.includes("?") ? "&" : "?"}country=${country}`;
+function activeKey(pathname: string, type: string | null): NavKey | null {
+  if (pathname === "/") return "home";
+  if (pathname.startsWith("/mobile")) return type === "prepaid" ? "prepaid" : "postpaid";
+  if (pathname.startsWith("/broadband")) return "broadband";
+  if (pathname.startsWith("/travel-esim")) return "esim";
+  return null;
 }
 
-export function Header({ country, active, pathname }: { country: Country; active: NavKey; pathname: string }) {
+const withCountry = (path: string, country: Country) => `${path}${path.includes("?") ? "&" : "?"}country=${country}`;
+
+/** iOS segmented control: equal-width segments with a thumb that slides between them. */
+function Segmented({ count, index, children, label, className = "" }: { count: number; index: number; children: React.ReactNode; label: string; className?: string }) {
   return (
-    <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
-        <Link href={withCountry("/", country)} className="flex items-center gap-2">
-          <span className="text-xl font-extrabold tracking-tight text-sifu-navy">Plan<span className="text-sifu-gold">Sifu</span></span>
-          <span className="rounded-full bg-sifu-gold px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">Beta</span>
-        </Link>
+    <div role="group" aria-label={label} className={`relative grid rounded-full bg-fill-strong p-0.5 text-[13px] font-semibold ${className}`} style={{ gridTemplateColumns: `repeat(${count}, 1fr)` }}>
+      {index >= 0 && (
+        <span
+          aria-hidden
+          className="absolute inset-y-0.5 left-0.5 rounded-full bg-surface shadow-[0_3px_8px_rgba(0,0,0,0.12),0_0_0_0.5px_rgba(0,0,0,0.04)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+          style={{ width: `calc((100% - 4px) / ${count})`, transform: `translateX(${index * 100}%)` }}
+        />
+      )}
+      {children}
+    </div>
+  );
+}
 
-        <nav aria-label="Categories" className="order-3 -mx-4 flex w-[calc(100%+2rem)] gap-1 overflow-x-auto px-4 md:order-none md:mx-0 md:w-auto md:px-0">
-          {TABS.map((t) => (
-            <Link
-              key={t.key}
-              href={withCountry(t.path, country)}
-              aria-current={active === t.key ? "page" : undefined}
-              className={`whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold transition ${active === t.key ? "bg-sifu-navy text-white" : "text-slate-600 hover:bg-slate-100"}`}
-            >
-              {t.label}
-            </Link>
-          ))}
-        </nav>
+export function Header() {
+  const pathname = usePathname();
+  const params = useSearchParams();
+  const country: Country = params.get("country") === "SG" ? "SG" : "MY";
+  const active = activeKey(pathname, params.get("type"));
+  const [scrolled, setScrolled] = useState(false);
 
-        <div className="ml-auto flex rounded-full border border-slate-200 p-0.5 text-sm font-semibold" role="group" aria-label="Country">
-          {(Object.keys(COUNTRIES) as Country[]).map((c) => (
-            <Link
-              key={c}
-              href={`${pathname}${pathname.includes("?") ? "&" : "?"}country=${c}`}
-              aria-current={country === c ? "true" : undefined}
-              className={`rounded-full px-3 py-1 ${country === c ? "bg-sifu-gold text-white" : "text-slate-600 hover:bg-slate-100"}`}
-            >
-              {COUNTRIES[c].flag} {COUNTRIES[c].currency}
-            </Link>
-          ))}
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 6);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  if (pathname.startsWith("/crawl-report")) return null;
+
+  const here = `${pathname}${params.toString() ? `?${params.toString()}` : ""}`;
+  const countryHref = (c: Country) => {
+    const next = new URLSearchParams(params.toString());
+    next.set("country", c);
+    return `${pathname}?${next.toString()}`;
+  };
+  void here;
+  const activeIndex = TABS.findIndex((t) => t.key === active);
+  const desktopTabs = TABS.filter((t) => t.key !== "home");
+  const desktopIndex = desktopTabs.findIndex((t) => t.key === active);
+
+  return (
+    <>
+      <header className={`material sticky top-0 z-40 border-b transition-colors duration-300 ${scrolled ? "border-sep" : "border-transparent"}`}>
+        <div className="mx-auto flex h-14 max-w-7xl items-center gap-4 px-4">
+          <Link href={withCountry("/", country)} className="press flex items-center gap-2" aria-label="PlanSifu home">
+            <span className="text-[19px] font-bold tracking-tight">Plan<span className="text-accent">Sifu</span></span>
+          </Link>
+
+          <nav aria-label="Categories" className="mx-auto hidden md:block">
+            <Segmented count={desktopTabs.length} index={desktopIndex} label="Categories" className="w-[27rem]">
+              {desktopTabs.map((t) => (
+                <Link key={t.key} href={withCountry(t.path, country)} aria-current={active === t.key ? "page" : undefined} className={`press relative z-10 rounded-full px-3 py-1.5 text-center transition-colors ${active === t.key ? "text-label" : "text-label-2 hover:text-label"}`}>
+                  {t.label}
+                </Link>
+              ))}
+            </Segmented>
+          </nav>
+
+          <Segmented count={2} index={country === "MY" ? 0 : 1} label="Country and currency" className="ml-auto w-[9.5rem] md:ml-0">
+            {(Object.keys(COUNTRIES) as Country[]).map((c) => (
+              <Link key={c} href={countryHref(c)} scroll={false} aria-current={country === c ? "true" : undefined} className={`press relative z-10 whitespace-nowrap rounded-full px-2 py-1.5 text-center transition-colors ${country === c ? "text-label" : "text-label-2 hover:text-label"}`}>
+                {COUNTRIES[c].flag} {COUNTRIES[c].currency}
+              </Link>
+            ))}
+          </Segmented>
         </div>
-      </div>
-    </header>
+      </header>
+
+      {/* Mobile: iOS-style tab bar */}
+      <nav aria-label="Categories" className="material fixed inset-x-0 bottom-0 z-40 border-t border-sep pb-[env(safe-area-inset-bottom)] md:hidden">
+        <ul className="mx-auto grid max-w-md grid-cols-5">
+          {TABS.map((t, i) => {
+            const on = i === activeIndex;
+            return (
+              <li key={t.key}>
+                <Link href={withCountry(t.path, country)} aria-current={on ? "page" : undefined} className={`press flex flex-col items-center gap-0.5 pb-1.5 pt-2 text-[10px] font-medium transition-colors ${on ? "text-accent" : "text-label-3"}`}>
+                  <t.Icon className={`size-6 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${on ? "scale-110" : ""}`} />
+                  {t.short}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+    </>
   );
 }

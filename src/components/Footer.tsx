@@ -1,7 +1,7 @@
 export function Footer() {
   return (
-    <footer className="mt-16 border-t border-slate-200 bg-white py-8 text-center text-xs text-slate-500">
-      <p className="mx-auto max-w-2xl px-4">
+    <footer className="mx-auto mt-12 max-w-2xl px-4 pb-32 text-center text-xs leading-relaxed text-label-3 md:pb-12">
+      <p>
         PlanSifu may earn a commission when you apply through our links, at no cost to you. Prices are collected
         automatically and may change; always confirm with the provider.
       </p>

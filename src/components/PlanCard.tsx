@@ -1,51 +1,57 @@
 import { formatContract, formatData, formatPrice, formatSpeed, formatTalktime } from "@/lib/currency";
 import type { PlanWithProvider } from "@/types/database";
 import { DealBadge } from "./DealBadge";
+import { CheckIcon } from "./Icons";
 import { ProviderLogo } from "./ProviderLogo";
 
 interface Props {
   plan: PlanWithProvider;
-  /** Omit to hide the compare checkbox. */
+  /** Omit to hide the compare control. */
   compare?: { selected: boolean; disabled: boolean; onToggle: () => void };
+  /** Position in the list, for the staggered entrance. */
+  index?: number;
 }
 
 function Spec({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg bg-slate-50 px-3 py-2">
-      <dt className="text-[11px] font-medium uppercase tracking-wide text-slate-500">{label}</dt>
-      <dd className="text-sm font-bold">{value}</dd>
+    <div className="rounded-xl bg-fill px-3 py-2">
+      <dt className="text-[11px] font-medium text-label-3">{label}</dt>
+      <dd className="text-[15px] font-semibold tracking-tight">{value}</dd>
     </div>
   );
 }
 
-export function PlanCard({ plan, compare }: Props) {
+export function PlanCard({ plan, compare, index = 0 }: Props) {
   const isBroadband = plan.category === "broadband";
   return (
-    <article className={`flex flex-col gap-4 rounded-2xl border bg-white p-5 shadow-sm transition hover:shadow-md ${compare?.selected ? "border-sifu-gold ring-2 ring-sifu-gold/30" : "border-slate-200"}`}>
+    <article
+      className={`rise lift flex flex-col gap-4 rounded-[22px] bg-surface p-5 shadow-card ${compare?.selected ? "ring-2 ring-accent-fill" : ""}`}
+      style={{ "--i": index } as React.CSSProperties}
+    >
       <header className="flex items-center gap-3">
         <ProviderLogo provider={plan.provider} />
         <div className="min-w-0 flex-1">
-          <p className="text-xs font-medium text-slate-500">{plan.provider.name}</p>
-          <h3 className="truncate font-bold">{plan.title}</h3>
+          <p className="text-[13px] font-medium text-label-2">{plan.provider.name}</p>
+          <h3 className="truncate text-[17px] font-semibold tracking-tight">{plan.title}</h3>
         </div>
         {compare && (
-          <label className={`flex items-center gap-1.5 text-xs font-medium ${compare.disabled && !compare.selected ? "opacity-40" : "cursor-pointer"}`}>
-            <input
-              type="checkbox"
-              className="size-4 accent-sifu-gold"
-              checked={compare.selected}
-              disabled={compare.disabled && !compare.selected}
-              onChange={compare.onToggle}
-            />
-            Compare
-          </label>
+          <button
+            type="button"
+            role="checkbox"
+            aria-checked={compare.selected}
+            aria-label={`Compare ${plan.title}`}
+            disabled={compare.disabled && !compare.selected}
+            onClick={compare.onToggle}
+            className={`press grid size-7 shrink-0 place-items-center rounded-full border-2 transition-colors disabled:opacity-30 ${compare.selected ? "border-accent-fill bg-accent-fill text-accent-on-fill" : "border-label-3/50 text-transparent"}`}
+          >
+            <CheckIcon className="size-4" />
+          </button>
         )}
       </header>
 
-      <div className="flex items-baseline gap-2">
-        <span className="text-3xl font-extrabold text-sifu-gold">{formatPrice(plan.monthly_price, plan.currency)}</span>
-        <span className="text-sm text-slate-500">/ month</span>
-        <span className="ml-auto rounded-full bg-sifu-navy px-2 py-0.5 text-[11px] font-bold text-white">{plan.currency}</span>
+      <div className="flex items-baseline gap-1.5">
+        <span className="text-[34px] font-bold leading-none tracking-tight tabular-nums">{formatPrice(plan.monthly_price, plan.currency)}</span>
+        <span className="text-[15px] text-label-2">/ month</span>
       </div>
 
       <dl className="grid grid-cols-2 gap-2">
@@ -60,7 +66,7 @@ export function PlanCard({ plan, compare }: Props) {
       {plan.features.length > 0 && (
         <ul className="flex flex-wrap gap-1.5">
           {plan.features.map((f) => (
-            <li key={f} className="rounded-full border border-slate-200 px-2 py-0.5 text-xs text-slate-600">✓ {f}</li>
+            <li key={f} className="rounded-full bg-fill px-2.5 py-1 text-xs font-medium text-label-2">{f}</li>
           ))}
         </ul>
       )}
@@ -69,9 +75,9 @@ export function PlanCard({ plan, compare }: Props) {
         href={`/api/redirect?plan_id=${encodeURIComponent(plan.id)}`}
         rel="sponsored nofollow noopener"
         target="_blank"
-        className="mt-auto rounded-xl bg-sifu-gold px-4 py-3 text-center font-bold text-white transition hover:bg-sifu-gold-dark"
+        className="press mt-auto rounded-full bg-accent-fill px-4 py-3 text-center text-[16px] font-semibold text-accent-on-fill hover:bg-accent-fill-hover"
       >
-        Get Deal →
+        Get Deal
       </a>
     </article>
   );

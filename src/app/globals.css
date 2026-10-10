@@ -1,15 +1,286 @@
 @import "tailwindcss";
 
+/*
+ * Design tokens, modelled on Apple's system colours and materials.
+ * Light = iOS "grouped" look (grey canvas, white cards); dark = true-black canvas with elevated greys.
+ */
+:root {
+  color-scheme: light dark;
+  --bg: #f2f2f7;
+  --surface: #ffffff;
+  --fill: #f2f2f7; /* quiet fill inside cards (tertiary system fill) */
+  --fill-strong: rgba(120, 120, 128, 0.16);
+  --label: #1c1c1e;
+  --label-2: #636366;
+  --label-3: #8e8e93;
+  --sep: rgba(60, 60, 67, 0.14);
+  --accent: #b45309; /* PlanSifu gold, darkened for AA contrast on white */
+  --accent-fill: #b45309;
+  --accent-fill-hover: #92400e;
+  --accent-on-fill: #ffffff;
+  --tint: rgba(217, 119, 6, 0.12);
+  --good: #1a7f37;
+  --good-tint: rgba(52, 199, 89, 0.16);
+  --material: rgba(255, 255, 255, 0.72);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.05);
+  --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.05), 0 16px 40px rgba(0, 0, 0, 0.1);
+  --spring: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000000;
+    --surface: #1c1c1e;
+    --fill: #2c2c2e;
+    --fill-strong: rgba(120, 120, 128, 0.36);
+    --label: #f5f5f7;
+    --label-2: #aeaeb2;
+    --label-3: #8e8e93;
+    --sep: rgba(84, 84, 88, 0.55);
+    --accent: #fbbf24;
+    --accent-fill: #f59e0b;
+    --accent-fill-hover: #fbbf24;
+    --accent-on-fill: #1c1c1e;
+    --tint: rgba(251, 191, 36, 0.16);
+    --good: #30d158;
+    --good-tint: rgba(48, 209, 88, 0.2);
+    --material: rgba(28, 28, 30, 0.72);
+    --shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.06);
+    --shadow-lift: 0 0 0 0.5px rgba(255, 255, 255, 0.1), 0 16px 40px rgba(0, 0, 0, 0.6);
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-fill: var(--fill);
+  --color-fill-strong: var(--fill-strong);
+  --color-label: var(--label);
+  --color-label-2: var(--label-2);
+  --color-label-3: var(--label-3);
+  --color-sep: var(--sep);
+  --color-accent: var(--accent);
+  --color-accent-fill: var(--accent-fill);
+  --color-accent-fill-hover: var(--accent-fill-hover);
+  --color-accent-on-fill: var(--accent-on-fill);
+  --color-tint: var(--tint);
+  --color-good: var(--good);
+  --color-good-tint: var(--good-tint);
+  --shadow-card: var(--shadow);
+  --shadow-lift: var(--shadow-lift);
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", var(--font-inter), "Segoe UI", system-ui, sans-serif;
+}
+
+/* Legacy brand tokens (the internal crawl report still uses them). */
 @theme {
   --color-sifu-gold: #d97706;
   --color-sifu-gold-dark: #b45309;
   --color-sifu-gold-light: #fef3c7;
   --color-sifu-navy: #0f172a;
   --color-sifu-navy-light: #1e293b;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
 }
 
 body {
-  background: #f8fafc;
-  color: var(--color-sifu-navy);
+  background: var(--bg);
+  color: var(--label);
+  font-feature-settings: "ss01", "cv11";
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+}
+
+::selection {
+  background: var(--tint);
+}
+
+:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+
+/* ---- Materials ---- */
+.material {
+  background: var(--material);
+  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  backdrop-filter: saturate(180%) blur(24px);
+}
+
+/* ---- Motion ---- */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+}
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+@keyframes float-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.96);
+  }
+}
+
+.rise {
+  animation: rise 0.6s var(--spring) both;
+  animation-delay: calc(min(var(--i, 0), 14) * 45ms);
+}
+.fade-in {
+  animation: fade 0.25s ease-out both;
+}
+.sheet {
+  animation: sheet-up 0.45s var(--spring) both;
+}
+.pop {
+  animation: pop 0.35s var(--spring) both;
+}
+
+/* Press feedback: everything tappable shrinks a touch, like UIKit's highlight. */
+.press {
+  transition: transform 0.35s var(--spring), background-color 0.2s ease, box-shadow 0.35s var(--spring), opacity 0.2s ease;
+}
+.press:active {
+  transform: scale(0.97);
+  transition-duration: 0.08s;
+}
+.lift {
+  transition: transform 0.45s var(--spring), box-shadow 0.45s var(--spring);
+}
+@media (hover: hover) {
+  .lift:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lift);
+  }
+}
+
+/* ---- Controls ---- */
+/* iOS switch: <input type="checkbox" class="switch"> */
+.switch {
+  appearance: none;
+  position: relative;
+  flex: none;
+  width: 51px;
+  height: 31px;
+  border-radius: 999px;
+  background: var(--fill-strong);
+  transition: background-color 0.3s var(--spring);
+  cursor: pointer;
+}
+.switch::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15), 0 1px 1px rgba(0, 0, 0, 0.16);
+  transition: transform 0.35s var(--spring), width 0.2s ease;
+}
+.switch:checked {
+  background: #34c759;
+}
+.switch:active::after {
+  width: 33px;
+}
+.switch:checked:active::after {
+  transform: translateX(14px);
+}
+.switch:checked::after {
+  transform: translateX(20px);
+}
+
+/* iOS slider */
+input[type="range"].slider {
+  appearance: none;
+  height: 28px;
+  background: transparent;
+  cursor: pointer;
+}
+input[type="range"].slider::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--accent-fill) var(--pct, 0%), var(--fill-strong) var(--pct, 0%));
+}
+input[type="range"].slider::-moz-range-track {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--fill-strong);
+}
+input[type="range"].slider::-moz-range-progress {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--accent-fill);
+}
+input[type="range"].slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  margin-top: -12px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18), 0 0 0 0.5px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s var(--spring);
+}
+input[type="range"].slider:active::-webkit-slider-thumb {
+  transform: scale(1.12);
+}
+input[type="range"].slider::-moz-range-thumb {
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
+}
+
+/* Native-style select (chevron, no OS chrome) */
+select.menu {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238e8e93' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

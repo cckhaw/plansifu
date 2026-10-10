@@ -12,70 +12,89 @@ interface Props {
   priceCeiling: number;
   isBroadband: boolean;
   onReset: () => void;
+  /** Rendered inside a sheet: drop the card chrome. */
+  bare?: boolean;
 }
 
-const field = "mb-5";
-const label = "mb-2 block text-sm font-bold";
+/** An iOS "inset grouped" section: a small caption above a rounded white list. */
+function Group({ title, children }: { title?: string; children: React.ReactNode }) {
+  return (
+    <section className="mb-5">
+      {title && <h3 className="mb-1.5 px-4 text-[12px] font-medium uppercase tracking-wide text-label-3">{title}</h3>}
+      <div className="divide-y divide-sep overflow-hidden rounded-2xl bg-surface shadow-card [&>*]:px-4">{children}</div>
+    </section>
+  );
+}
 
-export function FilterSidebar({ filters, onChange, providers, currency, priceCeiling, isBroadband, onReset }: Props) {
+const pct = (v: number, max: number) => ({ "--pct": `${max ? (v / max) * 100 : 0}%` }) as React.CSSProperties;
+
+export function FilterSidebar({ filters, onChange, providers, currency, priceCeiling, isBroadband, onReset, bare }: Props) {
   const set = <K extends keyof Filters>(k: K, v: Filters[K]) => onChange({ ...filters, [k]: v });
   const toggleProvider = (id: string) =>
     set("providers", filters.providers.includes(id) ? filters.providers.filter((x) => x !== id) : [...filters.providers, id]);
+  const select = "menu rounded-lg bg-fill-strong py-1.5 pl-3 text-[15px] font-medium outline-none";
 
   return (
-    <aside className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:sticky lg:top-20" aria-label="Filters">
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-extrabold">Filters</h2>
-        <button onClick={onReset} className="text-xs font-semibold text-sifu-gold hover:underline">Reset</button>
+    <aside aria-label="Filters" className={bare ? "" : "lg:sticky lg:top-20"}>
+      <div className="mb-3 flex items-center justify-between px-1">
+        <h2 className="text-[22px] font-bold tracking-tight">Filters</h2>
+        <button onClick={onReset} className="press text-[15px] font-medium text-accent">Reset</button>
       </div>
 
-      <div className={field}>
-        <label htmlFor="f-sort" className={label}>Sort by</label>
-        <select id="f-sort" value={filters.sort} onChange={(e) => set("sort", e.target.value as Filters["sort"])} className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm">
-          <option value="price_asc">Price: low to high</option>
-          <option value="price_desc">Price: high to low</option>
-          <option value={isBroadband ? "speed_desc" : "data_desc"}>{isBroadband ? "Fastest speed" : "Most data"}</option>
-        </select>
-      </div>
-
-      <div className={field}>
-        <label htmlFor="f-price" className={label}>Max monthly price: <span className="text-sifu-gold">{formatPrice(filters.maxPrice, currency)}</span></label>
-        <input id="f-price" type="range" min={0} max={priceCeiling} step={1} value={filters.maxPrice} onChange={(e) => set("maxPrice", Number(e.target.value))} className="w-full accent-sifu-gold" />
-      </div>
-
-      {isBroadband ? (
-        <div className={field}>
-          <label htmlFor="f-speed" className={label}>Min speed</label>
-          <select id="f-speed" value={filters.minSpeed} onChange={(e) => set("minSpeed", Number(e.target.value))} className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm">
-            {[0, 100, 300, 500, 1000, 2000].map((v) => <option key={v} value={v}>{v === 0 ? "Any" : v >= 1000 ? `${v / 1000}Gbps+` : `${v}Mbps+`}</option>)}
+      <Group>
+        <label className="flex items-center justify-between gap-3 py-3 text-[16px]">
+          Sort by
+          <select value={filters.sort} onChange={(e) => set("sort", e.target.value as Filters["sort"])} className={select}>
+            <option value="price_asc">Price: low to high</option>
+            <option value="price_desc">Price: high to low</option>
+            <option value={isBroadband ? "speed_desc" : "data_desc"}>{isBroadband ? "Fastest speed" : "Most data"}</option>
           </select>
-        </div>
-      ) : (
-        <div className={field}>
-          <label htmlFor="f-data" className={label}>Min data: <span className="text-sifu-gold">{filters.minData === 0 ? "Any" : `${filters.minData}GB`}</span></label>
-          <input id="f-data" type="range" min={0} max={200} step={10} value={filters.minData} onChange={(e) => set("minData", Number(e.target.value))} className="w-full accent-sifu-gold" />
-        </div>
-      )}
+        </label>
+      </Group>
 
-      <fieldset className={field}>
-        <legend className={label}>Contract</legend>
+      <Group>
+        <div className="py-3">
+          <div className="mb-1 flex items-center justify-between text-[16px]">
+            <label htmlFor="f-price">Max price / month</label>
+            <span className="font-semibold tabular-nums text-accent">{formatPrice(filters.maxPrice, currency)}</span>
+          </div>
+          <input id="f-price" className="slider w-full" style={pct(filters.maxPrice, priceCeiling)} type="range" min={0} max={priceCeiling} step={1} value={filters.maxPrice} onChange={(e) => set("maxPrice", Number(e.target.value))} />
+        </div>
+        {isBroadband ? (
+          <label className="flex items-center justify-between gap-3 py-3 text-[16px]">
+            Min speed
+            <select value={filters.minSpeed} onChange={(e) => set("minSpeed", Number(e.target.value))} className={select}>
+              {[0, 100, 300, 500, 1000, 2000].map((v) => <option key={v} value={v}>{v === 0 ? "Any" : v >= 1000 ? `${v / 1000}Gbps+` : `${v}Mbps+`}</option>)}
+            </select>
+          </label>
+        ) : (
+          <div className="py-3">
+            <div className="mb-1 flex items-center justify-between text-[16px]">
+              <label htmlFor="f-data">Min data</label>
+              <span className="font-semibold tabular-nums text-accent">{filters.minData === 0 ? "Any" : `${filters.minData}GB`}</span>
+            </div>
+            <input id="f-data" className="slider w-full" style={pct(filters.minData, 200)} type="range" min={0} max={200} step={10} value={filters.minData} onChange={(e) => set("minData", Number(e.target.value))} />
+          </div>
+        )}
+      </Group>
+
+      <Group title="Contract">
         {[{ v: null, l: "Any" }, { v: 0, l: "No contract" }, { v: 12, l: "12 months" }, { v: 24, l: "24 months" }].map((o) => (
-          <label key={o.l} className="mb-1 flex cursor-pointer items-center gap-2 text-sm">
-            <input type="radio" name="contract" className="accent-sifu-gold" checked={filters.contract === o.v} onChange={() => set("contract", o.v)} />
+          <button key={o.l} type="button" role="radio" aria-checked={filters.contract === o.v} onClick={() => set("contract", o.v)} className="press flex w-full items-center justify-between py-3 text-left text-[16px]">
             {o.l}
-          </label>
+            {filters.contract === o.v && <span aria-hidden className="text-accent">✓</span>}
+          </button>
         ))}
-      </fieldset>
+      </Group>
 
-      <fieldset>
-        <legend className={label}>Providers</legend>
+      <Group title="Providers">
         {providers.map((p) => (
-          <label key={p.id} className="mb-1 flex cursor-pointer items-center gap-2 text-sm">
-            <input type="checkbox" className="accent-sifu-gold" checked={filters.providers.includes(p.id)} onChange={() => toggleProvider(p.id)} />
+          <label key={p.id} className="flex cursor-pointer items-center justify-between gap-3 py-2.5 text-[16px]">
             {p.name}
+            <input type="checkbox" className="switch" checked={filters.providers.includes(p.id)} onChange={() => toggleProvider(p.id)} />
           </label>
         ))}
-      </fieldset>
+      </Group>
     </aside>
   );
 }

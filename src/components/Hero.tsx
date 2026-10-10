@@ -1,28 +1,23 @@
 import type { Country } from "@/types/database";
-
-const BADGES = ["✔ Independent comparison", "✔ Updated every night", "✔ Free to use", "✔ 100% local telcos"];
+import { SearchIcon } from "./Icons";
 
 export function Hero({ country }: { country: Country }) {
   return (
-    <section className="bg-sifu-navy text-white">
-      <div className="mx-auto max-w-4xl px-4 py-14 text-center md:py-20">
-        <h1 className="text-3xl font-extrabold leading-tight md:text-5xl">
-          Master Your Mobile &amp; Fibre Savings with <span className="text-sifu-gold">PlanSifu</span>
-        </h1>
-        <p className="mx-auto mt-4 max-w-2xl text-base text-slate-300 md:text-lg">
-          Compare all telco and broadband subscription deals across Malaysia &amp; Singapore
-        </p>
+    <section className="mx-auto max-w-4xl px-4 pb-4 pt-10 text-center md:pt-16">
+      <h1 className="rise text-[38px] font-bold leading-[1.05] tracking-[-0.03em] md:text-[64px]">
+        Find the plan that<br className="hidden md:block" /> <span className="text-accent">actually fits.</span>
+      </h1>
+      <p className="rise mx-auto mt-4 max-w-xl text-[17px] leading-snug text-label-2 md:text-xl" style={{ "--i": 1 } as React.CSSProperties}>
+        Compare mobile, fibre broadband and travel eSIM deals across Malaysia &amp; Singapore — updated every night.
+      </p>
 
-        <form action="/mobile" method="get" role="search" className="mx-auto mt-8 flex max-w-xl overflow-hidden rounded-xl bg-white shadow-lg">
-          <input type="hidden" name="country" value={country} />
-          <input name="q" type="search" aria-label="Search plans" placeholder="Search a plan or provider, e.g. Maxis, 5G, unlimited…" className="min-w-0 flex-1 px-4 py-3.5 text-sm text-sifu-navy outline-none" />
-          <button className="bg-sifu-gold px-6 font-bold hover:bg-sifu-gold-dark">Search</button>
-        </form>
-
-        <ul className="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-slate-300">
-          {BADGES.map((b) => <li key={b}>{b}</li>)}
-        </ul>
-      </div>
+      <form action="/mobile" method="get" role="search" className="rise mx-auto mt-8 max-w-xl" style={{ "--i": 2 } as React.CSSProperties}>
+        <input type="hidden" name="country" value={country} />
+        <label className="flex items-center gap-2 rounded-[14px] bg-fill-strong px-3.5 py-3 transition-shadow focus-within:shadow-[0_0_0_3px_color-mix(in_srgb,var(--accent)_40%,transparent)]">
+          <SearchIcon className="size-5 shrink-0 text-label-3" />
+          <input name="q" type="search" aria-label="Search plans" placeholder="Search a plan or provider" className="min-w-0 flex-1 bg-transparent text-[17px] outline-none placeholder:text-label-3" />
+        </label>
+      </form>
     </section>
   );
 }
