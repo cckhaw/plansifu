@@ -26,7 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={inter.variable}>
       <body className="font-sans antialiased">
-        <Suspense fallback={<div className="h-14" />}>
+        <Suspense fallback={<div className="h-14 md:h-16" />}>
           <Header />
         </Suspense>
         {children}
