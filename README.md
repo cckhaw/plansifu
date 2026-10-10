@@ -49,7 +49,8 @@ Scraper selectors/URLs are in `scripts/scrapers/providers/*.ts`; provider sites 
 ## 3. GitHub Actions (nightly crawl)
 
 `.github/workflows/daily-scraper.yml` runs once a day at 03:00 MYT/SGT (`0 19 * * *` UTC) and can be run manually
-(**Actions → Daily Scraper → Run workflow**).
+(**Actions → Daily Scraper → Run workflow**, with `suite` = all / telco / esim).
+The **Travel eSIM** crawl runs separately once a week, Sundays 04:00 MYT/SGT (`0 20 * * 6` UTC). Run `supabase/migrations/03_travel_esim.sql` before its first run.
 
 Add under **Settings → Secrets and variables → Actions → Repository secrets**:
 `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`, `VERCEL_DEPLOY_HOOK_URL`.

@@ -1,6 +1,6 @@
 import type { CrawlPageReport, CrawlRun, CrawlWarning } from "@/types/database";
 import type { CrawlReportData, ProviderCrawl } from "@/lib/crawl-report";
-import { STALE_HOURS } from "@/lib/crawl-report";
+import { ESIM_STALE_HOURS, STALE_HOURS } from "@/lib/crawl-report";
 
 const FLAG = { MY: "🇲🇾", SG: "🇸🇬", GL: "✈️" } as const;
 const COUNTRY_ORDER = { MY: 0, SG: 1, GL: 2 } as const;
@@ -137,7 +137,7 @@ function ProviderRow({ p, now }: { p: ProviderCrawl; now: number }) {
           {log.duration_ms ? ` · took ${(log.duration_ms / 1000).toFixed(0)}s` : ""}
           {log.status !== "success" && p.lastSuccessAt ? ` · last success ${formatTime(p.lastSuccessAt)} (${timeAgo(p.lastSuccessAt, now)})` : ""}
           {log.status !== "success" && !p.lastSuccessAt ? " · never succeeded" : ""}
-          {status === "stale" ? ` · last success is over ${STALE_HOURS} h old` : ""}
+          {status === "stale" ? ` · last success is over ${p.provider.country === "GL" ? ESIM_STALE_HOURS / 24 + " days" : STALE_HOURS + " h"} old` : ""}
         </p>
 
         {log.error_message && <p className="rounded-lg border border-red-300 bg-red-50 px-3 py-2 font-medium text-red-800">{log.error_message}</p>}
@@ -265,7 +265,7 @@ export function CrawlReportView({ data, now }: { data: CrawlReportData; now: num
 
       <footer className="border-t border-slate-200 pt-4 text-xs text-slate-500">
         <strong>Check</strong> = something differs from the previous crawl or from what the page showed: a page failed or returned nothing, the plan count fell 30% or more, a plan&apos;s price moved 25% or more, or extracted plans were all filtered out.
-        &quot;Stale&quot; = no successful crawl in {STALE_HOURS} hours. Times are Malaysia/Singapore time.
+        &quot;Stale&quot; = no successful crawl in {STALE_HOURS} hours ({ESIM_STALE_HOURS / 24} days for weekly Travel eSIM brands). Times are Malaysia/Singapore time.
       </footer>
     </div>
   );

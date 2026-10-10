@@ -2,7 +2,8 @@ name: Daily Scraper
 
 on:
   schedule:
-    - cron: "0 19 * * *" # 03:00 MYT/SGT (UTC+8) = 19:00 UTC the previous day
+    - cron: "0 19 * * *" # 03:00 MYT/SGT (UTC+8) = 19:00 UTC the previous day: telco crawl, every day
+    - cron: "0 20 * * 6" # 04:00 MYT/SGT on Sunday = 20:00 UTC Saturday: Travel eSIM crawl, once a week
   workflow_dispatch:
     inputs:
       providers:
@@ -36,7 +37,7 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run scrapers
-        if: ${{ inputs.suite != 'esim' }}
+        if: ${{ github.event.schedule == '0 19 * * *' || (github.event_name == 'workflow_dispatch' && inputs.suite != 'esim') }}
         run: npm run scrape
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -46,9 +47,9 @@ jobs:
           SCRAPE_ONLY: ${{ inputs.providers }}
           SCRAPE_DEBUG: ${{ inputs.providers != '' && '1' || '' }}
 
-      # Travel eSIM brands. A failure here must not block the telco crawl's deploy hook.
+      # Travel eSIM brands: weekly (Sunday 04:00 MYT) or on demand. A failure here must not block the deploy hook.
       - name: Run Travel eSIM scrapers
-        if: ${{ inputs.suite != 'telco' && !cancelled() }}
+        if: ${{ !cancelled() && (github.event.schedule == '0 20 * * 6' || (github.event_name == 'workflow_dispatch' && inputs.suite != 'telco')) }}
         continue-on-error: true
         run: npm run scrape:esim
         env:
