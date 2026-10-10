@@ -23,11 +23,14 @@ async function main() {
   console.log(`phone_number true ${pct(rows.filter((p) => p.phone_number).length)}, false ${pct(rows.filter((p) => p.phone_number === false).length)}, null ${pct(rows.filter((p) => p.phone_number === null).length)}`);
   console.log(`unlimited ${pct(rows.filter((p) => p.data_gb !== null && p.data_gb < 0).length)}, data null ${pct(rows.filter((p) => p.data_gb === null).length)}, validity null ${pct(rows.filter((p) => p.validity_days === null).length)}`);
 
-  const dest = process.env.AUDIT_DEST || "japan";
+  // AUDIT_DEST = "japan" or "japan|GigSky,Ubigi" (destination, optional brand filter)
+  const [destArg, brandArg] = (process.env.AUDIT_DEST || "japan").split("|");
+  const dest = destArg || "japan";
+  const brandFilter = brandArg?.split(",").map((b) => b.trim().toLowerCase());
   const usd: Record<string, number> = { USD: 1, EUR: 1.16, GBP: 1.33, MYR: 0.245, SGD: 0.78, AUD: 0.65 };
   console.log(`\n--- ${dest}: brand | title | GB | days | price | voice/sms/number | perks`);
   rows
-    .filter((p) => p.destination_key === dest)
+    .filter((p) => p.destination_key === dest && (!brandFilter || brandFilter.includes(p.provider.name.toLowerCase())))
     .sort((a, b) => a.provider.name.localeCompare(b.provider.name) || Number(a.price) - Number(b.price))
     .forEach((p) =>
       console.log(`${p.provider.name} | ${p.title} | ${p.data_gb} | ${p.validity_days} | ${p.price} ${p.currency} | ${p.voice_included}/${p.sms_included}/${p.phone_number} | ${p.perks.slice(0, 3).join(", ")}${p.coverage ? ` | cov: ${p.coverage}` : ""}`),
