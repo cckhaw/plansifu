@@ -27,15 +27,9 @@ export default async function MobilePage({ searchParams }: { searchParams: Promi
           {type === "prepaid" ? "Prepaid" : type === "postpaid" ? "Postpaid" : "Mobile"} plans
         </h1>
         <p className="rise mb-6 text-[17px] text-label-2" style={{ "--i": 1 } as React.CSSProperties}>
-          {COUNTRIES[country].flag} {COUNTRIES[country].label} · filter by price and data, then compare up to 3 side by side.
+          {COUNTRIES[country].flag} {COUNTRIES[country].label} · use Filters to narrow by price, data and contract, then compare up to 3 side by side.
         </p>
-        {picks.length > 0 && (
-          <div className="mb-10">
-            <PickTabs title="Best for…" groups={picks} />
-          </div>
-        )}
-        <h2 className="mb-3 px-1 text-[26px] font-bold tracking-tight">All plans</h2>
-        <ComparisonView key={`${country}-${type}`} plans={plans} initialQuery={sp.q ?? ""} />
+        <ComparisonView lead={picks.length > 0 ? <PickTabs compact title="Best for…" groups={picks} /> : undefined} key={`${country}-${type}`} plans={plans} initialQuery={sp.q ?? ""} />
       </main>
       <Footer />
     </>

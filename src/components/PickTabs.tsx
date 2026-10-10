@@ -7,7 +7,7 @@ import { ChevronIcon } from "./Icons";
 import { PlanCard } from "./PlanCard";
 
 /** "Best for ..." groups as a row of chips; picking one swaps in its top plans. */
-export function PickTabs({ title, groups, seeAllHref, seeAllLabel = "See all" }: { title: string; groups: PickGroup[]; seeAllHref?: string; seeAllLabel?: string }) {
+export function PickTabs({ title, groups, seeAllHref, seeAllLabel = "See all", compact }: { title: string; groups: PickGroup[]; seeAllHref?: string; seeAllLabel?: string; /** Narrower container (next to the filter sidebar): fewer columns. */ compact?: boolean }) {
   const [id, setId] = useState(groups[0]?.id);
   const active = groups.find((g) => g.id === id) ?? groups[0];
   if (!active) return null;
@@ -32,7 +32,7 @@ export function PickTabs({ title, groups, seeAllHref, seeAllLabel = "See all" }:
       </div>
       <p className="mb-4 px-1 text-[14px] text-label-2">{active.blurb}</p>
 
-      <div key={active.id} className="grid gap-4 md:grid-cols-3">
+      <div key={active.id} className={`grid grid-cols-1 gap-4 ${compact ? "md:grid-cols-2 2xl:grid-cols-3" : "md:grid-cols-3"}`}>
         {active.items.map((it, i) => (
           <PlanCard key={it.plan.id} plan={it.plan} index={i} callout={it.stat} rank={i + 1} />
         ))}
