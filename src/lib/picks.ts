@@ -39,7 +39,13 @@ function group(id: string, label: string, blurb: string, entries: { plan: PlanWi
   return items.length ? { id, label, blurb, items } : null;
 }
 
-export function buildPicks(plans: PlanWithProvider[], kind: PickKind): PickGroup[] {
+/** Plans limited to an age group or similar: fine to list, but never a headline "best" for everyone. */
+const RESTRICTED = /\b(seniors?|youths?|students?|silver|pioneer|merdeka|elderly|teens?|kids?|children)\b|16-24|60\+|55\+/i;
+/** Above this a "GB" figure is effectively uncapped, which would make price per GB meaningless. */
+const MAX_RANKED_GB = 300;
+
+export function buildPicks(allPlans: PlanWithProvider[], kind: PickKind): PickGroup[] {
+  const plans = allPlans.filter((p) => !RESTRICTED.test(`${p.title} ${p.features.join(" ")}`));
   const cur = plans[0]?.currency;
   const money = (n: number) => (cur ? formatPrice(Math.round(n * 100) / 100, cur) : String(n));
   const groups: (PickGroup | null)[] = [];
@@ -57,11 +63,11 @@ export function buildPicks(plans: PlanWithProvider[], kind: PickKind): PickGroup
 
   // Mobile (postpaid or prepaid). Prepaid packs are small, so the thresholds are lower.
   const minGb = kind === "postpaid" ? 20 : 5;
-  const metered = plans.filter((p) => !isUnlimited(p) && perGb(p) !== null);
+  const metered = plans.filter((p) => !isUnlimited(p) && perGb(p) !== null && (p.data_gb ?? 0) <= MAX_RANKED_GB);
   groups.push(
     group("value", "Best value per GB", `Lowest price per GB on plans with ${minGb}GB or more`, metered.filter((p) => (p.data_gb ?? 0) >= minGb).map((p) => ({ plan: p, stat: `${money(perGb(p)!)} / GB`, key: perGb(p)! }))),
     group("cheapest", "Cheapest", `Lowest price with at least ${kind === "postpaid" ? 10 : 3}GB`, plans.filter((p) => isUnlimited(p) || (p.data_gb ?? 0) >= (kind === "postpaid" ? 10 : 3)).map((p) => ({ plan: p, stat: `${money(p.monthly_price)}${kind === "postpaid" ? " / mo" : ""}`, key: p.monthly_price }))),
-    group("data", "Most data", "The biggest data allowances", plans.filter((p) => p.data_gb !== null).map((p) => ({ plan: p, stat: formatData(p.data_gb), key: isUnlimited(p) ? -1e9 : -(p.data_gb ?? 0) }))),
+    group("data", "Most data", "The biggest data allowances", plans.filter((p) => p.data_gb !== null).map((p) => ({ plan: p, stat: formatData(p.data_gb), key: isUnlimited(p) || (p.data_gb ?? 0) > MAX_RANKED_GB ? -1e9 + p.monthly_price : -(p.data_gb ?? 0) }))),
     group("unlimited", "Unlimited data", "Cheapest plans with no data cap", plans.filter(isUnlimited).map((p) => ({ plan: p, stat: "Unlimited", key: p.monthly_price }))),
     group("nocontract", "No contract", "Cheapest with no lock-in", plans.filter((p) => p.contract_months === 0 && (p.data_gb ?? 0) !== 0).map((p) => ({ plan: p, stat: "No contract", key: p.monthly_price }))),
     group("perks", "Most perks", "Plans with the most extras included", plans.filter((p) => p.features.length > 0).map((p) => ({ plan: p, stat: `${p.features.length} perks`, key: -p.features.length }))),
