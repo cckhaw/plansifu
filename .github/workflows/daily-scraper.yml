@@ -11,7 +11,7 @@ on:
         required: false
         default: ""
       suite:
-        description: "What to crawl: all (default), telco, or esim (Travel eSIM brands)"
+        description: "What to run: all (default), telco, esim (Travel eSIM crawl) or audit (print a Travel eSIM data-quality summary)"
         required: false
         default: "all"
 
@@ -37,7 +37,7 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run scrapers
-        if: ${{ github.event.schedule == '0 19 * * *' || (github.event_name == 'workflow_dispatch' && inputs.suite != 'esim') }}
+        if: ${{ github.event.schedule == '0 19 * * *' || (github.event_name == 'workflow_dispatch' && (inputs.suite == 'all' || inputs.suite == 'telco')) }}
         run: npm run scrape
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -49,7 +49,7 @@ jobs:
 
       # Travel eSIM brands: weekly (Sunday 04:00 MYT) or on demand. A failure here must not block the deploy hook.
       - name: Run Travel eSIM scrapers
-        if: ${{ !cancelled() && (github.event.schedule == '0 20 * * 6' || (github.event_name == 'workflow_dispatch' && inputs.suite != 'telco')) }}
+        if: ${{ !cancelled() && (github.event.schedule == '0 20 * * 6' || (github.event_name == 'workflow_dispatch' && (inputs.suite == 'all' || inputs.suite == 'esim'))) }}
         continue-on-error: true
         run: npm run scrape:esim
         env:
@@ -58,6 +58,14 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           SCRAPE_ONLY: ${{ inputs.providers }}
           SCRAPE_DEBUG: ${{ inputs.providers != '' && '1' || '' }}
+
+      - name: Audit Travel eSIM data
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.suite == 'audit' }}
+        run: npx tsx scripts/esim/audit.ts
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          AUDIT_DEST: ${{ inputs.providers }}
 
       - name: Trigger Vercel deploy
         if: success()
