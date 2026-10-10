@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { ComparisonView } from "@/components/ComparisonView";
 import { Footer } from "@/components/Footer";
-import { Header, type NavKey } from "@/components/Header";
 import { COUNTRIES, parseCountry } from "@/lib/currency";
 import { getPlans } from "@/lib/plans";
 import type { PlanCategory } from "@/types/database";
@@ -16,18 +15,17 @@ export default async function MobilePage({ searchParams }: { searchParams: Promi
   const country = parseCountry(sp.country);
   const type = sp.type === "prepaid" || sp.type === "postpaid" ? sp.type : null;
   const categories: PlanCategory[] = type ? [`mobile_${type}`] : ["mobile_postpaid", "mobile_prepaid"];
-  const active: NavKey = type ?? "postpaid";
   const plans = await getPlans(country, categories);
-  const pathname = type ? `/mobile?type=${type}` : "/mobile";
 
   return (
     <>
-      <Header country={country} active={active} pathname={pathname} />
-      <main className="mx-auto max-w-7xl px-4 py-8 pb-24">
-        <h1 className="mb-1 text-2xl font-extrabold md:text-3xl">
-          {COUNTRIES[country].flag} {type === "prepaid" ? "Prepaid" : type === "postpaid" ? "Postpaid" : "Mobile"} plans in {COUNTRIES[country].label}
+      <main className="mx-auto max-w-7xl px-4 pb-28 pt-6 md:pb-16">
+        <h1 className="rise mb-1 text-[34px] font-bold leading-[1.1] tracking-[-0.025em] md:text-5xl">
+          {type === "prepaid" ? "Prepaid" : type === "postpaid" ? "Postpaid" : "Mobile"} plans
         </h1>
-        <p className="mb-6 text-slate-600">Filter by price, data and contract, then compare up to 3 plans side by side.</p>
+        <p className="rise mb-6 text-[17px] text-label-2" style={{ "--i": 1 } as React.CSSProperties}>
+          {COUNTRIES[country].flag} {COUNTRIES[country].label} · filter by price and data, then compare up to 3 side by side.
+        </p>
         <ComparisonView key={`${country}-${type}`} plans={plans} initialQuery={sp.q ?? ""} />
       </main>
       <Footer />

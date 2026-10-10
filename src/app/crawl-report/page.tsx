@@ -15,7 +15,7 @@ export default async function CrawlReportPage({ searchParams }: { searchParams: 
   if (!isAuthorised(key)) notFound();
   const data = await getCrawlReport();
   return (
-    <main className="min-h-screen bg-slate-50">
+    <main className="min-h-screen bg-slate-50 text-slate-900" style={{ colorScheme: "light" }}>
       <CrawlReportView data={data} now={Date.now()} />
     </main>
   );

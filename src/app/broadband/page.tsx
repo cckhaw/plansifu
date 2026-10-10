@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { ComparisonView } from "@/components/ComparisonView";
 import { Footer } from "@/components/Footer";
-import { Header } from "@/components/Header";
 import { COUNTRIES, parseCountry } from "@/lib/currency";
 import { getPlans } from "@/lib/plans";
 
@@ -15,10 +14,11 @@ export default async function BroadbandPage({ searchParams }: { searchParams: Pr
 
   return (
     <>
-      <Header country={country} active="broadband" pathname="/broadband" />
-      <main className="mx-auto max-w-7xl px-4 py-8 pb-24">
-        <h1 className="mb-1 text-2xl font-extrabold md:text-3xl">{COUNTRIES[country].flag} Home fibre broadband in {COUNTRIES[country].label}</h1>
-        <p className="mb-6 text-slate-600">Compare speeds, prices and freebies from every major fibre provider.</p>
+      <main className="mx-auto max-w-7xl px-4 pb-28 pt-6 md:pb-16">
+        <h1 className="rise mb-1 text-[34px] font-bold leading-[1.1] tracking-[-0.025em] md:text-5xl">Home fibre</h1>
+        <p className="rise mb-6 text-[17px] text-label-2" style={{ "--i": 1 } as React.CSSProperties}>
+          {COUNTRIES[country].flag} {COUNTRIES[country].label} · compare speeds, prices and freebies from every major provider.
+        </p>
         <ComparisonView key={country} plans={plans} initialQuery={sp.q ?? ""} />
       </main>
       <Footer />

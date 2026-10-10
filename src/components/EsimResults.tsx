@@ -24,28 +24,28 @@ function VoiceSms({ r }: { r: EsimRowView }) {
     const what = p.voice_included && p.sms_included ? "Voice + SMS" : p.voice_included ? "Voice" : "SMS";
     return (
       <span>
-        <span className="font-semibold text-emerald-700">✓ {what}</span>
-        {p.voice_sms_note && <span className="block text-xs text-slate-500">{p.voice_sms_note}</span>}
+        <span className="font-semibold text-good">✓ {what}</span>
+        {p.voice_sms_note && <span className="block text-xs text-label-3">{p.voice_sms_note}</span>}
       </span>
     );
   }
-  if (p.voice_included === false || p.sms_included === false) return <span className="text-slate-500">Data only</span>;
-  return <span className="text-slate-400">Not stated</span>;
+  if (p.voice_included === false || p.sms_included === false) return <span className="text-label-2">Data only</span>;
+  return <span className="text-label-3">Not stated</span>;
 }
 
 function PhoneNumber({ r }: { r: EsimRowView }) {
   const v = r.plan.phone_number;
-  if (v) return <span className="font-semibold text-emerald-700">✓ Yes</span>;
-  if (v === false) return <span className="text-slate-500">No</span>;
-  return <span className="text-slate-400">Not stated</span>;
+  if (v) return <span className="font-semibold text-good">✓ Yes</span>;
+  if (v === false) return <span className="text-label-2">No</span>;
+  return <span className="text-label-3">Not stated</span>;
 }
 
 function Perks({ perks, limit = 4 }: { perks: string[]; limit?: number }) {
-  if (!perks?.length) return <span className="text-slate-400">—</span>;
+  if (!perks?.length) return <span className="text-label-3">—</span>;
   return (
     <ul className="flex flex-wrap gap-1">
       {perks.slice(0, limit).map((p) => (
-        <li key={p} className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-700">{p}</li>
+        <li key={p} className="rounded-full bg-fill px-2 py-0.5 text-[11px] font-medium text-label-2">{p}</li>
       ))}
     </ul>
   );
@@ -57,19 +57,19 @@ export function EsimResults({ rows, country, bestGbId, cheapestId }: { rows: Esi
   const currency = COUNTRIES[country].currency;
   const tags = (r: EsimRowView) => (
     <>
-      {r.plan.id === bestGbId && <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">Best per GB</span>}
-      {r.plan.id === cheapestId && <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-800">Cheapest</span>}
+      {r.plan.id === bestGbId && <span className="rounded-full bg-good-tint px-2 py-0.5 text-[10px] font-bold text-good">Best per GB</span>}
+      {r.plan.id === cheapestId && <span className="rounded-full bg-tint px-2 py-0.5 text-[10px] font-bold text-accent">Cheapest</span>}
     </>
   );
   const original = (r: EsimRowView) =>
-    r.plan.currency !== currency ? <span className="block text-[11px] font-normal text-slate-500">{Number(r.plan.price).toFixed(2)} {r.plan.currency}</span> : null;
+    r.plan.currency !== currency ? <span className="block text-[11px] font-normal text-label-3">{Number(r.plan.price).toFixed(2)} {r.plan.currency}</span> : null;
 
   return (
     <>
       {/* Desktop table */}
-      <div className="hidden overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm md:block">
+      <div className="rise hidden overflow-x-auto rounded-[22px] bg-surface shadow-card md:block">
         <table className="w-full min-w-[980px] text-left text-sm">
-          <thead className="bg-slate-50 text-[11px] uppercase tracking-wide text-slate-500">
+          <thead className="text-[11px] font-medium uppercase tracking-wide text-label-3">
             <tr>
               <th className="px-4 py-3">Brand</th>
               <th className="px-3 py-3">Plan</th>
@@ -82,9 +82,9 @@ export function EsimResults({ rows, country, bestGbId, cheapestId }: { rows: Esi
               <th className="px-3 py-3" />
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-sep">
             {rows.map((r) => (
-              <tr key={r.plan.id} className="align-top hover:bg-slate-50/60">
+              <tr key={r.plan.id} className="align-top transition-colors hover:bg-fill/60">
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
                     <ProviderLogo provider={r.plan.provider} size={32} />
@@ -93,18 +93,18 @@ export function EsimResults({ rows, country, bestGbId, cheapestId }: { rows: Esi
                 </td>
                 <td className="px-3 py-3">
                   <div className="font-semibold">{dataLabel(r)} · {validityLabel(r)}</div>
-                  {r.plan.coverage && <div className="text-xs text-slate-500">{r.plan.coverage}</div>}
-                  {r.plan.data_note && <div className="text-xs text-slate-500">{r.plan.data_note}</div>}
+                  {r.plan.coverage && <div className="text-xs text-label-3">{r.plan.coverage}</div>}
+                  {r.plan.data_note && <div className="text-xs text-label-3">{r.plan.data_note}</div>}
                   <div className="mt-1 flex gap-1">{tags(r)}</div>
                 </td>
-                <td className="px-3 py-3 text-base font-extrabold text-sifu-gold">{money(r.price, currency)}{original(r)}</td>
-                <td className="px-3 py-3 font-bold">{r.unlimited ? <span className="text-slate-500">Unlimited</span> : money(r.perGb, currency)}</td>
+                <td className="px-3 py-3 text-[17px] font-bold tracking-tight tabular-nums">{money(r.price, currency)}{original(r)}</td>
+                <td className="px-3 py-3 font-semibold tabular-nums">{r.unlimited ? <span className="text-label-2 font-medium">Unlimited</span> : money(r.perGb, currency)}</td>
                 <td className="px-3 py-3">{money(r.perDay, currency)}</td>
                 <td className="px-3 py-3"><VoiceSms r={r} /></td>
                 <td className="px-3 py-3"><PhoneNumber r={r} /></td>
                 <td className="max-w-[220px] px-3 py-3"><Perks perks={r.plan.perks} /></td>
                 <td className="px-3 py-3">
-                  <a href={href(r)} rel="sponsored nofollow noopener" target="_blank" className="whitespace-nowrap rounded-lg bg-sifu-gold px-3 py-2 text-xs font-bold text-white hover:bg-amber-700">Get eSIM →</a>
+                  <a href={href(r)} rel="sponsored nofollow noopener" target="_blank" className="press whitespace-nowrap rounded-full bg-accent-fill px-3.5 py-2 text-[13px] font-semibold text-accent-on-fill hover:bg-accent-fill-hover">Get eSIM</a>
                 </td>
               </tr>
             ))}
@@ -114,26 +114,26 @@ export function EsimResults({ rows, country, bestGbId, cheapestId }: { rows: Esi
 
       {/* Mobile cards */}
       <div className="grid gap-3 md:hidden">
-        {rows.map((r) => (
-          <article key={r.plan.id} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        {rows.map((r, i) => (
+          <article style={{ "--i": i } as React.CSSProperties} key={r.plan.id} className="rise lift rounded-[22px] bg-surface p-4 shadow-card">
             <header className="flex items-center gap-3">
               <ProviderLogo provider={r.plan.provider} size={36} />
               <div className="min-w-0 flex-1">
-                <p className="text-xs font-medium text-slate-500">{r.plan.provider.name}</p>
-                <h3 className="font-bold">{dataLabel(r)} · {validityLabel(r)}</h3>
+                <p className="text-[13px] font-medium text-label-2">{r.plan.provider.name}</p>
+                <h3 className="font-semibold tracking-tight">{dataLabel(r)} · {validityLabel(r)}</h3>
               </div>
-              <div className="text-right text-xl font-extrabold text-sifu-gold">{money(r.price, currency)}{original(r)}</div>
+              <div className="text-right text-[22px] font-bold tracking-tight tabular-nums">{money(r.price, currency)}{original(r)}</div>
             </header>
             <div className="mt-1 flex gap-1">{tags(r)}</div>
-            {(r.plan.coverage || r.plan.data_note) && <p className="mt-1 text-xs text-slate-500">{[r.plan.coverage, r.plan.data_note].filter(Boolean).join(" · ")}</p>}
+            {(r.plan.coverage || r.plan.data_note) && <p className="mt-1 text-xs text-label-3">{[r.plan.coverage, r.plan.data_note].filter(Boolean).join(" · ")}</p>}
             <dl className="mt-3 grid grid-cols-2 gap-2 text-sm">
-              <div className="rounded-lg bg-slate-50 px-3 py-2"><dt className="text-[11px] uppercase text-slate-500">Per GB</dt><dd className="font-bold">{r.unlimited ? "Unlimited" : money(r.perGb, currency)}</dd></div>
-              <div className="rounded-lg bg-slate-50 px-3 py-2"><dt className="text-[11px] uppercase text-slate-500">Per day</dt><dd className="font-bold">{money(r.perDay, currency)}</dd></div>
-              <div className="rounded-lg bg-slate-50 px-3 py-2"><dt className="text-[11px] uppercase text-slate-500">Voice / SMS</dt><dd><VoiceSms r={r} /></dd></div>
-              <div className="rounded-lg bg-slate-50 px-3 py-2"><dt className="text-[11px] uppercase text-slate-500">Phone number</dt><dd><PhoneNumber r={r} /></dd></div>
+              <div className="rounded-xl bg-fill px-3 py-2"><dt className="text-[11px] font-medium text-label-3">Per GB</dt><dd className="font-bold">{r.unlimited ? "Unlimited" : money(r.perGb, currency)}</dd></div>
+              <div className="rounded-xl bg-fill px-3 py-2"><dt className="text-[11px] font-medium text-label-3">Per day</dt><dd className="font-bold">{money(r.perDay, currency)}</dd></div>
+              <div className="rounded-xl bg-fill px-3 py-2"><dt className="text-[11px] font-medium text-label-3">Voice / SMS</dt><dd><VoiceSms r={r} /></dd></div>
+              <div className="rounded-xl bg-fill px-3 py-2"><dt className="text-[11px] font-medium text-label-3">Phone number</dt><dd><PhoneNumber r={r} /></dd></div>
             </dl>
             <div className="mt-3"><Perks perks={r.plan.perks} limit={6} /></div>
-            <a href={href(r)} rel="sponsored nofollow noopener" target="_blank" className="mt-3 block rounded-lg bg-sifu-gold py-2.5 text-center text-sm font-bold text-white">Get eSIM →</a>
+            <a href={href(r)} rel="sponsored nofollow noopener" target="_blank" className="press mt-3 block rounded-full bg-accent-fill py-3 text-center text-[16px] font-semibold text-accent-on-fill">Get eSIM</a>
           </article>
         ))}
       </div>
