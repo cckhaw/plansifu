@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { COUNTRIES } from "@/lib/currency";
 import type { Country } from "@/types/database";
 import { HomeIcon, PhoneIcon, PlaneIcon, SimIcon, WifiIcon } from "./Icons";
+import { ThemeToggle } from "./ThemeToggle";
 
 type NavKey = "home" | "postpaid" | "prepaid" | "broadband" | "esim";
 
@@ -73,11 +74,11 @@ export function Header() {
 
   return (
     <>
-      <header className={`material sticky top-0 z-40 border-b transition-colors duration-300 ${scrolled ? "border-sep" : "border-transparent"}`}>
-        <div className="mx-auto flex h-14 md:h-16 max-w-7xl items-center gap-4 px-4">
-          {/* The logo scales with the header: 32px tall on phones, 44px from md up. A light plate keeps the navy artwork legible in dark mode. */}
-          <Link href={withCountry("/", country)} className="press flex shrink-0 items-center rounded-xl dark:bg-white/95 dark:px-2 dark:py-1" aria-label="PlanSifu home">
-            <Image src="/logo.png" alt="PlanSifu 师傅" width={640} height={197} priority sizes="(min-width: 768px) 143px, 104px" className="h-8 w-auto md:h-11" />
+      <header className={`header-bar material sticky top-0 z-40 border-b transition-colors duration-300 ${scrolled ? "border-sep" : "border-transparent"}`}>
+        <div className="mx-auto flex h-16 md:h-20 max-w-7xl items-center gap-4 px-4">
+          {/* The logo scales with the bar: 48px tall on phones, 64px from md up; the bar is light in dark mode so the navy artwork stays legible. */}
+          <Link href={withCountry("/", country)} className="press flex shrink-0 items-center" aria-label="PlanSifu home">
+            <Image src="/logo.png" alt="PlanSifu 师傅" width={800} height={343} priority sizes="(min-width: 768px) 150px, 112px" className="h-12 w-auto md:h-16" />
           </Link>
 
           <nav aria-label="Categories" className="mx-auto hidden md:block">
@@ -90,13 +91,16 @@ export function Header() {
             </Segmented>
           </nav>
 
-          <Segmented count={2} index={country === "MY" ? 0 : 1} label="Country and currency" className="ml-auto w-[9.5rem] md:ml-0">
-            {(Object.keys(COUNTRIES) as Country[]).map((c) => (
-              <Link key={c} href={countryHref(c)} scroll={false} aria-current={country === c ? "true" : undefined} className={`press relative z-10 whitespace-nowrap rounded-full px-2 py-1.5 text-center transition-colors ${country === c ? "text-label" : "text-label-2 hover:text-label"}`}>
-                {COUNTRIES[c].flag} {COUNTRIES[c].currency}
-              </Link>
-            ))}
-          </Segmented>
+          <div className="ml-auto flex items-center gap-2 md:ml-0">
+            <Segmented count={2} index={country === "MY" ? 0 : 1} label="Country" className="w-[7.5rem]">
+              {(Object.keys(COUNTRIES) as Country[]).map((c) => (
+                <Link key={c} href={countryHref(c)} scroll={false} aria-label={`${COUNTRIES[c].label} (${COUNTRIES[c].currency})`} title={`${COUNTRIES[c].label} · prices in ${COUNTRIES[c].currency}`} aria-current={country === c ? "true" : undefined} className={`press relative z-10 whitespace-nowrap rounded-full px-2 py-1.5 text-center transition-colors ${country === c ? "text-label" : "text-label-2 hover:text-label"}`}>
+                  {COUNTRIES[c].flag} {c}
+                </Link>
+              ))}
+            </Segmented>
+            <ThemeToggle />
+          </div>
         </div>
       </header>
 
