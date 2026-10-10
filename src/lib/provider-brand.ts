@@ -26,6 +26,8 @@ export const PROVIDER_BRANDS: Record<string, ProviderBrand> = {
   tunetalk: { abbr: "TT", bg: "#4D7C0F", fg: DARK },
   xox: { abbr: "XX", bg: "#111827", fg: DARK },
   ansar: { abbr: "AN", bg: "#78350F", fg: DARK },
+  spark: { abbr: "SP", bg: "#F59E0B", fg: LIGHT },
+  hotlink: { abbr: "HL", bg: "#14B8A6", fg: LIGHT },
   eastel: { abbr: "ET", bg: "#0284C7", fg: DARK },
   hellosim: { abbr: "HS", bg: "#FDA4AF", fg: LIGHT },
   "singtel hi!": { abbr: "HI", bg: "#FACC15", fg: LIGHT },
@@ -36,6 +38,7 @@ export const PROVIDER_BRANDS: Record<string, ProviderBrand> = {
   zym: { abbr: "ZY", bg: "#C4B5FD", fg: LIGHT },
   zero1: { abbr: "Z1", bg: "#64748B", fg: DARK },
   cuniq: { abbr: "CQ", bg: "#A8A29E", fg: LIGHT },
+  eight: { abbr: "EI", bg: "#1E3A8A", fg: DARK },
   vivifi: { abbr: "VF", bg: "#6366F1", fg: DARK },
 };
 

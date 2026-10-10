@@ -15,7 +15,7 @@ export const t = {
   /** Same target, HTML fetched through our Vercel relay (for sites that block the CI network). */
   relay: (target: ScrapeTarget): ScrapeTarget => ({ ...target, relay: true }),
   post: (url: string, hint?: string): ScrapeTarget => ({ url, category: post, hint }),
-  pre: (url: string): ScrapeTarget => ({ url, category: pre }),
+  pre: (url: string, hint?: string): ScrapeTarget => ({ url, category: pre, hint }),
   bb: (url: string): ScrapeTarget => ({ url, category: bb }),
   /** The page is known to list no plans (e.g. prices sit behind a configurator): an empty result is not a warning. */
   expectEmpty: (target: ScrapeTarget): ScrapeTarget => ({ ...target, expectEmpty: true }),
