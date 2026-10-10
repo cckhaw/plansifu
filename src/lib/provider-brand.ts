@@ -26,6 +26,7 @@ export const PROVIDER_BRANDS: Record<string, ProviderBrand> = {
   tunetalk: { abbr: "TT", bg: "#4D7C0F", fg: DARK },
   xox: { abbr: "XX", bg: "#111827", fg: DARK },
   ansar: { abbr: "AN", bg: "#78350F", fg: DARK },
+  spark: { abbr: "SP", bg: "#F59E0B", fg: LIGHT },
   hotlink: { abbr: "HL", bg: "#14B8A6", fg: LIGHT },
   eastel: { abbr: "ET", bg: "#0284C7", fg: DARK },
   hellosim: { abbr: "HS", bg: "#FDA4AF", fg: LIGHT },

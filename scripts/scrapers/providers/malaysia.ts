@@ -24,6 +24,13 @@ export const malaysiaProviders = [
     t.pre("https://www.u.com.my/en/personal/mobile-plans/prepaid/data-plans"),
     t.bb("https://www.u.com.my/en/personal/broadband"),
   ]),
+  // CelcomDigi's app-based eSIM brand: monthly, no-contract subscriptions with in-app top-ups, so listed as prepaid.
+  defineProvider("Spark", "MY", "https://spark.celcomdigi.com", [
+    t.pre(
+      "https://spark.celcomdigi.com",
+      "Only the plan cards under 'Find your Spark' (each shows a 'Monthly price'). Ignore promo codes, vouchers and discounts. If a plan name appears twice with different specs, return only the first.",
+    ),
+  ]),
   defineProvider("Hotlink", "MY", "https://www.hotlink.com.my/en/home/", [
     t.post("https://www.hotlink.com.my/en/products/postpaid/"),
     t.pre("https://www.hotlink.com.my/en/products/prepaid/"),
