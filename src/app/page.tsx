@@ -1,10 +1,14 @@
 import Link from "next/link";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
-import { ChevronIcon, PhoneIcon, PlaneIcon, SimIcon, WifiIcon } from "@/components/Icons";
-import { PlanCard } from "@/components/PlanCard";
-import { parseCountry } from "@/lib/currency";
+import { HeroCarousel } from "@/components/HeroCarousel";
+import { PhoneIcon, PlaneIcon, SimIcon, WifiIcon } from "@/components/Icons";
+import { PickTabs } from "@/components/PickTabs";
+import { COUNTRIES, formatData, formatPrice, formatSpeed, parseCountry } from "@/lib/currency";
+import { filterAndSort, getEsimPlans, getFxRates, toRowView } from "@/lib/esim";
+import { buildPicks, planSlide, type HeroSlide, type PickGroup } from "@/lib/picks";
 import { getPlans } from "@/lib/plans";
+import type { Country } from "@/types/database";
 
 export const revalidate = 3600;
 
@@ -15,19 +19,74 @@ const TILES = [
   { href: "/travel-esim", title: "Travel eSIM", blurb: "By destination", Icon: PlaneIcon, color: "#FF9F0A" },
 ];
 
+/** Colours are deliberately deep so white text stays readable on every slide. */
+const COLORS = { blue: "#0a64d8", purple: "#8a43c2", green: "#1f8a3b", orange: "#c2410c", indigo: "#4745c7", teal: "#0e7480", pink: "#c8123f" };
+
+const first = (groups: PickGroup[], id: string) => groups.find((g) => g.id === id)?.items[0];
+
+async function esimSlide(country: Country): Promise<HeroSlide | null> {
+  const [plans, { rates }] = await Promise.all([getEsimPlans("japan"), getFxRates()]);
+  const { rows } = filterAndSort(plans.map((p) => toRowView(p, country, rates)), { all: false, voice: false, number: false, minGb: 0, brand: null }, "gb");
+  const best = rows.find((r) => r.perGb !== null && r.price !== null);
+  if (!best || best.perGb === null || best.price === null) return null;
+  const currency = COUNTRIES[country].currency;
+  const p = best.plan;
+  return {
+    id: "esim-japan",
+    tag: "Best for Japan trips",
+    icon: "plane",
+    color: COLORS.pink,
+    brand: p.provider.name,
+    provider: p.provider,
+    title: p.title,
+    headline: `${formatPrice(Math.round(best.perGb * 100) / 100, currency)} / GB`,
+    sub: `Cheapest travel eSIM per GB for Japan: ${formatData(p.data_gb)} for ${p.validity_days ?? "?"} days.`,
+    price: formatPrice(Math.round(best.price * 100) / 100, currency),
+    href: `/travel-esim?dest=japan&country=${country}`,
+    cta: "Compare travel eSIMs",
+    external: false,
+  };
+}
+
 export default async function Home({ searchParams }: { searchParams: Promise<{ country?: string }> }) {
   const country = parseCountry((await searchParams).country);
-  const [mobile, broadband] = await Promise.all([getPlans(country, ["mobile_postpaid"]), getPlans(country, ["broadband"])]);
+  const [postpaid, prepaid, broadband, esim] = await Promise.all([
+    getPlans(country, ["mobile_postpaid"]),
+    getPlans(country, ["mobile_prepaid"]),
+    getPlans(country, ["broadband"]),
+    esimSlide(country),
+  ]);
+  const post = buildPicks(postpaid, "postpaid");
+  const pre = buildPicks(prepaid, "prepaid");
+  const bb = buildPicks(broadband, "broadband");
 
-  const sections = [
-    { title: "Top postpaid deals", plans: mobile.slice(0, 3), href: `/mobile?type=postpaid&country=${country}` },
-    { title: "Top home fibre deals", plans: broadband.slice(0, 3), href: `/broadband?country=${country}` },
-  ];
+  const slides: HeroSlide[] = [];
+  const add = (s: HeroSlide | null | undefined) => s && slides.push(s);
+  const v = first(post, "value");
+  if (v) add(planSlide({ id: "post-value", tag: "Best value postpaid", icon: "phone", color: COLORS.blue, plan: v.plan, headline: v.stat, sub: `${formatData(v.plan.data_gb)} of data: the lowest price per GB on a postpaid plan.` }));
+  const u = first(post, "unlimited");
+  if (u) add(planSlide({ id: "post-unlimited", tag: "Best for heavy users", icon: "phone", color: COLORS.purple, plan: u.plan, headline: "Unlimited data", sub: "The cheapest postpaid plan with no data cap, for streaming and tethering." }));
+  const c = first(post, "cheapest");
+  if (c) add(planSlide({ id: "post-cheap", tag: "Best on a budget", icon: "phone", color: COLORS.green, plan: c.plan, headline: `${c.stat}`, sub: `The lowest-priced postpaid plan that still gives you ${formatData(c.plan.data_gb)}.` }));
+  const pv = first(pre, "value");
+  if (pv) add(planSlide({ id: "pre-value", tag: "Best prepaid value", icon: "sim", color: COLORS.orange, plan: pv.plan, headline: pv.stat, sub: `${formatData(pv.plan.data_gb)} with no contract: the lowest price per GB on prepaid.` }));
+  const f = first(bb, "fastest");
+  if (f) add(planSlide({ id: "bb-fast", tag: "Fastest home fibre", icon: "wifi", color: COLORS.indigo, plan: f.plan, headline: formatSpeed(f.plan.speed_mbps), sub: "The quickest home fibre plan on the market, for big households and gamers." }));
+  const bv = first(bb, "value");
+  if (bv) add(planSlide({ id: "bb-value", tag: "Best value fibre", icon: "wifi", color: COLORS.teal, plan: bv.plan, headline: bv.stat, sub: `${formatSpeed(bv.plan.speed_mbps)} for the lowest price per 100Mbps.` }));
+  add(esim);
 
   return (
     <>
       <Hero country={country} />
-      <main className="mx-auto max-w-7xl space-y-12 px-4 pb-28 pt-6 md:pb-16">
+      <main className="mx-auto max-w-7xl space-y-12 px-4 pb-28 pt-4 md:pb-16">
+        {slides.length > 0 && (
+          <div>
+            <h2 className="mb-3 px-1 text-[26px] font-bold tracking-tight">Best for you</h2>
+            <HeroCarousel slides={slides} />
+          </div>
+        )}
+
         <ul className="grid grid-cols-2 gap-3 md:grid-cols-4">
           {TILES.map((t, i) => (
             <li key={t.href} className="rise" style={{ "--i": i + 3 } as React.CSSProperties}>
@@ -44,19 +103,14 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
           ))}
         </ul>
 
-        {sections.map((s) => (
-          <section key={s.title}>
-            <div className="mb-3 flex items-end justify-between px-1">
-              <h2 className="text-[26px] font-bold tracking-tight">{s.title}</h2>
-              <Link href={s.href} className="press inline-flex items-center gap-0.5 text-[15px] font-medium text-accent">See all <ChevronIcon className="size-4" /></Link>
-            </div>
-            {s.plans.length ? (
-              <div className="grid gap-4 md:grid-cols-3">{s.plans.map((p, i) => <PlanCard key={p.id} plan={p} index={i} />)}</div>
-            ) : (
-              <p className="px-1 text-label-2">No plans available yet — check back soon.</p>
-            )}
-          </section>
-        ))}
+        {post.length > 0 && <PickTabs title="Postpaid, by what matters to you" groups={post} seeAllHref={`/mobile?type=postpaid&country=${country}`} />}
+        {pre.length > 0 && <PickTabs title="Prepaid, by what matters to you" groups={pre} seeAllHref={`/mobile?type=prepaid&country=${country}`} />}
+        {bb.length > 0 && <PickTabs title="Home fibre, by what matters to you" groups={bb} seeAllHref={`/broadband?country=${country}`} />}
+        {post.length + pre.length + bb.length === 0 && <p className="px-1 text-label-2">No plans available yet — check back soon.</p>}
+
+        <p className="px-1 text-xs leading-relaxed text-label-3">
+          Picks are ranked automatically from live prices and specs (for example, price per GB), not by who pays us. Always confirm details with the provider.
+        </p>
       </main>
       <Footer />
     </>

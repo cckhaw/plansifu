@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { ComparisonView } from "@/components/ComparisonView";
 import { Footer } from "@/components/Footer";
+import { PickTabs } from "@/components/PickTabs";
 import { COUNTRIES, parseCountry } from "@/lib/currency";
+import { buildPicks } from "@/lib/picks";
 import { getPlans } from "@/lib/plans";
 
 export const metadata: Metadata = { title: "Compare Home Fibre Broadband" };
@@ -11,6 +13,7 @@ export default async function BroadbandPage({ searchParams }: { searchParams: Pr
   const sp = await searchParams;
   const country = parseCountry(sp.country);
   const plans = await getPlans(country, ["broadband"]);
+  const picks = buildPicks(plans, "broadband");
 
   return (
     <>
@@ -19,6 +22,12 @@ export default async function BroadbandPage({ searchParams }: { searchParams: Pr
         <p className="rise mb-6 text-[17px] text-label-2" style={{ "--i": 1 } as React.CSSProperties}>
           {COUNTRIES[country].flag} {COUNTRIES[country].label} · compare speeds, prices and freebies from every major provider.
         </p>
+        {picks.length > 0 && (
+          <div className="mb-10">
+            <PickTabs title="Best for…" groups={picks} />
+          </div>
+        )}
+        <h2 className="mb-3 px-1 text-[26px] font-bold tracking-tight">All plans</h2>
         <ComparisonView key={country} plans={plans} initialQuery={sp.q ?? ""} />
       </main>
       <Footer />

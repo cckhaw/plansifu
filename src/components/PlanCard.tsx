@@ -10,6 +10,10 @@ interface Props {
   compare?: { selected: boolean; disabled: boolean; onToggle: () => void };
   /** Position in the list, for the staggered entrance. */
   index?: number;
+  /** The figure this plan won on, e.g. "RM0.52 / GB". */
+  callout?: string;
+  /** 1-based rank inside a "best for" group. */
+  rank?: number;
 }
 
 function Spec({ label, value }: { label: string; value: string }) {
@@ -21,13 +25,19 @@ function Spec({ label, value }: { label: string; value: string }) {
   );
 }
 
-export function PlanCard({ plan, compare, index = 0 }: Props) {
+export function PlanCard({ plan, compare, index = 0, callout, rank }: Props) {
   const isBroadband = plan.category === "broadband";
   return (
     <article
       className={`rise lift flex flex-col gap-4 rounded-[22px] bg-surface p-5 shadow-card ${compare?.selected ? "ring-2 ring-accent-fill" : ""}`}
       style={{ "--i": index } as React.CSSProperties}
     >
+      {callout && (
+        <div className="-mb-1 flex items-center gap-2">
+          {rank === 1 && <span className="rounded-full bg-accent-fill px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-accent-on-fill">Top pick</span>}
+          <span className="rounded-full bg-tint px-2.5 py-1 text-[13px] font-semibold tabular-nums text-accent">{callout}</span>
+        </div>
+      )}
       <header className="flex items-center gap-3">
         <ProviderLogo provider={plan.provider} />
         <div className="min-w-0 flex-1">

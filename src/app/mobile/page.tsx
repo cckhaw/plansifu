@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { ComparisonView } from "@/components/ComparisonView";
 import { Footer } from "@/components/Footer";
+import { PickTabs } from "@/components/PickTabs";
 import { COUNTRIES, parseCountry } from "@/lib/currency";
+import { buildPicks } from "@/lib/picks";
 import { getPlans } from "@/lib/plans";
 import type { PlanCategory } from "@/types/database";
 
@@ -16,6 +18,7 @@ export default async function MobilePage({ searchParams }: { searchParams: Promi
   const type = sp.type === "prepaid" || sp.type === "postpaid" ? sp.type : null;
   const categories: PlanCategory[] = type ? [`mobile_${type}`] : ["mobile_postpaid", "mobile_prepaid"];
   const plans = await getPlans(country, categories);
+  const picks = type === "prepaid" ? buildPicks(plans, "prepaid") : buildPicks(plans.filter((p) => p.category === "mobile_postpaid"), "postpaid");
 
   return (
     <>
@@ -26,6 +29,12 @@ export default async function MobilePage({ searchParams }: { searchParams: Promi
         <p className="rise mb-6 text-[17px] text-label-2" style={{ "--i": 1 } as React.CSSProperties}>
           {COUNTRIES[country].flag} {COUNTRIES[country].label} · filter by price and data, then compare up to 3 side by side.
         </p>
+        {picks.length > 0 && (
+          <div className="mb-10">
+            <PickTabs title="Best for…" groups={picks} />
+          </div>
+        )}
+        <h2 className="mb-3 px-1 text-[26px] font-bold tracking-tight">All plans</h2>
         <ComparisonView key={`${country}-${type}`} plans={plans} initialQuery={sp.q ?? ""} />
       </main>
       <Footer />
