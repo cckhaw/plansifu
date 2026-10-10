@@ -26,7 +26,7 @@ export function getAdminClient(): SupabaseClient {
   return client;
 }
 
-export async function resolveProviderId(name: string, country: Country, website?: string): Promise<string> {
+export async function resolveProviderId(name: string, country: Country | "GL", website?: string): Promise<string> {
   const db = getAdminClient();
   const { data, error } = await db
     .from("providers")

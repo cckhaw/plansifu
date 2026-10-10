@@ -5,7 +5,7 @@ export type PlanCategory = "mobile_postpaid" | "mobile_prepaid" | "broadband";
 export interface Provider {
   id: string;
   name: string;
-  country: Country;
+  country: Country | "GL"; // "GL" = global (travel eSIM brands)
   logo_url: string | null;
   website_url: string | null;
   is_featured: boolean;
@@ -106,3 +106,30 @@ export interface PlanWithProvider extends Plan {
 export type ScrapedPlan = Omit<Plan, "id" | "provider_id" | "updated_at" | "is_active"> & {
   is_active?: boolean;
 };
+
+/** Travel eSIM plan (table `esim_plans`). Prices are in the brand's own currency; the site converts at display time. */
+export interface EsimPlan {
+  id: string;
+  provider_id: string;
+  destination_key: string;
+  title: string;
+  /** Short description of the coverage, e.g. "39 European countries". */
+  coverage: string | null;
+  /** -1 = unlimited */
+  data_gb: number | null;
+  data_note: string | null;
+  validity_days: number | null;
+  price: number;
+  currency: string;
+  voice_included: boolean | null;
+  sms_included: boolean | null;
+  voice_sms_note: string | null;
+  /** The plan comes with a phone number that can receive calls / SMS. */
+  phone_number: boolean | null;
+  perks: string[];
+  affiliate_url: string | null;
+  is_active: boolean;
+  updated_at: string;
+}
+
+export type EsimPlanWithProvider = EsimPlan & { provider: Pick<Provider, "id" | "name" | "logo_url" | "website_url"> };

@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "scrape": "tsx scripts/scrapers/run-scrapers.ts"
+    "scrape": "tsx scripts/scrapers/run-scrapers.ts",
+    "scrape:esim": "tsx scripts/esim/run-esim.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.132.1",

@@ -9,6 +9,10 @@ on:
         description: "Optional comma-separated provider names to scrape (default: all)"
         required: false
         default: ""
+      suite:
+        description: "What to crawl: all (default), telco, or esim (Travel eSIM brands)"
+        required: false
+        default: "all"
 
 concurrency:
   group: daily-scraper
@@ -17,7 +21,7 @@ concurrency:
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
 
@@ -32,12 +36,25 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run scrapers
+        if: ${{ inputs.suite != 'esim' }}
         run: npm run scrape
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }} # only used when SCRAPE_ENGINE=firecrawl
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }} # backup engine only
+          SCRAPE_ONLY: ${{ inputs.providers }}
+          SCRAPE_DEBUG: ${{ inputs.providers != '' && '1' || '' }}
+
+      # Travel eSIM brands. A failure here must not block the telco crawl's deploy hook.
+      - name: Run Travel eSIM scrapers
+        if: ${{ inputs.suite != 'telco' && !cancelled() }}
+        continue-on-error: true
+        run: npm run scrape:esim
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           SCRAPE_ONLY: ${{ inputs.providers }}
           SCRAPE_DEBUG: ${{ inputs.providers != '' && '1' || '' }}
 
