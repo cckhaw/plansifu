@@ -32,6 +32,9 @@ export function ComparisonView({ plans, initialQuery = "", lead }: { plans: Plan
   const toggle = (id: string) => setSelected((s) => (s.includes(id) ? s.filter((x) => x !== id) : s.length < MAX_COMPARE ? [...s, id] : s));
   const activeFilters = [filters.maxPrice < priceCeiling, filters.minData > 0, filters.minSpeed > 0, filters.contract !== null, filters.providers.length > 0].filter(Boolean).length;
 
+  // The "Best for…" picks only make sense for the unfiltered list; once someone searches or filters they get out of the way.
+  const pristine = activeFilters === 0 && !filters.query.trim() && filters.sort === initial.sort;
+
   // The hero search sends people here with ?q=. Reading it after hydration keeps this page statically rendered.
   useEffect(() => {
     const q = new URLSearchParams(window.location.search).get("q");
@@ -52,7 +55,7 @@ export function ComparisonView({ plans, initialQuery = "", lead }: { plans: Plan
       </div>
 
       <section aria-labelledby="all-plans-heading" className="min-w-0">
-        <div className="mb-4 flex items-center gap-2">
+        <div className="material sticky top-16 z-30 -mx-4 mb-4 flex items-center gap-2 px-4 py-2 md:top-20 lg:static lg:mx-0 lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
           <label className="flex min-w-0 flex-1 items-center gap-2 rounded-[12px] bg-fill-strong px-3 py-2.5 transition-shadow focus-within:shadow-[0_0_0_3px_color-mix(in_srgb,var(--accent)_40%,transparent)]">
             <SearchIcon className="size-[18px] shrink-0 text-label-3" />
             <input
@@ -68,7 +71,7 @@ export function ComparisonView({ plans, initialQuery = "", lead }: { plans: Plan
             Filters{activeFilters ? ` · ${activeFilters}` : ""}
           </button>
         </div>
-        {lead && <div className="mb-10">{lead}</div>}
+        {lead && pristine && <div className="mb-8">{lead}</div>}
         <div className="mb-3 flex items-baseline justify-between px-1">
           <h2 id="all-plans-heading" className="text-[22px] font-bold tracking-tight md:text-[26px]">All plans</h2>
           <p aria-live="polite" className="text-[13px] font-medium text-label-3">{visible.length} plan{visible.length === 1 ? "" : "s"}{activeFilters ? " · filtered" : ""}</p>
