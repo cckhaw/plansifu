@@ -14,7 +14,8 @@ inspired by CompareHero.my.
 - Scripts run with `tsx`
 
 ## Structure
-- `src/app` — App Router pages: `/`, `/mobile`, `/broadband`, `/api/redirect`
+- `src/app` — App Router pages. Country lives in the path: `/` (hub), `/[country]` (`my`|`sg`), `/[country]/{mobile,postpaid,prepaid,broadband,travel-esim}`, programmatic `/[country]/mobile/[feature]` and `/[country]/broadband/[speed]` (404 below 3 plans), `/about`, `/sitemap.xml`, `/robots.txt`; APIs: `/api/redirect`, `/api/og` (social card, edge), `/api/fetch-page`. `src/middleware.ts` 301s the old `/mobile?type=&country=` URLs.
+- `src/lib/seo-helpers.ts` — titles, descriptions, canonicals, OpenGraph/Twitter metadata (set `NEXT_PUBLIC_SITE_URL` to the primary domain); `src/components/seo/` — JSON-LD (Product/AggregateOffer, BreadcrumbList, FAQPage; FAQ markup must match visible FAQ text)
 - `src/components` — Hero, Header, FilterSidebar, ComparisonView, ComparisonTable,
   PlanCard, DealBadge, ProviderLogo
 - `src/lib` — Supabase clients, currency helpers, plan queries, filtering, seed data
