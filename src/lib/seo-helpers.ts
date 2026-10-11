@@ -61,7 +61,7 @@ const KIND_NOUN: Record<Kind, string> = {
 /** High-CTR title: "Best Postpaid Plans in Malaysia (2026) | PlanSifu 师傅". `qualifier` is e.g. "5G" or "1Gbps". */
 export function buildTitle(opts: { country: Country; kind: Kind; qualifier?: string; best?: boolean }): string {
   const place = COUNTRIES[opts.country].label;
-  if (opts.kind === "travel-esim") return `${opts.qualifier ? `${opts.qualifier} ` : ""}Travel eSIM Compared (${year()}) | ${BRAND}`.replace("  ", " ");
+  if (opts.kind === "travel-esim") return opts.qualifier ? `Best ${opts.qualifier} Travel eSIM Plans (${year()}) | ${BRAND}` : `Best Travel eSIM Plans Compared (${year()}) | ${BRAND}`;
   const noun = KIND_NOUN[opts.kind];
   const best = opts.best === false ? "" : "Best ";
   return `${best}${opts.qualifier ? `${opts.qualifier} ` : ""}${noun} in ${place} (${year()}) | ${BRAND}`;
