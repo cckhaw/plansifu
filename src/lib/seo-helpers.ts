@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { COUNTRIES, formatPrice } from "@/lib/currency";
+import { RESTRICTED } from "@/lib/picks";
 import { kindPath, type Kind } from "@/lib/routes";
 import type { Country, PlanWithProvider } from "@/types/database";
 
@@ -33,7 +34,9 @@ export interface PlanStats {
 
 /** Facts used in titles, descriptions and structured data. Only real numbers from the live data. */
 export function planStats(plans: PlanWithProvider[], country: Country): PlanStats {
-  const prices = plans.map((p) => Number(p.monthly_price)).filter((n) => n > 0);
+  // Headline price range excludes plans limited to an age group (senior, youth...), which most visitors cannot buy.
+  const open = plans.filter((p) => !RESTRICTED.test(`${p.title} ${p.features.join(" ")}`));
+  const prices = (open.length ? open : plans).map((p) => Number(p.monthly_price)).filter((n) => n > 0);
   const byCount = new Map<string, number>();
   plans.forEach((p) => byCount.set(p.provider.name, (byCount.get(p.provider.name) ?? 0) + 1));
   return {

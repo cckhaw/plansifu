@@ -40,7 +40,7 @@ function group(id: string, label: string, blurb: string, entries: { plan: PlanWi
 }
 
 /** Plans limited to an age group or similar: fine to list, but never a headline "best" for everyone. */
-const RESTRICTED = /\b(seniors?|youths?|students?|silver|pioneer|merdeka|elderly|teens?|kids?|children)\b|16-24|60\+|55\+/i;
+export const RESTRICTED = /\b(seniors?|youths?|students?|silver|pioneer|merdeka|elderly|teens?|kids?|children)\b|16-24|60\+|55\+/i;
 /** Above this a "GB" figure is effectively uncapped, which would make price per GB meaningless. */
 const MAX_RANKED_GB = 300;
 
