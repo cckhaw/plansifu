@@ -37,8 +37,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       if (matchSpeed(broadband, s).length >= MIN_PLANS_FOR_PAGE) entries.push({ url: absoluteUrl(`${kindPath(country, "broadband")}/${s.slug}`), lastModified: now, changeFrequency: "daily", priority: 0.7 });
     }
     for (const d of ESIM_DESTINATIONS) {
-      // The default destination is the base URL (already listed above), so only the others carry ?dest=.
-      if (d.key !== ESIM_DESTINATIONS[0].key && (esimCounts[d.key] ?? 0) >= MIN_PLANS_FOR_PAGE) entries.push({ url: absoluteUrl(`${kindPath(country, "travel-esim")}?dest=${d.key}`), lastModified: now, changeFrequency: "weekly", priority: 0.6 });
+      if ((esimCounts[d.key] ?? 0) >= MIN_PLANS_FOR_PAGE) entries.push({ url: absoluteUrl(`${kindPath(country, "travel-esim")}/${d.key}`), lastModified: now, changeFrequency: "weekly", priority: 0.6 });
     }
   }
   return entries;

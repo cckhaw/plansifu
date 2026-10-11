@@ -43,7 +43,7 @@ async function esimSlide(country: Country): Promise<HeroSlide | null> {
     headline: `${formatPrice(Math.round(best.perGb * 100) / 100, currency)} / GB`,
     sub: `Cheapest travel eSIM per GB for Japan: ${formatData(p.data_gb)} for ${p.validity_days ?? "?"} days.`,
     price: formatPrice(Math.round(best.price * 100) / 100, currency),
-    href: `${kindPath(country, "travel-esim")}?dest=japan`,
+    href: `${kindPath(country, "travel-esim")}/japan`,
     cta: "Compare travel eSIMs",
     external: false,
   };
