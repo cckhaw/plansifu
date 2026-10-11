@@ -2,6 +2,7 @@
 
 import type { Country } from "@/types/database";
 import { ESIM_DESTINATIONS } from "@/lib/esim-destinations";
+import { kindPath } from "@/lib/routes";
 
 interface Props {
   country: Country;
@@ -29,8 +30,7 @@ const row = "flex items-center justify-between gap-3 px-4 py-3 text-[16px]";
 
 export function EsimFilters({ country, dest, sort, all, voice, number, minGb, brand, brands, counts }: Props) {
   return (
-    <form method="get" action="/travel-esim" className="rise mb-6 grid gap-4 md:grid-cols-2" style={{ "--i": 2 } as React.CSSProperties}>
-      <input type="hidden" name="country" value={country} />
+    <form method="get" action={kindPath(country, "travel-esim")} className="rise mb-6 grid gap-4 md:grid-cols-2" style={{ "--i": 2 } as React.CSSProperties}>
 
       <div className="divide-y divide-sep overflow-hidden rounded-[18px] bg-surface shadow-card">
         <label className={row}>

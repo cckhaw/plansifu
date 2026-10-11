@@ -5,29 +5,36 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { COUNTRIES } from "@/lib/currency";
+import { countryOfSlug, homePath, kindPath, slugOf, type Kind } from "@/lib/routes";
 import type { Country } from "@/types/database";
 import { HomeIcon, PhoneIcon, PlaneIcon, SimIcon, WifiIcon } from "./Icons";
 import { ThemeToggle } from "./ThemeToggle";
 
 type NavKey = "home" | "postpaid" | "prepaid" | "broadband" | "esim";
 
-const TABS: { key: NavKey; label: string; short: string; path: string; Icon: (p: { className?: string }) => React.ReactElement }[] = [
-  { key: "home", label: "Home", short: "Home", path: "/", Icon: HomeIcon },
-  { key: "postpaid", label: "Postpaid", short: "Postpaid", path: "/mobile?type=postpaid", Icon: PhoneIcon },
-  { key: "prepaid", label: "Prepaid", short: "Prepaid", path: "/mobile?type=prepaid", Icon: SimIcon },
-  { key: "broadband", label: "Broadband", short: "Fibre", path: "/broadband", Icon: WifiIcon },
-  { key: "esim", label: "Travel eSIM", short: "eSIM", path: "/travel-esim", Icon: PlaneIcon },
+const TABS: { key: NavKey; label: string; short: string; kind: Kind | null; Icon: (p: { className?: string }) => React.ReactElement }[] = [
+  { key: "home", label: "Home", short: "Home", kind: null, Icon: HomeIcon },
+  { key: "postpaid", label: "Postpaid", short: "Postpaid", kind: "postpaid", Icon: PhoneIcon },
+  { key: "prepaid", label: "Prepaid", short: "Prepaid", kind: "prepaid", Icon: SimIcon },
+  { key: "broadband", label: "Broadband", short: "Fibre", kind: "broadband", Icon: WifiIcon },
+  { key: "esim", label: "Travel eSIM", short: "eSIM", kind: "travel-esim", Icon: PlaneIcon },
 ];
 
-function activeKey(pathname: string, type: string | null): NavKey | null {
-  if (pathname === "/") return "home";
-  if (pathname.startsWith("/mobile")) return type === "prepaid" ? "prepaid" : "postpaid";
-  if (pathname.startsWith("/broadband")) return "broadband";
-  if (pathname.startsWith("/travel-esim")) return "esim";
-  return null;
+/** Country and active tab come from the URL: /my/postpaid, /sg/broadband/1gbps, ... */
+function parsePath(pathname: string): { country: Country; active: NavKey | null } {
+  const [seg, kind] = pathname.split("/").filter(Boolean);
+  const country = countryOfSlug(seg) ?? "MY";
+  if (!pathname.split("/").filter(Boolean).length) return { country, active: "home" };
+  if (!countryOfSlug(seg)) return { country, active: null };
+  if (!kind) return { country, active: "home" };
+  if (kind === "postpaid" || kind === "mobile") return { country, active: "postpaid" };
+  if (kind === "prepaid") return { country, active: "prepaid" };
+  if (kind === "broadband") return { country, active: "broadband" };
+  if (kind === "travel-esim") return { country, active: "esim" };
+  return { country, active: null };
 }
 
-const withCountry = (path: string, country: Country) => `${path}${path.includes("?") ? "&" : "?"}country=${country}`;
+const tabHref = (t: (typeof TABS)[number], c: Country) => (t.kind ? kindPath(c, t.kind) : homePath(c));
 
 /** iOS segmented control: equal-width segments with a thumb that slides between them. */
 function Segmented({ count, index, children, label, className = "" }: { count: number; index: number; children: React.ReactNode; label: string; className?: string }) {
@@ -48,8 +55,7 @@ function Segmented({ count, index, children, label, className = "" }: { count: n
 export function Header() {
   const pathname = usePathname();
   const params = useSearchParams();
-  const country: Country = params.get("country") === "SG" ? "SG" : "MY";
-  const active = activeKey(pathname, params.get("type"));
+  const { country, active } = parsePath(pathname);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -61,13 +67,13 @@ export function Header() {
 
   if (pathname.startsWith("/crawl-report")) return null;
 
-  const here = `${pathname}${params.toString() ? `?${params.toString()}` : ""}`;
+  /** Same page in the other country: swap the /my or /sg segment and keep the query (e.g. the eSIM destination). */
   const countryHref = (c: Country) => {
-    const next = new URLSearchParams(params.toString());
-    next.set("country", c);
-    return `${pathname}?${next.toString()}`;
+    const parts = pathname.split("/").filter(Boolean);
+    const rest = countryOfSlug(parts[0]) ? parts.slice(1) : [];
+    const q = params.toString();
+    return `/${[slugOf(c), ...rest].join("/")}${q ? `?${q}` : ""}`;
   };
-  void here;
   const activeIndex = TABS.findIndex((t) => t.key === active);
   const desktopTabs = TABS.filter((t) => t.key !== "home");
   const desktopIndex = desktopTabs.findIndex((t) => t.key === active);
@@ -77,14 +83,14 @@ export function Header() {
       <header className={`header-bar material sticky top-0 z-40 border-b transition-colors duration-300 ${scrolled ? "border-sep" : "border-transparent"}`}>
         <div className="mx-auto flex h-16 md:h-20 max-w-7xl items-center gap-4 px-4">
           {/* The logo scales with the bar: 48px tall on phones, 64px from md up; the bar is light in dark mode so the navy artwork stays legible. */}
-          <Link href={withCountry("/", country)} className="press flex shrink-0 items-center" aria-label="PlanSifu home">
+          <Link href={homePath(country)} className="press flex shrink-0 items-center" aria-label="PlanSifu home">
             <Image src="/logo.png" alt="PlanSifu 师傅" width={800} height={343} priority sizes="(min-width: 768px) 150px, 112px" className="h-12 w-auto md:h-16" />
           </Link>
 
           <nav aria-label="Categories" className="mx-auto hidden md:block">
             <Segmented count={desktopTabs.length} index={desktopIndex} label="Categories" className="w-[27rem]">
               {desktopTabs.map((t) => (
-                <Link key={t.key} href={withCountry(t.path, country)} aria-current={active === t.key ? "page" : undefined} className={`press relative z-10 rounded-full px-3 py-1.5 text-center transition-colors ${active === t.key ? "text-label" : "text-label-2 hover:text-label"}`}>
+                <Link key={t.key} href={tabHref(t, country)} aria-current={active === t.key ? "page" : undefined} className={`press relative z-10 rounded-full px-3 py-1.5 text-center transition-colors ${active === t.key ? "text-label" : "text-label-2 hover:text-label"}`}>
                   {t.label}
                 </Link>
               ))}
@@ -111,7 +117,7 @@ export function Header() {
             const on = i === activeIndex;
             return (
               <li key={t.key}>
-                <Link href={withCountry(t.path, country)} aria-current={on ? "page" : undefined} className={`press flex flex-col items-center gap-0.5 pb-1.5 pt-2 text-[10px] font-medium transition-colors ${on ? "text-accent" : "text-label-3"}`}>
+                <Link href={tabHref(t, country)} aria-current={on ? "page" : undefined} className={`press flex flex-col items-center gap-0.5 pb-1.5 pt-2 text-[10px] font-medium transition-colors ${on ? "text-accent" : "text-label-3"}`}>
                   <t.Icon className={`size-6 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${on ? "scale-110" : ""}`} />
                   {t.short}
                 </Link>
