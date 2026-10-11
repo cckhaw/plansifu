@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { HeroSlide } from "@/lib/picks";
+import { PageDots } from "./Carousel";
 import { ChevronIcon, PhoneIcon, PlaneIcon, SimIcon, WifiIcon } from "./Icons";
 import { ProviderLogo } from "./ProviderLogo";
 
@@ -108,11 +109,7 @@ export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
         <button onClick={() => goTo(index - 1)} aria-label="Previous" disabled={index <= 0} className="press hidden size-8 place-items-center rounded-full bg-fill-strong text-label-2 disabled:opacity-30 md:grid">
           <ChevronIcon className="size-4 rotate-180" />
         </button>
-        <div role="tablist" aria-label="Choose a slide" className="flex items-center gap-1.5">
-          {slides.map((s, i) => (
-            <button key={s.id} role="tab" aria-selected={i === index} aria-label={`Show ${s.tag}`} onClick={() => goTo(i)} className={`h-2 rounded-full transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${i === index ? "w-6 bg-label-2" : "w-2 bg-fill-strong"}`} />
-          ))}
-        </div>
+        <PageDots count={slides.length} index={index} onSelect={goTo} label={(i) => `Show ${slides[i].tag}`} />
         <button onClick={() => goTo(index + 1)} aria-label="Next" disabled={index >= slides.length - 1} className="press hidden size-8 place-items-center rounded-full bg-fill-strong text-label-2 disabled:opacity-30 md:grid">
           <ChevronIcon className="size-4" />
         </button>

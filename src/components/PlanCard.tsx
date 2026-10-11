@@ -18,9 +18,9 @@ interface Props {
 
 function Spec({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl bg-fill px-3 py-2">
+    <div className="min-w-0 rounded-xl bg-fill px-2.5 py-2">
       <dt className="text-[11px] font-medium text-label-3">{label}</dt>
-      <dd className="text-[15px] font-semibold tracking-tight">{value}</dd>
+      <dd className="truncate text-[14px] font-semibold tracking-tight">{value}</dd>
     </div>
   );
 }
@@ -29,7 +29,7 @@ export function PlanCard({ plan, compare, index = 0, callout, rank }: Props) {
   const isBroadband = plan.category === "broadband";
   return (
     <article
-      className={`rise lift flex flex-col gap-4 rounded-[22px] bg-surface p-5 shadow-card ${compare?.selected ? "ring-2 ring-accent-fill" : ""}`}
+      className={`rise lift flex flex-col gap-3.5 rounded-[22px] bg-surface p-4 md:gap-4 md:p-5 shadow-card ${compare?.selected ? "ring-2 ring-accent-fill" : ""}`}
       style={{ "--i": index } as React.CSSProperties}
     >
       {callout && (
@@ -41,7 +41,7 @@ export function PlanCard({ plan, compare, index = 0, callout, rank }: Props) {
       <header className="flex items-center gap-3">
         <ProviderLogo provider={plan.provider} />
         <div className="min-w-0 flex-1">
-          <p className="text-[13px] font-medium text-label-2">{plan.provider.name}</p>
+          <p className="text-[13px] font-medium text-label-2">{plan.provider.name} · {plan.category === "mobile_prepaid" ? "Prepaid" : plan.category === "mobile_postpaid" ? "Postpaid" : "Home fibre"}</p>
           <h3 className="truncate text-[17px] font-semibold tracking-tight">{plan.title}</h3>
         </div>
         {compare && (
@@ -64,11 +64,10 @@ export function PlanCard({ plan, compare, index = 0, callout, rank }: Props) {
         <span className="text-[15px] text-label-2">/ month</span>
       </div>
 
-      <dl className="grid grid-cols-2 gap-2">
+      <dl className="grid grid-cols-3 gap-2">
         {isBroadband ? <Spec label="Speed" value={formatSpeed(plan.speed_mbps)} /> : <Spec label="Data" value={formatData(plan.data_gb)} />}
         {isBroadband ? <Spec label="Data" value={plan.data_gb === null ? "Unlimited" : formatData(plan.data_gb)} /> : <Spec label="Calls / SMS" value={formatTalktime(plan)} />}
         <Spec label="Contract" value={formatContract(plan.contract_months)} />
-        <Spec label="Type" value={plan.category === "mobile_prepaid" ? "Prepaid" : plan.category === "mobile_postpaid" ? "Postpaid" : "Home fibre"} />
       </dl>
 
       {plan.promotion_badge && <DealBadge text={plan.promotion_badge} />}

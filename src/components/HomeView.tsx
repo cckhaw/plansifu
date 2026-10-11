@@ -6,12 +6,12 @@ import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
 import { HeroCarousel } from "@/components/HeroCarousel";
 import { PhoneIcon, PlaneIcon, SimIcon, WifiIcon } from "@/components/Icons";
-import { PickTabs } from "@/components/PickTabs";
+import { PickCarousel } from "@/components/PickCarousel";
 import { COUNTRIES, formatData, formatPrice, formatSpeed } from "@/lib/currency";
 import { filterAndSort, getEsimPlans, getFxRates, toRowView } from "@/lib/esim";
-import { buildPicks, planSlide, type HeroSlide, type PickGroup } from "@/lib/picks";
+import { RESTRICTED, buildPicks, planSlide, type HeroSlide, type PickGroup } from "@/lib/picks";
 import { getPlans } from "@/lib/plans";
-import type { Country } from "@/types/database";
+import type { Country, PlanWithProvider } from "@/types/database";
 
 const TILES = [
   { kind: "postpaid", title: "Postpaid", blurb: "Monthly plans", Icon: PhoneIcon, color: "#0A84FF" },
@@ -19,6 +19,14 @@ const TILES = [
   { kind: "broadband", title: "Broadband", blurb: "Home fibre", Icon: WifiIcon, color: "#BF5AF2" },
   { kind: "travel-esim", title: "Travel eSIM", blurb: "By destination", Icon: PlaneIcon, color: "#FF9F0A" },
 ] as const;
+
+/** "42 plans · from RM20" for a tile, ignoring age-restricted plans for the price. */
+function tileStat(plans: PlanWithProvider[]): string | null {
+  if (!plans.length) return null;
+  const open = plans.filter((p) => !RESTRICTED.test(`${p.title} ${p.features.join(" ")}`) && p.monthly_price > 0);
+  const low = open.length ? Math.min(...open.map((p) => p.monthly_price)) : null;
+  return `${plans.length} plans${low !== null ? ` · from ${formatPrice(low, plans[0].currency)}` : ""}`;
+}
 
 /** Colours are deliberately deep so white text stays readable on every slide. */
 const COLORS = { blue: "#0a64d8", purple: "#8a43c2", green: "#1f8a3b", orange: "#c2410c", indigo: "#4745c7", teal: "#0e7480", pink: "#c8123f" };
@@ -56,6 +64,7 @@ export async function HomeView({ country }: { country: Country }) {
     getPlans(country, ["broadband"]),
     esimSlide(country),
   ]);
+  const stats: Record<string, string | null> = { postpaid: tileStat(postpaid), prepaid: tileStat(prepaid), broadband: tileStat(broadband), "travel-esim": esim ? `From ${esim.price} · Japan` : null };
   const post = buildPicks(postpaid, "postpaid");
   const pre = buildPicks(prepaid, "prepaid");
   const bb = buildPicks(broadband, "broadband");
@@ -79,7 +88,7 @@ export async function HomeView({ country }: { country: Country }) {
   return (
     <>
       <Hero country={country} />
-      <main className="mx-auto max-w-7xl space-y-12 px-4 pb-28 pt-4 md:pb-16">
+      <main className="mx-auto max-w-7xl space-y-14 px-4 pb-28 pt-2 md:pb-16">
         {slides.length > 0 && (
           <div>
             <h2 className="mb-3 px-1 text-[26px] font-bold tracking-tight">Best plans for you in {COUNTRIES[country].label}</h2>
@@ -97,15 +106,16 @@ export async function HomeView({ country }: { country: Country }) {
                 <span>
                   <span className="block text-[17px] font-semibold tracking-tight">{t.title}</span>
                   <span className="block text-[13px] text-label-2">{t.blurb}</span>
+                  {stats[t.kind] && <span className="mt-1 block text-[12px] font-medium tabular-nums text-accent">{stats[t.kind]}</span>}
                 </span>
               </Link>
             </li>
           ))}
         </ul>
 
-        {post.length > 0 && <PickTabs title="Postpaid, by what matters to you" groups={post} seeAllHref={kindPath(country, "postpaid")} />}
-        {pre.length > 0 && <PickTabs title="Prepaid, by what matters to you" groups={pre} seeAllHref={kindPath(country, "prepaid")} />}
-        {bb.length > 0 && <PickTabs title="Home fibre, by what matters to you" groups={bb} seeAllHref={kindPath(country, "broadband")} />}
+        {post.length > 0 && <PickCarousel title="Postpaid, by what matters to you" groups={post} seeAllHref={kindPath(country, "postpaid")} />}
+        {pre.length > 0 && <PickCarousel title="Prepaid, by what matters to you" groups={pre} seeAllHref={kindPath(country, "prepaid")} />}
+        {bb.length > 0 && <PickCarousel title="Home fibre, by what matters to you" groups={bb} seeAllHref={kindPath(country, "broadband")} />}
         {post.length + pre.length + bb.length === 0 && <p className="px-1 text-label-2">No plans available yet — check back soon.</p>}
 
         <p className="px-1 text-xs leading-relaxed text-label-3">

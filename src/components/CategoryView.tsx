@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ComparisonView } from "@/components/ComparisonView";
 import { Footer } from "@/components/Footer";
-import { PickTabs } from "@/components/PickTabs";
+import { PickCarousel } from "@/components/PickCarousel";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { FaqSection } from "@/components/seo/FaqSection";
 import { JsonLdProduct } from "@/components/seo/JsonLdProduct";
@@ -67,25 +67,38 @@ export async function CategoryView({ country, kind }: { country: Country; kind: 
     <>
       <main className="mx-auto max-w-7xl px-4 pb-28 pt-6 md:pb-16">
         <Breadcrumbs crumbs={crumbs.map((c, i) => (i === crumbs.length - 1 ? { ...c, path } : c))} />
-        <header className="mb-6">
-          <h1 className="rise mb-2 text-[34px] font-bold leading-[1.1] tracking-[-0.025em] md:text-5xl">
-            {H1[kind]} in {place}
-          </h1>
-          <p className="rise max-w-3xl text-[17px] leading-relaxed text-label-2" style={{ "--i": 1 } as React.CSSProperties}>
-            {COUNTRIES[country].flag} {stats.count
-              ? `Compare ${stats.count} ${CATEGORY_LABEL[kind].toLowerCase()} in ${place} from ${stats.providers.slice(0, 4).join(", ")}${stats.providers.length > 4 ? " and more" : ""}${stats.low !== null ? `, from ${formatPrice(stats.low, stats.currency)}${kind === "prepaid" ? "" : " a month"}` : ""}. Use Filters to narrow by price, data and contract, then compare up to 3 side by side.`
+        <header className="mb-8">
+          <p className="rise mb-2 text-[13px] font-semibold uppercase tracking-wide text-accent">{COUNTRIES[country].flag} {place} · {stats.currency}</p>
+          <h1 className="rise mb-3 text-[40px] font-bold leading-[1.04] tracking-[-0.03em] md:text-6xl">{H1[kind]}</h1>
+          <p className="rise max-w-2xl text-[17px] leading-snug text-label-2 md:text-xl" style={{ "--i": 1 } as React.CSSProperties}>
+            {stats.count
+              ? `Compare ${stats.count} ${CATEGORY_LABEL[kind].toLowerCase()} from ${stats.providers.slice(0, 4).join(", ")}${stats.providers.length > 4 ? " and more" : ""}. Narrow by price, data and contract, then compare up to 3 side by side.`
               : `We are collecting ${CATEGORY_LABEL[kind].toLowerCase()} for ${place}. Check back after tonight's update.`}
           </p>
+          {stats.count > 0 && (
+            <dl className="rise mt-6 grid max-w-2xl grid-cols-3 gap-3" style={{ "--i": 2 } as React.CSSProperties}>
+              {[
+                ["Plans", String(stats.count)],
+                ["From", stats.low !== null ? formatPrice(stats.low, stats.currency) : "–"],
+                ["Providers", String(stats.providers.length)],
+              ].map(([k, v]) => (
+                <div key={k} className="rounded-[18px] bg-surface px-4 py-3 shadow-card">
+                  <dt className="text-[12px] font-medium text-label-3">{k}</dt>
+                  <dd className="text-[22px] font-bold leading-tight tracking-tight tabular-nums md:text-[26px]">{v}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
           {related.length > 0 && (
-            <nav aria-label="Popular searches" className="mt-4 flex flex-wrap gap-2">
+            <nav aria-label="Popular searches" className="no-scrollbar -mx-4 mt-5 flex gap-2 overflow-x-auto px-4 md:mx-0 md:flex-wrap md:px-0">
               {related.map((r) => (
-                <Link key={r.href} href={r.href} className="press rounded-full bg-surface px-3.5 py-1.5 text-[14px] font-medium text-label-2 shadow-card hover:text-label">{r.label}</Link>
+                <Link key={r.href} href={r.href} className="press shrink-0 rounded-full bg-surface px-3.5 py-1.5 text-[14px] font-medium text-label-2 shadow-card hover:text-label">{r.label}</Link>
               ))}
             </nav>
           )}
         </header>
 
-        <ComparisonView lead={picks.length > 0 ? <PickTabs compact title="Best for…" groups={picks} /> : undefined} key={`${country}-${kind}`} plans={plans} />
+        <ComparisonView lead={picks.length > 0 ? <PickCarousel compact title="Best for…" groups={picks} /> : undefined} key={`${country}-${kind}`} plans={plans} />
         <FaqSection faqs={faqsFor(country, kind)} />
       </main>
       <Footer />
