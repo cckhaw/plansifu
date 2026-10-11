@@ -1,5 +1,6 @@
 import { cache } from "react";
 import type { EsimPlanWithProvider } from "@/types/database";
+import { ESIM_DESTINATIONS } from "./esim-destinations";
 import { FALLBACK_USD_RATES, type FxRates } from "./fx";
 import { sampleEsimPlans } from "./sample-esim";
 import { getPublicClient } from "./supabase";
@@ -24,10 +25,15 @@ export const getEsimPlans = cache(async (destinationKey: string): Promise<EsimPl
 export const getEsimDestinationCounts = cache(async (): Promise<Record<string, number>> => {
   const db = getPublicClient();
   if (!db) return sampleEsimPlans.reduce<Record<string, number>>((m, p) => ((m[p.destination_key] = (m[p.destination_key] ?? 0) + 1), m), {});
-  const { data, error } = await db.from("esim_plans").select("destination_key").eq("is_active", true).limit(20000);
-  if (error) return {};
+  // One count query per destination: PostgREST returns at most 1000 rows per request, so counting rows client-side
+  // silently undercounted (and left most destinations out of the sitemap).
   const counts: Record<string, number> = {};
-  for (const r of data ?? []) counts[r.destination_key as string] = (counts[r.destination_key as string] ?? 0) + 1;
+  await Promise.all(
+    ESIM_DESTINATIONS.map(async (d) => {
+      const { count, error } = await db.from("esim_plans").select("id", { count: "exact", head: true }).eq("is_active", true).eq("destination_key", d.key);
+      if (!error && count) counts[d.key] = count;
+    }),
+  );
   return counts;
 });
 
