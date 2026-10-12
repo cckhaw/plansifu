@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Flag } from "@/components/Flag";
 import Link from "next/link";
 import { Footer } from "@/components/Footer";
 import { ChevronIcon } from "@/components/Icons";
@@ -52,7 +53,7 @@ export default async function HubPage() {
             {countries.map(({ c, stats }, i) => (
               <li key={c} className="rise" style={{ "--i": i + 2 } as React.CSSProperties}>
                 <Link href={homePath(c)} className="press lift flex h-full flex-col gap-4 rounded-[28px] bg-surface p-7 shadow-card">
-                  <span className="text-[56px] leading-none" aria-hidden>{COUNTRIES[c].flag}</span>
+                  <Flag className="text-[56px] leading-none" emoji={COUNTRIES[c].flag} />
                   <span>
                     <span className="block text-[28px] font-bold tracking-tight">{COUNTRIES[c].label}</span>
                     <span className="mt-1 block text-[15px] text-label-2">

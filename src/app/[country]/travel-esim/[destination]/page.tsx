@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Flag } from "@/components/Flag";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { EsimExplorer } from "@/components/EsimExplorer";
@@ -82,7 +83,7 @@ export default async function TravelEsimDestinationPage({ params }: Props) {
         />
         <header className="mb-8">
           <h1 className="rise mb-3 text-[32px] font-bold leading-[1.1] tracking-[-0.025em] md:text-5xl">
-            Best Travel eSIM for {place} {destination.flag}
+            Best Travel eSIM for {place} <Flag emoji={destination.flag} />
           </h1>
           <p className="rise max-w-3xl text-[17px] leading-relaxed text-label-2" style={{ "--i": 1 } as React.CSSProperties}>
             {esimIntro(country, destination, summary)}
@@ -103,7 +104,7 @@ export default async function TravelEsimDestinationPage({ params }: Props) {
               {others.map((o) => (
                 <li key={o.key}>
                   <Link href={`${kindPath(country, "travel-esim")}/${o.key}`} className="press inline-block rounded-full bg-surface px-3.5 py-1.5 text-[14px] font-medium text-label-2 shadow-card hover:text-label">
-                    {o.flag} {shortName(o)}
+                    <Flag emoji={o.flag} /> {shortName(o)}
                   </Link>
                 </li>
               ))}
