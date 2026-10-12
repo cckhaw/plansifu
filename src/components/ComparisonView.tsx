@@ -49,7 +49,9 @@ export function ComparisonView({ plans, initialQuery = "", lead }: { plans: Plan
   }, [sheet]);
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[300px_1fr]">
+    <div>
+      {lead && pristine && <div className="mb-8">{lead}</div>}
+      <div className="grid gap-6 lg:grid-cols-[300px_1fr]">
       <div className="hidden lg:block">
         <FilterSidebar filters={filters} onChange={setFilters} providers={providers} currency={currency} priceCeiling={priceCeiling} isBroadband={isBroadband} onReset={() => setFilters(initial)} />
       </div>
@@ -71,7 +73,6 @@ export function ComparisonView({ plans, initialQuery = "", lead }: { plans: Plan
             Filters{activeFilters ? ` · ${activeFilters}` : ""}
           </button>
         </div>
-        {lead && pristine && <div className="mb-8">{lead}</div>}
         <div className="mb-3 flex items-baseline justify-between px-1">
           <h2 id="all-plans-heading" className="text-[22px] font-bold tracking-tight md:text-[26px]">All plans</h2>
           <p aria-live="polite" className="text-[13px] font-medium text-label-3">{visible.length} plan{visible.length === 1 ? "" : "s"}{activeFilters ? " · filtered" : ""}</p>
@@ -89,6 +90,7 @@ export function ComparisonView({ plans, initialQuery = "", lead }: { plans: Plan
           </div>
         )}
       </section>
+      </div>
 
       {sheet && (
         <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label="Filters">

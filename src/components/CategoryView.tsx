@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Flag } from "./Flag";
 import { ComparisonView } from "@/components/ComparisonView";
 import { Footer } from "@/components/Footer";
 import { PickCarousel } from "@/components/PickCarousel";
@@ -68,15 +69,15 @@ export async function CategoryView({ country, kind }: { country: Country; kind: 
       <main className="mx-auto max-w-7xl px-4 pb-28 pt-6 md:pb-16">
         <Breadcrumbs crumbs={crumbs.map((c, i) => (i === crumbs.length - 1 ? { ...c, path } : c))} />
         <header className="mb-8">
-          <p className="rise mb-2 text-[13px] font-semibold uppercase tracking-wide text-accent">{COUNTRIES[country].flag} {place} · {stats.currency}</p>
+          <p className="rise mb-2 text-[13px] font-semibold uppercase tracking-wide text-accent"><Flag emoji={COUNTRIES[country].flag} /> {place} · {stats.currency}</p>
           <h1 className="rise mb-3 text-[40px] font-bold leading-[1.04] tracking-[-0.03em] md:text-6xl">{H1[kind]}</h1>
-          <p className="rise max-w-2xl text-[17px] leading-snug text-label-2 md:text-xl" style={{ "--i": 1 } as React.CSSProperties}>
+          <p className="rise text-[17px] leading-snug text-label-2 md:text-xl" style={{ "--i": 1 } as React.CSSProperties}>
             {stats.count
               ? `Compare ${stats.count} ${CATEGORY_LABEL[kind].toLowerCase()} from ${stats.providers.slice(0, 4).join(", ")}${stats.providers.length > 4 ? " and more" : ""}. Narrow by price, data and contract, then compare up to 3 side by side.`
               : `We are collecting ${CATEGORY_LABEL[kind].toLowerCase()} for ${place}. Check back after tonight's update.`}
           </p>
           {stats.count > 0 && (
-            <dl className="rise mt-6 grid max-w-2xl grid-cols-3 gap-3" style={{ "--i": 2 } as React.CSSProperties}>
+            <dl className="rise mt-6 grid grid-cols-3 gap-3" style={{ "--i": 2 } as React.CSSProperties}>
               {[
                 ["Plans", String(stats.count)],
                 ["From", stats.low !== null ? formatPrice(stats.low, stats.currency) : "–"],
@@ -98,7 +99,7 @@ export async function CategoryView({ country, kind }: { country: Country; kind: 
           )}
         </header>
 
-        <ComparisonView lead={picks.length > 0 ? <PickCarousel compact title="Best for…" groups={picks} /> : undefined} key={`${country}-${kind}`} plans={plans} />
+        <ComparisonView lead={picks.length > 0 ? <PickCarousel title="Best for…" groups={picks} /> : undefined} key={`${country}-${kind}`} plans={plans} />
         <FaqSection faqs={faqsFor(country, kind)} />
       </main>
       <Footer />

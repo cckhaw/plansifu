@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Flag } from "@/components/Flag";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/Footer";
@@ -69,7 +70,7 @@ export default async function TravelEsimIndex({ params }: Props) {
               {g.list.map(({ d, s }, i) => (
                 <li key={d.key} className="rise" style={{ "--i": i } as React.CSSProperties}>
                   <Link href={`${kindPath(country, "travel-esim")}/${d.key}`} className="press lift flex h-full flex-col gap-3 rounded-[22px] bg-surface p-4 shadow-card">
-                    <span className="text-[34px] leading-none" aria-hidden>{d.flag}</span>
+                    <Flag className="text-[34px] leading-none" emoji={d.flag} />
                     <span>
                       <span className="block text-[17px] font-semibold tracking-tight">{shortName(d)}</span>
                       <span className="block text-[13px] text-label-2">{s.count} plans · {s.brands.length} brands</span>

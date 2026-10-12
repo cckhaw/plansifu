@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Flag } from "./Flag";
 import { COUNTRIES } from "@/lib/currency";
 import { kindPath } from "@/lib/routes";
 import type { Country } from "@/types/database";
@@ -17,7 +18,7 @@ export function Footer() {
       <nav aria-label="Footer" className="mb-8 grid gap-6 text-[14px] sm:grid-cols-3">
         {(["MY", "SG"] as Country[]).map((c) => (
           <div key={c}>
-            <h2 className="mb-2 text-[13px] font-semibold uppercase tracking-wide text-label-2">{COUNTRIES[c].flag} {COUNTRIES[c].label}</h2>
+            <h2 className="mb-2 text-[13px] font-semibold uppercase tracking-wide text-label-2"><Flag emoji={COUNTRIES[c].flag} /> {COUNTRIES[c].label}</h2>
             <ul className="space-y-1.5">
               {LINKS.map(([k, label]) => (
                 <li key={k}><Link href={kindPath(c, k)} className="text-label-2 hover:text-label hover:underline">{label}</Link></li>

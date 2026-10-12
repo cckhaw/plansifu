@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { Flag } from "./Flag";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -101,7 +102,7 @@ export function Header() {
             <Segmented count={2} index={country === "MY" ? 0 : 1} label="Country" className="w-[7.5rem]">
               {(Object.keys(COUNTRIES) as Country[]).map((c) => (
                 <Link key={c} href={countryHref(c)} scroll={false} aria-label={`${COUNTRIES[c].label} (${COUNTRIES[c].currency})`} title={`${COUNTRIES[c].label} · prices in ${COUNTRIES[c].currency}`} aria-current={country === c ? "true" : undefined} className={`press relative z-10 whitespace-nowrap rounded-full px-2 py-1.5 text-center transition-colors ${country === c ? "text-label" : "text-label-2 hover:text-label"}`}>
-                  {COUNTRIES[c].flag} {c}
+                  <Flag emoji={COUNTRIES[c].flag} /> {c}
                 </Link>
               ))}
             </Segmented>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Flag } from "./Flag";
 import { Footer } from "@/components/Footer";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { FaqSection } from "@/components/seo/FaqSection";
@@ -44,8 +45,8 @@ export function ProgrammaticView(p: Props) {
         <Breadcrumbs crumbs={[{ name: "PlanSifu", path: "/" }, { name: COUNTRIES[country].label, path: homePath(country) }, { name: p.parentLabel, path: p.parentPath }, { name: p.crumb, path: p.path }]} />
         <header className="mb-8">
           <h1 className="rise mb-3 text-[32px] font-bold leading-[1.1] tracking-[-0.025em] md:text-5xl">{p.h1}</h1>
-          <p className="rise max-w-3xl text-[17px] leading-relaxed text-label-2" style={{ "--i": 1 } as React.CSSProperties}>
-            {COUNTRIES[country].flag} {p.intro}
+          <p className="rise text-[17px] leading-relaxed text-label-2" style={{ "--i": 1 } as React.CSSProperties}>
+            <Flag emoji={COUNTRIES[country].flag} /> {p.intro}
           </p>
         </header>
 
