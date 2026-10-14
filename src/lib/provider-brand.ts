@@ -56,7 +56,6 @@ export const PROVIDER_BRANDS: Record<string, ProviderBrand> = {
   flexiroam: { abbr: "FX", bg: "#FB923C", fg: LIGHT },
   maya: { abbr: "MY", bg: "#4F46E5", fg: DARK },
   bnesim: { abbr: "BN", bg: "#0369A1", fg: DARK },
-  truely: { abbr: "TR", bg: "#84CC16", fg: LIGHT },
   billionconnect: { abbr: "BC", bg: "#1E40AF", fg: DARK },
   gogoroaming: { abbr: "GR", bg: "#F59E0B", fg: LIGHT },
   xummer: { abbr: "XM", bg: "#14B8A6", fg: LIGHT },

@@ -34,7 +34,6 @@ export const ESIM_BRANDS: EsimBrand[] = [
   { name: "Flexiroam", website: "https://www.flexiroam.com", pattern: (s) => `https://www.flexiroam.com/shop/esim-${s}` },
   { name: "Maya", website: "https://maya.net", pattern: (s) => `https://maya.net/esim/${s}` },
   { name: "BNESIM", website: "https://www.bnesim.com", urls: (d) => (d.iso2 ? [`https://www.bnesim.com/plans/${d.iso2}/`] : []) },
-  { name: "Truely", website: "https://truely.com", pattern: (s) => `https://truely.com/destinations/${s}` },
   {
     name: "GigSky",
     website: "https://www.gigsky.com",
