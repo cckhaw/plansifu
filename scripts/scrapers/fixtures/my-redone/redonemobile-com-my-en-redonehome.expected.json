@@ -1,0 +1,19 @@
+[
+ {
+  "title": "5G Home WiFi 88",
+  "category": "broadband",
+  "monthly_price": 88,
+  "currency": "MYR",
+  "data_gb": 1000,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 24,
+  "features": [
+   "Rebate RM10 x 12 months",
+   "Device: 5G Modem – TOZED S200A",
+   "Data only (no calls/SMS)"
+  ],
+  "promotion_badge": "RM78/mth for the first 12 months"
+ }
+]

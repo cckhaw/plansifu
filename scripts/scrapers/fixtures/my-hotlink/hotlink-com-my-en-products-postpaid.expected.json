@@ -1,0 +1,39 @@
+[
+ {
+  "title": "Hotlink Postpaid 50",
+  "category": "mobile_postpaid",
+  "monthly_price": 50,
+  "currency": "MYR",
+  "data_gb": 500,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "UNLIMITED 5G/4G Speed",
+   "UNLIMITED Calls to All Networks",
+   "MENANG AHAD in Hotlink App",
+   "No Contract, Instant Upgrade"
+  ],
+  "promotion_badge": "RM40/mth online offer - LIMITED TIME PROMO"
+ },
+ {
+  "title": "Hotlink Postpaid 75",
+  "category": "mobile_postpaid",
+  "monthly_price": 75,
+  "currency": "MYR",
+  "data_gb": 600,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "BIG DISCOUNT on New 5G Phones",
+   "FREE Roaming SG, TH, ID",
+   "UNLIMITED 5G/4G Speed",
+   "UNLIMITED Calls to All Networks",
+   "MENANG AHAD in Hotlink App"
+  ],
+  "promotion_badge": "RM65/mth online offer - BEST PLAN"
+ }
+]

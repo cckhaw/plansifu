@@ -1,0 +1,19 @@
+[
+ {
+  "title": "M1 HomePac 10Gbps (With ONT)",
+  "category": "broadband",
+  "monthly_price": 26.9,
+  "currency": "SGD",
+  "data_gb": null,
+  "speed_mbps": 10000,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 24,
+  "features": [
+   "Free NLT Registration (worth $61.04)​",
+   "Free Weekday/Weekend Installation (worth $123.41)",
+   "Optional router top up from $8/mth​"
+  ],
+  "promotion_badge": "best buy | U.P. $135/mth"
+ }
+]

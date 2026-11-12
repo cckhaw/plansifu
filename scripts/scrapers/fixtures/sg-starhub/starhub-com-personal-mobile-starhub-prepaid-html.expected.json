@@ -1,0 +1,70 @@
+[
+ {
+  "title": "Prepaid Lite",
+  "category": "mobile_prepaid",
+  "monthly_price": 12,
+  "currency": "SGD",
+  "data_gb": 300,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": -1,
+  "contract_months": 0,
+  "features": [
+   "15GB APAC data",
+   "200GB SEA data",
+   "Up to 500 mins IDD calls"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Prepaid Core",
+  "category": "mobile_prepaid",
+  "monthly_price": 15,
+  "currency": "SGD",
+  "data_gb": 500,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": -1,
+  "contract_months": 0,
+  "features": [
+   "30GB APAC data",
+   "200GB SEA data",
+   "Up to 600 mins IDD calls"
+  ],
+  "promotion_badge": "Best value"
+ },
+ {
+  "title": "Prepaid Plus",
+  "category": "mobile_prepaid",
+  "monthly_price": 20,
+  "currency": "SGD",
+  "data_gb": 700,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": -1,
+  "contract_months": 0,
+  "features": [
+   "50GB APAC data",
+   "300GB SEA data",
+   "Up to 1000 mins IDD calls"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Prepaid Max",
+  "category": "mobile_prepaid",
+  "monthly_price": 30,
+  "currency": "SGD",
+  "data_gb": 1000,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": -1,
+  "contract_months": 0,
+  "features": [
+   "100GB APAC data",
+   "20GB Global Data",
+   "Up to 1000 mins IDD calls"
+  ],
+  "promotion_badge": "Limited time 50% OFF*"
+ }
+]

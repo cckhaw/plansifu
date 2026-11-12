@@ -1,0 +1,92 @@
+[
+ {
+  "title": "ONE Asia Shared Data Plan 4G 500GB",
+  "category": "mobile_postpaid",
+  "monthly_price": 9.9,
+  "currency": "SGD",
+  "data_gb": 500,
+  "speed_mbps": null,
+  "talktime_mins": 300,
+  "sms_count": 300,
+  "contract_months": 0,
+  "features": [
+   "20GB Roaming Data in Mainland China",
+   "200GB Roaming Data in MIT",
+   "10GB APAC*Roaming Data",
+   "100 mins IDD calls from SGP to 12 selected destinations"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "ONE Asia Shared Data Plan 5G 600GB",
+  "category": "mobile_postpaid",
+  "monthly_price": 11.9,
+  "currency": "SGD",
+  "data_gb": 600,
+  "speed_mbps": null,
+  "talktime_mins": 400,
+  "sms_count": 400,
+  "contract_months": 0,
+  "features": [
+   "35GB Roaming Data in Mainland China",
+   "300GB Roaming Data in MIT",
+   "20GB APAC*Roaming Data",
+   "100 mins IDD calls from SGP to 12 selected destinations"
+  ],
+  "promotion_badge": "New Plan !"
+ },
+ {
+  "title": "ONE Asia Shared Data Plan 5G 700GB",
+  "category": "mobile_postpaid",
+  "monthly_price": 14.9,
+  "currency": "SGD",
+  "data_gb": 700,
+  "speed_mbps": null,
+  "talktime_mins": 400,
+  "sms_count": 400,
+  "contract_months": 0,
+  "features": [
+   "50GB Roaming Data in Mainland China",
+   "400GB Roaming Data in MIT",
+   "30GB APAC*Roaming Data",
+   "100 mins IDD calls from SGP to 12 selected destinations"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "ONE Asia Shared Data Plan 5G 800GB",
+  "category": "mobile_postpaid",
+  "monthly_price": 24.9,
+  "currency": "SGD",
+  "data_gb": 800,
+  "speed_mbps": null,
+  "talktime_mins": 500,
+  "sms_count": 500,
+  "contract_months": 0,
+  "features": [
+   "80GB Roaming Data in Mainland China",
+   "500GB Roaming Data in MIT",
+   "40GB APAC*Roaming Data",
+   "100 mins IDD calls from SGP to 12 selected destinations"
+  ],
+  "promotion_badge": "Free China number"
+ },
+ {
+  "title": "ONE Asia Shared Data Plan 5G 1000GB",
+  "category": "mobile_postpaid",
+  "monthly_price": 29.9,
+  "currency": "SGD",
+  "data_gb": 1000,
+  "speed_mbps": null,
+  "talktime_mins": 1000,
+  "sms_count": 1000,
+  "contract_months": 0,
+  "features": [
+   "100GB Roaming Data in Mainland China",
+   "600GB Roaming Data in MIT",
+   "50GB APAC*Roaming Data",
+   "100 mins IDD calls from SGP to 12 selected destinations"
+  ],
+  "promotion_badge": "Free China number"
+ }
+]

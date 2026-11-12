@@ -1,0 +1,176 @@
+[
+ {
+  "title": "Fortune eight Data Plan",
+  "category": "mobile_postpaid",
+  "monthly_price": 11.8,
+  "currency": "SGD",
+  "data_gb": 688,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "688GB Local 5G Data",
+   "28GB APAC Roaming (20 countries)",
+   "10GB Intl Roaming"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Lucky eight Data Plan",
+  "category": "mobile_postpaid",
+  "monthly_price": 14.8,
+  "currency": "SGD",
+  "data_gb": 788,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "788GB Local 5G Data",
+   "38GB APAC Roaming (20 countries)",
+   "18GB Intl Roaming"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Triple eight Data Plan",
+  "category": "mobile_postpaid",
+  "monthly_price": 18,
+  "currency": "SGD",
+  "data_gb": 888,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "888GB Local 5G Data",
+   "48GB APAC Roaming (20 countries)",
+   "28GB Intl Roaming"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "(NEW) Double eight Data Plan",
+  "category": "mobile_postpaid",
+  "monthly_price": 8.8,
+  "currency": "SGD",
+  "data_gb": 588,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "588GB Local Data",
+   "18GB APAC Roaming",
+   "6GB Intl Roaming"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "5G+ Power Plan",
+  "category": "mobile_postpaid",
+  "monthly_price": 10.8,
+  "currency": "SGD",
+  "data_gb": 588,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": 88,
+  "contract_months": 0,
+  "features": [
+   "588GB 5G+ Data (SG-MY-ID-TH-HK)",
+   "18GB APAC Roaming (20 countries)",
+   "6GB Intl Roaming (68 countries)",
+   "588 IDD Mins (20+ countries)",
+   "88 Local SMS",
+   "UNLIMITED* Local Talktime",
+   "Free 8 Months Rollover Data"
+  ],
+  "promotion_badge": "BEST VALUE!"
+ },
+ {
+  "title": "5G+ Life Plan",
+  "category": "mobile_postpaid",
+  "monthly_price": 12.8,
+  "currency": "SGD",
+  "data_gb": 688,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": 128,
+  "contract_months": 0,
+  "features": [
+   "688GB 5G+ Data (SG-MY-ID-TH-HK)",
+   "28GB APAC Roaming (20 countries)",
+   "10GB Intl Roaming (68 countries)",
+   "688 IDD Mins (20+ countries)",
+   "128 Local SMS",
+   "UNLIMITED* Local Talktime",
+   "Free 8 Months Data Rollover"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "5G+ Ultra Plan",
+  "category": "mobile_postpaid",
+  "monthly_price": 14.8,
+  "currency": "SGD",
+  "data_gb": 788,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": 188,
+  "contract_months": 0,
+  "features": [
+   "788GB 5G+ Data (SG-MY-ID-TH-HK) + NEW (CN-JP)",
+   "38GB APAC Roaming (20 countries)",
+   "18GB Intl Roaming (68 countries)",
+   "788 IDD Mins (20+ countries)",
+   "188 Local SMS",
+   "UNLIMITED* Local Talktime",
+   "Free 8 Months Data Rollover"
+  ],
+  "promotion_badge": "MOST POPULAR!"
+ },
+ {
+  "title": "5G+ Supreme Plan",
+  "category": "mobile_postpaid",
+  "monthly_price": 18.8,
+  "currency": "SGD",
+  "data_gb": 888,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": 288,
+  "contract_months": 0,
+  "features": [
+   "888GB 5G+ Data (SG-MY-ID-TH-HK) + NEW (CN-KR-JP-AU)",
+   "48GB APAC Roaming (20 countries)",
+   "28GB Intl Roaming (68 countries)",
+   "888 IDD Mins (20+ countries)",
+   "288 Local SMS",
+   "UNLIMITED* Local Talktime",
+   "Free 8 Months Data Rollover"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "5G+ Senior Plan",
+  "category": "mobile_postpaid",
+  "monthly_price": 6.8,
+  "currency": "SGD",
+  "data_gb": 528,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": 88,
+  "contract_months": 0,
+  "features": [
+   "528GG 5G+ Data (SG-MY-ID-TH-HK)",
+   "6GB APAC Roaming (20 countries)",
+   "6GB Intl Roaming (68 countries)",
+   "400 IDD Mins (20+ countries)",
+   "88 Local SMS",
+   "UNLIMITED Local Talktime",
+   "Free 8 Months Rollover Data",
+   "For Seniors 60 years & above"
+  ],
+  "promotion_badge": null
+ }
+]

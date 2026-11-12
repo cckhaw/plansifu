@@ -1,0 +1,86 @@
+[
+ {
+  "title": "CelcomDigi Home Fibre 2Gbps",
+  "category": "broadband",
+  "monthly_price": 319,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": 2000,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Free Premium WiFi 7 router + installation",
+   "Free mesh node",
+   "Unlimited ultra-fast Internet",
+   "Fastest available connectivity"
+  ],
+  "promotion_badge": "Free 3 months"
+ },
+ {
+  "title": "CelcomDigi Home Fibre 1Gbps",
+  "category": "broadband",
+  "monthly_price": 249,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": 1000,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Free Premium WiFi 7 router + installation",
+   "Free mesh node",
+   "Unlimited ultra-fast Internet"
+  ],
+  "promotion_badge": "Free 3 months"
+ },
+ {
+  "title": "CelcomDigi Home Fibre 300Mbps",
+  "category": "broadband",
+  "monthly_price": 139,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": 300,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Free WiFi 7 router + installation",
+   "Unlimited high-speed Internet"
+  ],
+  "promotion_badge": "Free 3 months"
+ },
+ {
+  "title": "CelcomDigi Home Fibre 500Mbps",
+  "category": "broadband",
+  "monthly_price": 159,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": 500,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Free WiFi 7 router + installation",
+   "Free mesh node",
+   "Unlimited high-speed Internet"
+  ],
+  "promotion_badge": "Free 3 months"
+ },
+ {
+  "title": "CelcomDigi Home Fibre 100Mbps",
+  "category": "broadband",
+  "monthly_price": 99,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": 100,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Free WiFi 6 router + installation",
+   "Unlimited Internet"
+  ],
+  "promotion_badge": "Free 3 months"
+ }
+]

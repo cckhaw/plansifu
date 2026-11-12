@@ -1,0 +1,116 @@
+[
+ {
+  "coverage": null,
+  "data_gb": -1,
+  "data_note": null,
+  "validity_days": 3,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "perks": [
+   "5G where available",
+   "Hotspot allowed",
+   "Always On included"
+  ],
+  "title": "Unlimited / 3 days",
+  "price": 11.9,
+  "currency": "USD",
+  "destination_key": "japan"
+ },
+ {
+  "coverage": null,
+  "data_gb": -1,
+  "data_note": null,
+  "validity_days": 5,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "perks": [
+   "5G where available",
+   "Hotspot allowed",
+   "Always On included"
+  ],
+  "title": "Unlimited / 5 days",
+  "price": 20.5,
+  "currency": "USD",
+  "destination_key": "japan"
+ },
+ {
+  "coverage": null,
+  "data_gb": -1,
+  "data_note": null,
+  "validity_days": 7,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "perks": [
+   "5G where available",
+   "Hotspot allowed",
+   "Always On included"
+  ],
+  "title": "Unlimited / 7 days",
+  "price": 27.5,
+  "currency": "USD",
+  "destination_key": "japan"
+ },
+ {
+  "coverage": null,
+  "data_gb": -1,
+  "data_note": null,
+  "validity_days": 10,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "perks": [
+   "5G where available",
+   "Hotspot allowed",
+   "Always On included"
+  ],
+  "title": "Unlimited / 10 days",
+  "price": 36.5,
+  "currency": "USD",
+  "destination_key": "japan"
+ },
+ {
+  "coverage": null,
+  "data_gb": -1,
+  "data_note": null,
+  "validity_days": 15,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "perks": [
+   "5G where available",
+   "Hotspot allowed",
+   "Always On included"
+  ],
+  "title": "Unlimited / 15 days",
+  "price": 50.5,
+  "currency": "USD",
+  "destination_key": "japan"
+ },
+ {
+  "coverage": null,
+  "data_gb": -1,
+  "data_note": null,
+  "validity_days": 30,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "perks": [
+   "5G where available",
+   "Hotspot allowed",
+   "Always On included"
+  ],
+  "title": "Unlimited / 30 days",
+  "price": 73.9,
+  "currency": "USD",
+  "destination_key": "japan"
+ }
+]

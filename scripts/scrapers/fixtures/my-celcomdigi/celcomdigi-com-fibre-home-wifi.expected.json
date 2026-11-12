@@ -1,0 +1,37 @@
+[
+ {
+  "title": "Premium 5G Home WiFi​",
+  "category": "broadband",
+  "monthly_price": 149,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Unlimited 5G speeds",
+   "Unlimited 5G/4G Internet​",
+   "Premium router",
+   "FREE 24-months Viu Premium access (worth RM526)​"
+  ],
+  "promotion_badge": "RM109/mth"
+ },
+ {
+  "title": "Essential 5G Home WiFi​",
+  "category": "broadband",
+  "monthly_price": 99,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": 200,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Unlimited 5G/4G Internet​",
+   "Essential router",
+   "FREE 24-months Viu Premium access (worth RM526)​"
+  ],
+  "promotion_badge": "RM79/mth - Limited time offer"
+ }
+]

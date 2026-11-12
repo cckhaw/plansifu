@@ -1,0 +1,136 @@
+[
+ {
+  "coverage": "33 countries",
+  "data_note": null,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "title": "500MB / 1 day",
+  "data_gb": 0.5,
+  "validity_days": 1,
+  "price": 0.54,
+  "currency": "USD",
+  "perks": [
+   "First-time deal",
+   "Top-up anytime",
+   "No KYC",
+   "24/7 support"
+  ],
+  "destination_key": "europe"
+ },
+ {
+  "coverage": "33 countries",
+  "data_note": null,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "title": "1GB / 30 days",
+  "data_gb": 1,
+  "validity_days": 30,
+  "price": 3,
+  "currency": "USD",
+  "perks": [
+   "Top-up anytime",
+   "No KYC",
+   "24/7 support"
+  ],
+  "destination_key": "europe"
+ },
+ {
+  "coverage": "33 countries",
+  "data_note": null,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "title": "5GB / 30 days",
+  "data_gb": 5,
+  "validity_days": 30,
+  "price": 11.52,
+  "currency": "USD",
+  "perks": [
+   "Top-up anytime",
+   "No KYC",
+   "24/7 support"
+  ],
+  "destination_key": "europe"
+ },
+ {
+  "coverage": "33 countries",
+  "data_note": null,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "title": "10GB / 30 days",
+  "data_gb": 10,
+  "validity_days": 30,
+  "price": 19.2,
+  "currency": "USD",
+  "perks": [
+   "Top-up anytime",
+   "No KYC",
+   "24/7 support"
+  ],
+  "destination_key": "europe"
+ },
+ {
+  "coverage": "33 countries",
+  "data_note": null,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "title": "20GB / 30 days",
+  "data_gb": 20,
+  "validity_days": 30,
+  "price": 26.4,
+  "currency": "USD",
+  "perks": [
+   "Top-up anytime",
+   "No KYC",
+   "24/7 support"
+  ],
+  "destination_key": "europe"
+ },
+ {
+  "coverage": "33 countries",
+  "data_note": null,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "title": "30GB / 30 days",
+  "data_gb": 30,
+  "validity_days": 30,
+  "price": 33.6,
+  "currency": "USD",
+  "perks": [
+   "Top-up anytime",
+   "No KYC",
+   "24/7 support"
+  ],
+  "destination_key": "europe"
+ },
+ {
+  "coverage": "33 countries",
+  "data_note": null,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "title": "Unlimited / 30 days",
+  "data_gb": -1,
+  "validity_days": 30,
+  "price": 68.4,
+  "currency": "USD",
+  "perks": [
+   "Top-up anytime",
+   "No KYC",
+   "24/7 support"
+  ],
+  "destination_key": "europe"
+ }
+]

@@ -1,0 +1,129 @@
+[
+ {
+  "title": "Elite 8 Duo",
+  "category": "broadband",
+  "monthly_price": 38.8,
+  "currency": "SGD",
+  "data_gb": null,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 24,
+  "features": [
+   "24-Month Mesh Plan",
+   "Free 2X 10Gbps eero 7 Pro Router",
+   "First 28 days Service Guarantee",
+   "Twice a year Internet Check",
+   "Free NLT Service Activation",
+   "Free ONT Device",
+   "Free ONT Installation"
+  ],
+  "promotion_badge": "$0.80 on 1st month! | Includes 2 FREE Routers!"
+ },
+ {
+  "title": "Hybrid 8 Duo",
+  "category": "broadband",
+  "monthly_price": 36.8,
+  "currency": "SGD",
+  "data_gb": null,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 24,
+  "features": [
+   "24-Month Mesh Plan",
+   "FREE 10Gbps eero WiFi 7 Router (worth $599.99)",
+   "FREE 2.5Gbps eero WiFi 7 Router (worth $219.99)",
+   "FREE NLT Service Activation ($61.04)",
+   "FREE ONT Device ($108)",
+   "FREE ONT Installation ($68)",
+   "FREE 28 days Service Guarantee",
+   "Twice a year Internet Check"
+  ],
+  "promotion_badge": "$0.80 on 1st month! | Includes 2 FREE Routers!"
+ },
+ {
+  "title": "Elite 8",
+  "category": "broadband",
+  "monthly_price": 35.8,
+  "currency": "SGD",
+  "data_gb": null,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 24,
+  "features": [
+   "24-month plan",
+   "FREE 10Gbps eero WiFi 7 Router (worth $599.99)",
+   "FREE NLT Service Activation ($61.04)",
+   "FREE ONT Device ($108)",
+   "FREE ONT Installation ($68)",
+   "FREE 28 days Service Guarantee",
+   "Twice a year Internet Check"
+  ],
+  "promotion_badge": "$0.80 on 1st month! | $31.8/mth"
+ },
+ {
+  "title": "Flex 8",
+  "category": "broadband",
+  "monthly_price": 28.8,
+  "currency": "SGD",
+  "data_gb": null,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 12,
+  "features": [
+   "12-month plan",
+   "First 28 days Service Guarantee",
+   "Twice a year Internet Check",
+   "Free NLT Service Activation ($61.04)",
+   "Free ONT Device ($108)",
+   "Free ONT Installation ($68)",
+   "Bring Your Own Router"
+  ],
+  "promotion_badge": "$0.80 on 1st month! | $26.8/mth"
+ },
+ {
+  "title": "Plus 8 Duo",
+  "category": "broadband",
+  "monthly_price": 34.8,
+  "currency": "SGD",
+  "data_gb": null,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 24,
+  "features": [
+   "24-Month Mesh Plan",
+   "Free 2X 2.5Gbps eero 7 Router",
+   "First 28 days Service Guarantee",
+   "Twice a year Internet Check",
+   "Free NLT Service Activation",
+   "Free ONT Device",
+   "Free ONT Installation"
+  ],
+  "promotion_badge": "$0.80 on 1st month! | Includes 2 FREE Routers!"
+ },
+ {
+  "title": "Plus 8",
+  "category": "broadband",
+  "monthly_price": 31.8,
+  "currency": "SGD",
+  "data_gb": null,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 24,
+  "features": [
+   "24-month plan",
+   "FREE 2.5Gbps eero WiFi 7 Router (worth $219.99)",
+   "FREE NLT Service Activation ($61.04)",
+   "FREE ONT Device ($108)",
+   "FREE ONT Installation ($68)",
+   "FREE 28 days Service Guarantee",
+   "Twice a year Internet Check"
+  ],
+  "promotion_badge": "$0.80 on 1st month! | $27.8/mth"
+ }
+]

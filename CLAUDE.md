@@ -6,13 +6,12 @@ inspired by CompareHero.my.
 ## Stack
 - Next.js 15 (App Router), React 19, TypeScript (strict), Tailwind CSS v4
 - Supabase Postgres via `@supabase/supabase-js`
-- Scraping: Playwright renders each page (free, runs in GitHub Actions) and Claude Haiku
-  (`claude-haiku-5-5`, via `@anthropic-ai/sdk` structured outputs) extracts plans from the page text.
-  Each page is read in order: (1) the rendered text plus any JSON price feeds the page itself loaded (tabs, "show more" buttons and accordions are opened first),
-  with a second, deeper pass when few plans come back compared with the prices on the page; (2) if that errors or finds nothing, tiled screenshots read by Haiku vision
-  (`browser+vision`, not used for relayed pages or bot-blocked pages). Firecrawl was retired (no key or env var needed); old reports may still show its badge.
+- Scraping: Playwright renders each page (free, runs in GitHub Actions; tabs, "show more" buttons and accordions are opened first) and a
+  per-page deterministic parser turns it into plans. **No model or paid API is used anywhere in the crawl.** Parsers live in
+  `scripts/scrapers/providers/*.ts` (telco) and `scripts/esim/parsers/*.ts` (Travel eSIM), are tested against saved pages in
+  `fixtures/` (`npm run test:parsers`), and are written with `npm run crawl:capture` / `crawl:try` (telco) and `esim:capture` / `esim:try`;
+  see `scripts/scrapers/README.md`. A parser that finds nothing fails its page loudly instead of guessing.
   Sites that 403 GitHub's network (CelcomDigi) use `t.relay(...)`: HTML is fetched by `/api/fetch-page` on our Vercel deployment (Singapore region, auth = service-role key, host allowlist).
-  Sites with a regular layout get a dedicated parser instead (StarHub, Zym - no model needed).
 - Scripts run with `tsx`
 
 ## Structure
@@ -22,6 +21,7 @@ inspired by CompareHero.my.
   PlanCard, DealBadge, ProviderLogo
 - `src/lib` — Supabase clients, currency helpers, plan queries, filtering, seed data
 - `src/types/database.ts` — TS interfaces mirroring the DB tables
+- `/import?key=<CRAWL_REPORT_KEY>` + `/api/import-page` — private page for providers whose sites block the crawler (M1, Maxx): a bookmarklet sends the page you are looking at in your own browser here, the provider's own parsers read it (`scripts/scrapers/import-pages.ts`, sources in `import-sources.ts` / `sources/`), and Save upserts the plans. Partial imports never deactivate plans.
 - `scripts/scrapers` — Node scraping scripts (`db-upsert.ts`, `run-scrapers.ts`, `extract.ts`);
   providers are declared with `defineProvider` in `providers/*` (add a provider = add a row with its plan-page URLs)
 - `supabase/migrations` — SQL migrations (numbered `NN_name.sql`)
@@ -29,8 +29,8 @@ inspired by CompareHero.my.
 ## Commands
 - `npm run dev` / `npm run build` / `npm run lint` / `npm run typecheck`
 - `npm run scrape` — run all provider scrapers (needs `SUPABASE_URL`,
-  `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`). `SCRAPE_ONLY` limits providers: `"Maxis,M1"` by name, `Malaysia` / `Singapore` for a country, `all` (default) or `none` (`scripts/scrapers/select.ts`; also used by `npm run scrape:esim` for brands);
-  `SCRAPE_DEBUG=1` logs the raw model output; the run ends with a token/cost summary.
+  `SUPABASE_SERVICE_ROLE_KEY`). `SCRAPE_ONLY` limits providers: `"Maxis,M1"` by name, `Malaysia` / `Singapore` for a country, `all` (default) or `none` (`scripts/scrapers/select.ts`; also used by `npm run scrape:esim` for brands);
+  `SCRAPE_DEBUG=1` logs extra detail (dropped rows).
 
 ## Conventions
 - Server Components by default; add `"use client"` only for interactive components.

@@ -1,0 +1,160 @@
+[
+ {
+  "title": "Roam Asia Super 5G+",
+  "category": "mobile_postpaid",
+  "monthly_price": 15,
+  "currency": "SGD",
+  "data_gb": 800,
+  "speed_mbps": null,
+  "talktime_mins": 800,
+  "sms_count": 100,
+  "contract_months": 0,
+  "features": [
+   "40GB Roaming to Malaysia, Indonesia, Thailand, Philippines, India, Vietnam, Japan, South K",
+   "800 mins IDD 019 calls to Brunei, Canada, Hong Kong, New Zealand, Philippines, South Korea"
+  ],
+  "promotion_badge": "FREE 3 MONTHS (new number / selected port-ins)"
+ },
+ {
+  "title": "Vibe Ultra 5G+",
+  "category": "mobile_postpaid",
+  "monthly_price": 12.7,
+  "currency": "SGD",
+  "data_gb": 700,
+  "speed_mbps": null,
+  "talktime_mins": 588,
+  "sms_count": 100,
+  "contract_months": 0,
+  "features": [
+   "30GB Roaming to Malaysia, Indonesia, Thailand, Philippines, India, Vietnam, Japan, South K",
+   "600 mins IDD 019 calls to Brunei, Canada, Hong Kong, New Zealand, Philippines, South Korea"
+  ],
+  "promotion_badge": "FREE 3 MONTHS (new number / selected port-ins)"
+ },
+ {
+  "title": "Vibe Pro 5G+",
+  "category": "mobile_postpaid",
+  "monthly_price": 10.7,
+  "currency": "SGD",
+  "data_gb": 600,
+  "speed_mbps": null,
+  "talktime_mins": 588,
+  "sms_count": 100,
+  "contract_months": 0,
+  "features": [
+   "20GB Roaming to Malaysia, Indonesia, Thailand, Philippines, India, Vietnam, Japan, South K",
+   "400 mins IDD 019 calls to Brunei, Canada, Hong Kong, New Zealand, Philippines, South Korea"
+  ],
+  "promotion_badge": "FREE 3 MONTHS (new number / selected port-ins)"
+ },
+ {
+  "title": "VIBE",
+  "category": "mobile_postpaid",
+  "monthly_price": 10,
+  "currency": "SGD",
+  "data_gb": 600,
+  "speed_mbps": null,
+  "talktime_mins": 588,
+  "sms_count": 100,
+  "contract_months": 0,
+  "features": [
+   "15GB Roaming to Malaysia, Indonesia, Thailand, Philippines, India, Vietnam, Japan, South K",
+   "300 mins IDD 019 calls to Brunei, Canada, Hong Kong, New Zealand, Philippines, South Korea"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "PLUS 20",
+  "category": "mobile_postpaid",
+  "monthly_price": 11.5,
+  "currency": "SGD",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": 400,
+  "sms_count": 200,
+  "contract_months": 0,
+  "features": [
+   "600GB Roaming to Malaysia (yearly)"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "LITE",
+  "category": "mobile_postpaid",
+  "monthly_price": 9,
+  "currency": "SGD",
+  "data_gb": 3,
+  "speed_mbps": null,
+  "talktime_mins": 500,
+  "sms_count": 20,
+  "contract_months": 0,
+  "features": [
+   "600GB Roaming to Malaysia (yearly)"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Roam Max 5G+",
+  "category": "mobile_postpaid",
+  "monthly_price": 19.95,
+  "currency": "SGD",
+  "data_gb": 600,
+  "speed_mbps": null,
+  "talktime_mins": 1000,
+  "sms_count": 300,
+  "contract_months": 0,
+  "features": [
+   "20GB Roaming to Malaysia, Indonesia, Thailand, Philippines, India, Vietnam, Japan, South K",
+   "500 mins IDD 019 calls to Brunei, Canada, Hong Kong, New Zealand, Philippines, South Korea"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Roam Premium 5G+",
+  "category": "mobile_postpaid",
+  "monthly_price": 29.9,
+  "currency": "SGD",
+  "data_gb": 1000,
+  "speed_mbps": null,
+  "talktime_mins": 2000,
+  "sms_count": 500,
+  "contract_months": 0,
+  "features": [
+   "30GB Roaming to Malaysia, Indonesia, Thailand, Philippines, India, Vietnam, Japan, South K",
+   "500 mins IDD 019 calls to Brunei, Canada, Hong Kong, New Zealand, Philippines, South Korea"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Share (12-month Contract)",
+  "category": "mobile_postpaid",
+  "monthly_price": 41,
+  "currency": "SGD",
+  "data_gb": 500,
+  "speed_mbps": null,
+  "talktime_mins": 1000,
+  "sms_count": 100,
+  "contract_months": 12,
+  "features": [
+   "30GB Roaming to Malaysia, Indonesia, Thailand, Philippines, India, Vietnam, Japan, South K",
+   "Extra line S$3.88/mth"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Share (No Contract)",
+  "category": "mobile_postpaid",
+  "monthly_price": 41,
+  "currency": "SGD",
+  "data_gb": 500,
+  "speed_mbps": null,
+  "talktime_mins": 1000,
+  "sms_count": 100,
+  "contract_months": 0,
+  "features": [
+   "30GB Roaming to Malaysia, Indonesia, Thailand, Philippines, India, Vietnam, Japan, South K",
+   "Extra line S$6.5/mth"
+  ],
+  "promotion_badge": null
+ }
+]

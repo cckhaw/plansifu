@@ -1,0 +1,173 @@
+[
+ {
+  "title": "SIMBA 600GB + 700 mins",
+  "category": "mobile_prepaid",
+  "monthly_price": 15,
+  "currency": "SGD",
+  "data_gb": 600,
+  "speed_mbps": null,
+  "talktime_mins": 700,
+  "sms_count": -1,
+  "contract_months": 0,
+  "features": [
+   "8GB Global roaming (60+ Countries)",
+   "25GB APAC roaming (15 Countries)",
+   "Unlimited Calls to SG Mobile",
+   "FREE Voice Roaming",
+   "Rollover of unused data, talktime minutes for up to 6 cycles"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "SIMBA 600GB + 600 mins",
+  "category": "mobile_prepaid",
+  "monthly_price": 12,
+  "currency": "SGD",
+  "data_gb": 600,
+  "speed_mbps": null,
+  "talktime_mins": 600,
+  "sms_count": -1,
+  "contract_months": 0,
+  "features": [
+   "8GB Global roaming (60+ Countries)",
+   "18GB APAC roaming (15 Countries)",
+   "Unlimited Calls to SG Mobile",
+   "FREE Voice Roaming",
+   "Rollover of unused data, talktime minutes for up to 6 cycles"
+  ],
+  "promotion_badge": "Most Popular"
+ },
+ {
+  "title": "SIMBA 500GB + 500 mins",
+  "category": "mobile_prepaid",
+  "monthly_price": 10,
+  "currency": "SGD",
+  "data_gb": 500,
+  "speed_mbps": null,
+  "talktime_mins": 500,
+  "sms_count": -1,
+  "contract_months": 0,
+  "features": [
+   "3GB Global roaming (60+ Countries)",
+   "12GB APAC roaming (7 Countries)",
+   "Unlimited Calls to SG Mobile",
+   "FREE Voice Roaming",
+   "Rollover of unused data, talktime minutes for up to 6 cycles"
+  ],
+  "promotion_badge": "Best Value"
+ },
+ {
+  "title": "SIMBA 500GB + 400 mins Seniors Plan",
+  "category": "mobile_prepaid",
+  "monthly_price": 5,
+  "currency": "SGD",
+  "data_gb": 500,
+  "speed_mbps": null,
+  "talktime_mins": 400,
+  "sms_count": -1,
+  "contract_months": 0,
+  "features": [
+   "3GB Global roaming (60+ Countries)",
+   "5GB APAC roaming (7 Countries)",
+   "Unlimited Calls to SG Mobile",
+   "FREE Voice Roaming",
+   "Rollover of unused data, talktime minutes for up to 6 cycles"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "SIMBA 600GB + 800 mins",
+  "category": "mobile_prepaid",
+  "monthly_price": 18,
+  "currency": "SGD",
+  "data_gb": 600,
+  "speed_mbps": null,
+  "talktime_mins": 800,
+  "sms_count": -1,
+  "contract_months": 0,
+  "features": [
+   "10GB Global roaming (60+ Countries)",
+   "30GB APAC roaming (15 Countries)",
+   "Unlimited Calls to SG Mobile",
+   "FREE Voice Roaming",
+   "Rollover of unused data, talktime minutes for up to 6 cycles"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "SIMBA 700GB + 800 mins",
+  "category": "mobile_prepaid",
+  "monthly_price": 20,
+  "currency": "SGD",
+  "data_gb": 700,
+  "speed_mbps": null,
+  "talktime_mins": 800,
+  "sms_count": -1,
+  "contract_months": 0,
+  "features": [
+   "12GB Global roaming (60+ Countries)",
+   "50GB APAC roaming (15 Countries)",
+   "Unlimited Calls to SG Mobile",
+   "FREE Voice Roaming",
+   "Rollover of unused data, talktime minutes for up to 6 cycles"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "SIMBA 800GB + 800 mins",
+  "category": "mobile_prepaid",
+  "monthly_price": 25,
+  "currency": "SGD",
+  "data_gb": 800,
+  "speed_mbps": null,
+  "talktime_mins": 800,
+  "sms_count": -1,
+  "contract_months": 0,
+  "features": [
+   "15GB Global roaming (60+ Countries & Maldives)",
+   "80GB APAC roaming (15 Countries)",
+   "Unlimited Calls to SG Mobile",
+   "FREE Voice Roaming",
+   "Rollover of unused data, talktime minutes for up to 6 cycles"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "SIMBA 10Gbps Broadband Premium Huawei WiFi 7 Mesh System",
+  "category": "broadband",
+  "monthly_price": 29.99,
+  "currency": "SGD",
+  "data_gb": null,
+  "speed_mbps": 10000,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 24,
+  "features": [
+   "FREE WiFi 7 (10G) ONR",
+   "FREE 2 X Huawei OptiXstar WiFi 7 (2.5Gb) router",
+   "FREE Home Phone Line",
+   "FREE Device Installation",
+   "FREE NLT Service Activation"
+  ],
+  "promotion_badge": "LAUNCH DEAL"
+ },
+ {
+  "title": "SIMBA 10Gbps Broadband eero WiFi 7 router",
+  "category": "broadband",
+  "monthly_price": 29.99,
+  "currency": "SGD",
+  "data_gb": null,
+  "speed_mbps": 10000,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 24,
+  "features": [
+   "FREE eero Pro 7 10G router",
+   "FREE ONU",
+   "FREE Home Phone Line",
+   "FREE Device Installation",
+   "FREE NLT Service Activation"
+  ],
+  "promotion_badge": null
+ }
+]

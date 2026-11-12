@@ -1,0 +1,71 @@
+[
+ {
+  "coverage": null,
+  "data_gb": 1,
+  "data_note": null,
+  "validity_days": 7,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "One-time purchase"
+  ],
+  "title": "1GB / 7 days",
+  "price": 1,
+  "currency": "USD",
+  "destination_key": "thailand"
+ },
+ {
+  "coverage": null,
+  "data_gb": 3,
+  "data_note": null,
+  "validity_days": 15,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "One-time purchase"
+  ],
+  "title": "3GB / 15 days",
+  "price": 2.5,
+  "currency": "USD",
+  "destination_key": "thailand"
+ },
+ {
+  "coverage": null,
+  "data_gb": 10,
+  "data_note": null,
+  "validity_days": 30,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "One-time purchase",
+   "Popular choice"
+  ],
+  "title": "10GB / 30 days",
+  "price": 7,
+  "currency": "USD",
+  "destination_key": "thailand"
+ },
+ {
+  "coverage": null,
+  "data_gb": 20,
+  "data_note": null,
+  "validity_days": 7,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "One-time purchase"
+  ],
+  "title": "20GB / 7 days",
+  "price": 12,
+  "currency": "USD",
+  "destination_key": "thailand"
+ }
+]

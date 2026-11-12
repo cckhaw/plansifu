@@ -7,14 +7,14 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        // API endpoints (affiliate redirect, social card generator, plan relay) and the private crawl report are never indexed.
-        disallow: ["/api/redirect", "/api/og", "/api/", "/crawl-report"],
+        // API endpoints (affiliate redirect, social card generator, plan relay) and the private crawl report and import page are never indexed.
+        disallow: ["/api/redirect", "/api/og", "/api/", "/crawl-report", "/import"],
       },
       {
         // Link-preview crawlers must be able to fetch the social card (/api/og), so they get a narrower rule.
         userAgent: ["Twitterbot", "facebookexternalhit", "LinkedInBot", "WhatsApp", "TelegramBot", "Slackbot", "Discordbot"],
         allow: "/",
-        disallow: ["/api/redirect", "/crawl-report"],
+        disallow: ["/api/redirect", "/crawl-report", "/import"],
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,

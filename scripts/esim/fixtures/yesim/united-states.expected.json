@@ -1,0 +1,122 @@
+[
+ {
+  "coverage": null,
+  "data_note": null,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "title": "1GB / 30 days",
+  "data_gb": 1,
+  "validity_days": 30,
+  "price": 3.72,
+  "currency": "USD",
+  "perks": [
+   "5G",
+   "Top-up anytime",
+   "No KYC",
+   "24/7 support"
+  ],
+  "destination_key": "united-states"
+ },
+ {
+  "coverage": null,
+  "data_note": null,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "title": "5GB / 30 days",
+  "data_gb": 5,
+  "validity_days": 30,
+  "price": 10.8,
+  "currency": "USD",
+  "perks": [
+   "5G",
+   "Top-up anytime",
+   "No KYC",
+   "24/7 support"
+  ],
+  "destination_key": "united-states"
+ },
+ {
+  "coverage": null,
+  "data_note": null,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "title": "10GB / 30 days",
+  "data_gb": 10,
+  "validity_days": 30,
+  "price": 16.8,
+  "currency": "USD",
+  "perks": [
+   "5G",
+   "Top-up anytime",
+   "No KYC",
+   "24/7 support"
+  ],
+  "destination_key": "united-states"
+ },
+ {
+  "coverage": null,
+  "data_note": null,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "title": "20GB / 30 days",
+  "data_gb": 20,
+  "validity_days": 30,
+  "price": 25.2,
+  "currency": "USD",
+  "perks": [
+   "5G",
+   "Top-up anytime",
+   "No KYC",
+   "24/7 support"
+  ],
+  "destination_key": "united-states"
+ },
+ {
+  "coverage": null,
+  "data_note": null,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "title": "30GB / 30 days",
+  "data_gb": 30,
+  "validity_days": 30,
+  "price": 31.92,
+  "currency": "USD",
+  "perks": [
+   "5G",
+   "Top-up anytime",
+   "No KYC",
+   "24/7 support"
+  ],
+  "destination_key": "united-states"
+ },
+ {
+  "coverage": null,
+  "data_note": null,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "title": "Unlimited / 1 day",
+  "data_gb": -1,
+  "validity_days": 1,
+  "price": 3.48,
+  "currency": "USD",
+  "perks": [
+   "5G",
+   "Top-up anytime",
+   "No KYC",
+   "24/7 support"
+  ],
+  "destination_key": "united-states"
+ }
+]

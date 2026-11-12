@@ -1,0 +1,36 @@
+[
+ {
+  "title": "GOMO 10Gbps Value Broadband Plan",
+  "category": "broadband",
+  "monthly_price": 29.99,
+  "currency": "SGD",
+  "data_gb": null,
+  "speed_mbps": 10000,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 24,
+  "features": [
+   "FREE ONT (worth $163.50)",
+   "FREE NLT service activation (worth $61.04)",
+   "FREE Premium D-Link WiFi 7 4x4 Router (worth $399)",
+   "FREE installation and setup (worth $50)"
+  ],
+  "promotion_badge": "$28.80/mth for GOMO Mobile Customers"
+ },
+ {
+  "title": "GOMO 10Gbps Core Broadband Plan",
+  "category": "broadband",
+  "monthly_price": 29.99,
+  "currency": "SGD",
+  "data_gb": null,
+  "speed_mbps": 10000,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 12,
+  "features": [
+   "FREE ONT (worth $163.50)",
+   "FREE NLT service activation (worth $61.04)"
+  ],
+  "promotion_badge": "$28.80/mth for GOMO Mobile Customers"
+ }
+]

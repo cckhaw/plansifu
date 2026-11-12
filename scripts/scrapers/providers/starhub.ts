@@ -1,7 +1,8 @@
 import { renderPageText } from "../browser";
 import { scrapeTargets } from "../extract";
 import type { CrawlPageReport, ScrapedPlan } from "../../../src/types/database";
-import type { ProviderScraper, ScrapeResult } from "../types";
+import type { PageData, ProviderScraper, RawPlan, ScrapeResult, ScrapeTarget } from "../types";
+import { clean, contractMonths, dataGb, dom, plan, price, speedMbps } from "../parse-utils";
 import { t } from "./define";
 
 const POSTPAID_URL = "https://consumer.starhub.com/personal/store/mobile-plans";
@@ -53,10 +54,104 @@ export function parseStarhubPostpaid(text: string): ScrapedPlan[] {
   return plans;
 }
 
+/**
+ * Prepaid page: one `.plan-card` per plan; the plan name is the div right before the one holding `.price`,
+ * the "Local" section lists the data / calls allowance, `.plan-tag` carries badges ("Best value", promos).
+ */
+export function parseStarhubPrepaid(page: PageData): RawPlan[] {
+  const $ = dom(page);
+  const out: RawPlan[] = [];
+  $(".plan-card").each((_, el) => {
+    const c = $(el);
+    const priceEl = c.find(".front-content .price").first();
+    const amount = price(priceEl.text());
+    const name = clean(priceEl.parent().prev().text());
+    if (!name || !amount) return;
+    const sections = c
+      .find(".plan-details .section")
+      .map((_, s) => ({
+        title: clean($(s).find(".section-title").first().text()),
+        items: $(s)
+          .find(".item")
+          .map((_, i) => clean($(i).text()))
+          .get()
+          .filter(Boolean),
+      }))
+      .get();
+    const local = sections.find((s) => /^local/i.test(s.title))?.items ?? [];
+    const dataItem = local.find((i) => /\bdata\b/i.test(i));
+    const unlimitedCalls = local.some((i) => /unlimited calls/i.test(i));
+    const roaming = sections.filter((s) => /roaming/i.test(s.title)).flatMap((s) => s.items);
+    const badge = clean(c.find(".plan-tag").first().text());
+    out.push(
+      plan({
+        title: name,
+        monthly_price: amount,
+        data_gb: dataItem ? (dataGb(dataItem) ?? (/unlimited/i.test(dataItem) ? -1 : null)) : null,
+        talktime_mins: unlimitedCalls ? -1 : undefined,
+        sms_count: local.some((i) => /unlimited calls\s*&\s*sms/i.test(i)) ? -1 : undefined,
+        contract_months: contractMonths(c.find(".no-contract").text()) ?? undefined,
+        features: roaming.filter((i) => /data|IDD/i.test(i)).slice(0, 5),
+        promotion_badge: badge || undefined,
+      }),
+    );
+  });
+  return out;
+}
+
+/**
+ * Broadband page: `.plan-card-tile` cards (rendered twice, desktop grid + mobile carousel; duplicates are dropped
+ * by title). `.data-plan-gigs` is the plan name ("UltraSpeed 10Gbps"), `.data-plan-name` the contract term, `h5` the
+ * monthly price for that term and "(U.P. $X)" the usual price.
+ */
+export function parseStarhubBroadband(page: PageData): RawPlan[] {
+  const $ = dom(page);
+  const seen = new Set<string>();
+  const out: RawPlan[] = [];
+  $(".plan-card-tile").each((_, el) => {
+    const c = $(el);
+    const name = clean(c.find(".data-plan-gigs").first().text());
+    const amount = price(c.find(".data-plan-cost h5").first().text());
+    if (!name || !amount || seen.has(name.toLowerCase())) return;
+    seen.add(name.toLowerCase());
+    const terms = c
+      .find(".data-plan-name")
+      .map((_, n) => clean($(n).text()))
+      .get()
+      .filter(Boolean);
+    const up = clean(c.find(".data-plan-cost").first().text()).match(/U\.P\.\s*(\$[\d,.]+)/i);
+    const tag = clean(c.find(".recommended-plan").first().text());
+    const href = c.find(".sel-plan a").first().attr("href");
+    out.push(
+      plan({
+        title: name,
+        monthly_price: amount,
+        speed_mbps: speedMbps(name),
+        contract_months: contractMonths(terms.join(" ")) ?? undefined,
+        features: c
+          .find(".data-plan-details li")
+          .map((_, li) => clean($(li).text()))
+          .get()
+          .slice(0, 4),
+        promotion_badge: [terms.find((x) => /sign-ups/i.test(x)), tag, up ? `U.P. ${up[1]}/mth` : ""].filter(Boolean).join(" | ") || undefined,
+        affiliate_url: href,
+      }),
+    );
+  });
+  return out;
+}
+
+/** The two ordinary pages (declared as targets so capture.ts / try.ts can reach them). */
+const restTargets: ScrapeTarget[] = [
+  t.pre("https://www.starhub.com/personal/mobile/starhub-prepaid.html", parseStarhubPrepaid),
+  t.bb("https://www.starhub.com/personal/broadband.html", parseStarhubBroadband),
+];
+
 export const starhub: ProviderScraper = {
   name: "StarHub",
   country: "SG",
   website: "https://www.starhub.com",
+  targets: restTargets,
   async scrape(): Promise<ScrapeResult> {
     const started = Date.now();
     const pages: CrawlPageReport[] = [];
@@ -73,14 +168,7 @@ export const starhub: ProviderScraper = {
     postpaidPage.ms = Date.now() - started;
     pages.push(postpaidPage);
 
-    const rest = await scrapeTargets(
-      [
-        t.pre("https://www.starhub.com/personal/mobile/starhub-prepaid.html"),
-        t.bb("https://www.starhub.com/personal/broadband.html"),
-      ],
-      "SG",
-      "StarHub",
-    );
+    const rest = await scrapeTargets(restTargets, "SG", "StarHub");
     pages.push(...rest.pages);
     return { plans: [...postpaid, ...rest.plans], complete: !postpaidPage.error && postpaid.length > 0 && rest.complete, pages };
   },

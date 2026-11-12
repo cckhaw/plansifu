@@ -1,0 +1,56 @@
+[
+ {
+  "title": "BEST35",
+  "category": "mobile_prepaid",
+  "monthly_price": 35,
+  "currency": "MYR",
+  "data_gb": 1000,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "1,000GB* Total Internet",
+   "300GB High-Speed 5G Internet (Uncapped)",
+   "700GB Basic Internet (512kpbs)",
+   "50GB Hotspot",
+   "FREE Local Calls",
+   "Valid 30 Days"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "BEST10",
+  "category": "mobile_prepaid",
+  "monthly_price": 10,
+  "currency": "MYR",
+  "data_gb": 12,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "12GB of data for all apps",
+   "FREE Local Calls",
+   "Valid 10 Days"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "BEST5",
+  "category": "mobile_prepaid",
+  "monthly_price": 5,
+  "currency": "MYR",
+  "data_gb": 8,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "8GB of data for all apps",
+   "FREE Local Calls",
+   "Valid 5 Days"
+  ],
+  "promotion_badge": null
+ }
+]

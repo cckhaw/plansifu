@@ -1,0 +1,50 @@
+[
+ {
+  "title": "UltraSpeed 5Gbps",
+  "category": "broadband",
+  "monthly_price": 29.55,
+  "currency": "SGD",
+  "data_gb": null,
+  "speed_mbps": 5000,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 24,
+  "features": [
+   "FREE TP-Link WiFi 7 HB615 router",
+   "FREE NLT activation and installation fee worth $152.72"
+  ],
+  "promotion_badge": "For new sign-ups | U.P. $68.53/mth"
+ },
+ {
+  "title": "UltraSpeed 10Gbps",
+  "category": "broadband",
+  "monthly_price": 38.9,
+  "currency": "SGD",
+  "data_gb": null,
+  "speed_mbps": 10000,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 24,
+  "features": [
+   "FREE TP-Link WiFi 7 HB710 router ULTRA-FAST WIFI 7",
+   "FREE NLT activation and installation fee worth $152.72"
+  ],
+  "promotion_badge": "BEST VALUE | U.P. $121.01/mth"
+ },
+ {
+  "title": "UltraSpeed 10Gbps Mesh",
+  "category": "broadband",
+  "monthly_price": 46.26,
+  "currency": "SGD",
+  "data_gb": null,
+  "speed_mbps": 10000,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 24,
+  "features": [
+   "Includes 2 units TP-Link WiFi 7 HB710 router FOR MORE DEVICES, BEST COVERAGE",
+   "FREE NLT activation and installation fee worth $152.72"
+  ],
+  "promotion_badge": "U.P. $131.01/mth"
+ }
+]

@@ -3,7 +3,7 @@ import type { Browser } from "playwright";
 /** One shared headless Chromium per process; each page gets its own isolated context. */
 let browserPromise: Promise<Browser> | null = null;
 
-async function getBrowser(): Promise<Browser> {
+export async function getBrowser(): Promise<Browser> {
   if (browserPromise) {
     const b = await browserPromise.catch(() => null);
     if (b?.isConnected()) return b;
@@ -42,14 +42,15 @@ export interface RenderOptions {
   relay?: boolean;
   /** Record JSON responses that look like they carry prices (the site's own plan data). */
   feeds?: boolean;
-  /** Also take tiled JPEG screenshots of the page, for reading with a vision model. */
-  shots?: boolean;
 }
 
 export interface RenderResult {
+  /** Every text node of the rendered page, one per line (or `innerText` in "inner" mode). */
   text: string;
+  /** The rendered DOM (after tabs, "show more" buttons and accordions were opened), for selector-based parsers. */
+  html: string;
+  /** JSON responses the page loaded that carry prices. */
   feeds: DataFeed[];
-  shots: Buffer[];
 }
 
 const PRICE_EVIDENCE = /(?:RM|S?\$)\s?\d|"[A-Za-z_]*(?:price|fee|rental|charge)[A-Za-z_]*"\s*:\s*"?\d/gi;
@@ -58,8 +59,6 @@ const MAX_FEEDS = 3;
 const MAX_FEED_CHARS = 30_000;
 /** Buttons that reveal more plans in place. Links are skipped on purpose: they navigate away. */
 const SHOW_MORE = /^(load|view|see|show|explore)\s+(more|all)\b|^(more|see all|view all|show all)(\s+plans)?$/i;
-const SHOT_HEIGHT = 1400;
-const MAX_SHOTS = 6;
 
 const readText = (page: import("playwright").Page, mode: TextMode) =>
   page
@@ -84,13 +83,13 @@ const readText = (page: import("playwright").Page, mode: TextMode) =>
  *   (off-screen or inactive panels) - this took TuneTalk from 2 visible prices to 111.
  * - text "inner": what a user sees, with layout-aware lines (StarHub/Zym parsers rely on this).
  * Also waits for client-side apps to render, scrolls to trigger lazy loading, clicks tabs, opens
- * accordions and "show more" buttons, and (optionally) records the site's own JSON price feeds and
- * takes screenshots.
+ * accordions and "show more" buttons, records the site's own JSON price feeds, and returns the rendered DOM
+ * so parsers can use selectors.
  */
 export async function renderPage(url: string, opts: RenderOptions = {}): Promise<RenderResult> {
   const { minChars = 800, mode = "nodes", relay = false } = opts;
   const browser = await getBrowser();
-  if (relay) return { text: await renderViaRelay(browser, url), feeds: [], shots: [] };
+  if (relay) return { ...(await renderViaRelay(browser, url)), feeds: [] };
   const context = await browser.newContext({
     userAgent:
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
@@ -191,24 +190,14 @@ export async function renderPage(url: string, opts: RenderOptions = {}): Promise
     }
     if (n) await takeNew("Content revealed by expanding collapsed sections");
 
-    const shots: Buffer[] = [];
-    if (opts.shots) {
-      await page.evaluate(() => window.scrollTo(0, 0)).catch(() => undefined);
-      const height = await page.evaluate(() => document.documentElement.scrollHeight).catch(() => 900);
-      const slices = Math.min(MAX_SHOTS, Math.max(1, Math.ceil(height / SHOT_HEIGHT)));
-      for (let i = 0; i < slices; i++) {
-        const y = i * SHOT_HEIGHT;
-        const clip = { x: 0, y, width: 1366, height: Math.max(100, Math.min(SHOT_HEIGHT, height - y)) };
-        shots.push(await page.screenshot({ type: "jpeg", quality: 70, fullPage: true, clip }).catch(() => Buffer.alloc(0)));
-      }
-    }
+    const html = await page.content().catch(() => "");
 
     const feeds = (await Promise.all(feedReads))
       .filter((f): f is DataFeed => f !== null)
       .sort((a, b) => b.prices - a.prices)
       .slice(0, MAX_FEEDS)
       .map((f) => ({ ...f, body: f.body.slice(0, MAX_FEED_CHARS) }));
-    return { text, feeds, shots: shots.filter((b) => b.length > 0) };
+    return { text, html, feeds };
   } finally {
     await context.close().catch(() => undefined);
   }
@@ -236,7 +225,7 @@ const RELAY_PATH = "/api/fetch-page";
  * fetches the HTML (src/app/api/fetch-page, authenticated with the Supabase service-role key), and we read the
  * text from that server-rendered HTML in a script-free browser context.
  */
-async function renderViaRelay(browser: Browser, url: string): Promise<string> {
+async function renderViaRelay(browser: Browser, url: string): Promise<{ text: string; html: string }> {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!key) throw new Error("relay needs SUPABASE_SERVICE_ROLE_KEY");
   const base = (process.env.SITE_URL || "https://plansifu.vercel.app").replace(/\/$/, "");
@@ -246,11 +235,19 @@ async function renderViaRelay(browser: Browser, url: string): Promise<string> {
   });
   const html = await res.text();
   if (!res.ok) throw new Error(`relay ${res.status}: ${html.slice(0, 120)}`);
+  return pageFromHtml(browser, html);
+}
+
+/**
+ * What a relayed page looks like to a parser: the server-rendered HTML as given (no scripts run), plus its text nodes.
+ * Also used by the capture tool to reproduce a relayed page locally.
+ */
+export async function pageFromHtml(browser: Browser, html: string): Promise<{ text: string; html: string }> {
   const context = await browser.newContext({ javaScriptEnabled: false });
   try {
     const page = await context.newPage();
     await page.setContent(html, { waitUntil: "domcontentloaded" });
-    return await page
+    const text = await page
       .evaluate(() => {
         const out: string[] = [];
         const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
@@ -263,6 +260,7 @@ async function renderViaRelay(browser: Browser, url: string): Promise<string> {
         return out.join("\n");
       })
       .then((t) => t.replace(/\u00a0/g, " "));
+    return { text, html };
   } finally {
     await context.close().catch(() => undefined);
   }

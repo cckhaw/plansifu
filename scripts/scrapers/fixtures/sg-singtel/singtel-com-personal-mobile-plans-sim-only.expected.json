@@ -1,0 +1,88 @@
+[
+ {
+  "title": "Enhanced Lite",
+  "category": "mobile_postpaid",
+  "monthly_price": 35,
+  "currency": "SGD",
+  "data_gb": 300,
+  "speed_mbps": null,
+  "talktime_mins": 400,
+  "sms_count": 400,
+  "contract_months": 12,
+  "features": [
+   "10GB Malaysia Roaming",
+   "12 months of Caller ID"
+  ],
+  "promotion_badge": "$24.50/mth (U.P. $35) when you port-in"
+ },
+ {
+  "title": "Enhanced Core",
+  "category": "mobile_postpaid",
+  "monthly_price": 40,
+  "currency": "SGD",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": 700,
+  "sms_count": 700,
+  "contract_months": 0,
+  "features": [
+   "50GB Malaysia Roaming",
+   "4GB Asia Roaming",
+   "Caller ID"
+  ],
+  "promotion_badge": "25% OFF (U.P. $40) when you port-in by 15 Nov"
+ },
+ {
+  "title": "Priority Plus",
+  "category": "mobile_postpaid",
+  "monthly_price": 55,
+  "currency": "SGD",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": 1000,
+  "sms_count": 1000,
+  "contract_months": 0,
+  "features": [
+   "UNLIMITED Malaysia Roaming",
+   "13GB Asia Roaming",
+   "Caller ID"
+  ],
+  "promotion_badge": "25% OFF (U.P. $55) when you port-in by 15 Nov"
+ },
+ {
+  "title": "Priority Ultra",
+  "category": "mobile_postpaid",
+  "monthly_price": 80,
+  "currency": "SGD",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": 1500,
+  "sms_count": 1500,
+  "contract_months": 0,
+  "features": [
+   "UNLIMITED Malaysia Roaming",
+   "6GB Asia Roaming",
+   "18GB Worldwide Roaming",
+   "Caller ID",
+   "1 additional mobile line that shares your plan’s local data, talktime, SMS and Worldwide Roaming (up to 18GB)"
+  ],
+  "promotion_badge": "25% OFF (U.P. $80) when you port-in by 15 Nov"
+ },
+ {
+  "title": "Seniors SIM Only Plan",
+  "category": "mobile_postpaid",
+  "monthly_price": 12,
+  "currency": "SGD",
+  "data_gb": 340,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": 100,
+  "contract_months": 0,
+  "features": [
+   "6GB Malaysia Roaming",
+   "Caller ID",
+   "UNLIMITED calls & 100 SMS"
+  ],
+  "promotion_badge": "$6/mth when you port-in your existing number or sign up a new line. Limited time only!"
+ }
+]

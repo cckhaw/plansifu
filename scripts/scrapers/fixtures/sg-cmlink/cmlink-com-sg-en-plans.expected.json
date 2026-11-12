@@ -1,0 +1,195 @@
+[
+ {
+  "title": "4G 600GB SIM-only Best Value",
+  "category": "mobile_postpaid",
+  "monthly_price": 10.1,
+  "currency": "SGD",
+  "data_gb": 600,
+  "speed_mbps": null,
+  "talktime_mins": 300,
+  "sms_count": 100,
+  "contract_months": 0,
+  "features": [
+   "600GB local data",
+   "3GB roaming data for use in mainland China & Hong Kong SAR",
+   "15GB APAC 12 roaming data for use in Australia, Indonesia, Japan, China (including Hong Kong, Macau and Taiwan), Malaysia, Philippines, South Korea, Thailand and Vietnam",
+   "600GB shared roaming data across Indonesia, Malaysia and Thailand for 365 days (for new sign-ups only)",
+   "30GB International Roaming data for use in 210 destinations for 365 days (for new and port-in only)",
+   "5G+ Access and 10GB local data for $5/month",
+   "Free Caller ID & local incoming calls"
+  ],
+  "promotion_badge": "[Student Exclusive] Free 5G upgrade forever"
+ },
+ {
+  "title": "5G 600GB SIM-only",
+  "category": "mobile_postpaid",
+  "monthly_price": 11.1,
+  "currency": "SGD",
+  "data_gb": 600,
+  "speed_mbps": null,
+  "talktime_mins": 400,
+  "sms_count": 100,
+  "contract_months": 0,
+  "features": [
+   "Free 5G+ Access",
+   "600GB local data",
+   "3GB roaming data for use in mainland China & Hong Kong SAR",
+   "20GB APAC 12 roaming data for use in Australia, Indonesia, Japan, China (including Hong Kong, Macau and Taiwan), Malaysia, Philippines, South Korea, Thailand and Vietnam",
+   "700GB shared roaming data across Indonesia, Malaysia and Thailand for 365 days (for new sign-ups only)",
+   "30GB International Roaming data for use in 210 destinations for 365 days (for new and port-in only)",
+   "Free Caller ID & local incoming calls"
+  ],
+  "promotion_badge": "[All sign up] Free 3 months of subscription discount"
+ },
+ {
+  "title": "5G 600GB SIM-only New",
+  "category": "mobile_postpaid",
+  "monthly_price": 13.1,
+  "currency": "SGD",
+  "data_gb": 600,
+  "speed_mbps": null,
+  "talktime_mins": 400,
+  "sms_count": 100,
+  "contract_months": 0,
+  "features": [
+   "Includes 1-Card-Multi-Number service",
+   "Free 5G+ Access",
+   "600GB local data",
+   "3GB roaming data for use in mainland China & Hong Kong SAR",
+   "20GB APAC 12 roaming data for use in Australia, Indonesia, Japan, China (including Hong Kong, Macau and Taiwan), Malaysia, Philippines, South Korea, Thailand and Vietnam",
+   "700GB shared roaming data across Indonesia, Malaysia and Thailand for 365 days (for new sign-up only).",
+   "30GB International Roaming data used in 210 destinations for 365 days (for new and port-in only).",
+   "Free Caller ID & local incoming calls"
+  ],
+  "promotion_badge": "[All sign up] Free 3 months of subscription discount"
+ },
+ {
+  "title": "5G 800GB SIM-only Most Popular",
+  "category": "mobile_postpaid",
+  "monthly_price": 15,
+  "currency": "SGD",
+  "data_gb": 800,
+  "speed_mbps": null,
+  "talktime_mins": 800,
+  "sms_count": 100,
+  "contract_months": 0,
+  "features": [
+   "Free 5G+ Access",
+   "800GB local data",
+   "5GB roaming data for use in mainland China & Hong Kong SAR",
+   "40GB APAC 12 roaming data for use in Australia, Indonesia, Japan, China (including Hong Kong, Macau and Taiwan), Malaysia, Philippines, South Korea, Thailand and Vietnam",
+   "1TB shared roaming data for use in Indonesia, Malaysia and Thailand for 365 days (for new sign-ups only)",
+   "60GB International Roaming data for use in 210 destinations for 365 days (for new and port-in only)",
+   "Free Caller ID & local incoming calls"
+  ],
+  "promotion_badge": "[All sign up] Free 3 months of subscription discount"
+ },
+ {
+  "title": "5G 850GB SIM-only",
+  "category": "mobile_postpaid",
+  "monthly_price": 21,
+  "currency": "SGD",
+  "data_gb": 850,
+  "speed_mbps": null,
+  "talktime_mins": 800,
+  "sms_count": 300,
+  "contract_months": 0,
+  "features": [
+   "Free 5G+ Access",
+   "850GB local data",
+   "60GB roaming data for use in mainland China & Hong Kong SAR",
+   "45GB APAC 10 roaming data for use in Australia, China Macau, China Taiwan, Indonesia, Japan, Malaysia, Philippines, South Korea, Thailand and Vietnam",
+   "700GB shared roaming data across Indonesia, Malaysia and Thailand valid for 365 days (for new sign-ups only)",
+   "60GB International Roaming data for use in 210 destinations for 365 days (for new and port-in only)",
+   "Free Caller ID & local incoming calls"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "5G Unlimited SIM-only Worry-Free",
+  "category": "mobile_postpaid",
+  "monthly_price": 31.1,
+  "currency": "SGD",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": 1000,
+  "sms_count": 500,
+  "contract_months": 0,
+  "features": [
+   "Free 5G+ Access",
+   "Unlimited local data",
+   "80GB roaming data for use in mainland China & Hong Kong SAR",
+   "50GB APAC 10 roaming data for use in Australia, China Macau, China Taiwan, Indonesia, Japan, Malaysia, Philippines, South Korea, Thailand and Vietnam",
+   "700GB shared roaming data across Indonesia, Malaysia and Thailand valid for 365 days (for new sign-ups only)",
+   "60GB International Roaming data for use in 210 destinations for 365 days (for new and port-in only)",
+   "Free Caller ID & local incoming calls"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "5G 810GB 12-month contract",
+  "category": "mobile_postpaid",
+  "monthly_price": 15,
+  "currency": "SGD",
+  "data_gb": 810,
+  "speed_mbps": null,
+  "talktime_mins": 800,
+  "sms_count": 100,
+  "contract_months": 12,
+  "features": [
+   "Free 5G+ Access",
+   "5GB roaming data for use in mainland China and Hong Kong SAR",
+   "42GB APAC 12 roaming data for use in Australia, China (including Hong Kong, Macau and Taiwan), Indonesia, Japan, Malaysia, Philippines, South Korea, Thailand and Vietnam",
+   "1TB shared roaming data for use in Indonesia, Malaysia and Thailand for 365 days (for new sign-ups only)",
+   "60GB International Roaming data for use in 210 destinations for 365 days (for new and port-in only)",
+   "800 mins local calls",
+   "100 local SMS",
+   "800 mins from SG to 16 destinations (Local outgoing mins will also be deducted)"
+  ],
+  "promotion_badge": "[All sign up] Free 3 months of subscription discount"
+ },
+ {
+  "title": "5G 860GB 12-month contract",
+  "category": "mobile_postpaid",
+  "monthly_price": 21,
+  "currency": "SGD",
+  "data_gb": 860,
+  "speed_mbps": null,
+  "talktime_mins": 900,
+  "sms_count": 500,
+  "contract_months": 12,
+  "features": [
+   "Free 5G+ Access",
+   "65GB roaming data for use in mainland China and Hong Kong SAR",
+   "46GB APAC 10 roaming data for use in Australia, China Macau, China Taiwan, Indonesia, Japan, Malaysia, Philippines, South Korea, Thailand and Vietnam",
+   "700GB shared roaming data across Indonesia, Malaysia and Thailand valid for 365 days (for new sign-ups only)",
+   "60GB International Roaming data for use in 210 destinations for 365 days (for new and port-in only)",
+   "900 mins local calls",
+   "500 Local SMS",
+   "800 mins from SG to 16 destinations (Local outgoing mins will also be deducted)"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "5G Unlimited 12-month contract",
+  "category": "mobile_postpaid",
+  "monthly_price": 31.1,
+  "currency": "SGD",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": 1200,
+  "sms_count": 800,
+  "contract_months": 12,
+  "features": [
+   "Free 5G+ Access",
+   "^Data limit cap at 870GB, speed managed at 512kbps thereafter",
+   "85GB roaming data for use in mainland China and Hong Kong SAR",
+   "56GB APAC 10 roaming data for use in Australia, China Macau, China Taiwan, Indonesia, Japan, Malaysia, Philippines, South Korea, Thailand and Vietnam",
+   "700GB shared roaming data across Indonesia, Malaysia and Thailand valid for 365 days (for new sign-ups only)",
+   "60GB International Roaming data for use in 210 destinations for 365 days (for new and port-in only)",
+   "1200 mins local calls",
+   "800 Local SMS"
+  ],
+  "promotion_badge": null
+ }
+]

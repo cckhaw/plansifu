@@ -1,0 +1,53 @@
+[
+ {
+  "title": "ONE25",
+  "category": "mobile_prepaid",
+  "monthly_price": 25,
+  "currency": "MYR",
+  "data_gb": 150,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "30 days validity",
+   "Unlimited calls to all networks",
+   "Port-in customers: 180GB data"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "ONE35",
+  "category": "mobile_prepaid",
+  "monthly_price": 35,
+  "currency": "MYR",
+  "data_gb": 250,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "30 days validity",
+   "Unlimited calls to all networks",
+   "Port-in customers: 300GB data"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "ONE45",
+  "category": "mobile_prepaid",
+  "monthly_price": 45,
+  "currency": "MYR",
+  "data_gb": 350,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "30 days validity",
+   "Unlimited calls to all networks",
+   "Port-in customers: 450GB data"
+  ],
+  "promotion_badge": null
+ }
+]

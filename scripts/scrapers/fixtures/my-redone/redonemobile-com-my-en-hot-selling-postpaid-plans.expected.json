@@ -1,0 +1,95 @@
+[
+ {
+  "title": "5G Postpaid 18",
+  "category": "mobile_postpaid",
+  "monthly_price": 18,
+  "currency": "MYR",
+  "data_gb": 10,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Unlimited Calls"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "postpaidPLUS 38",
+  "category": "mobile_postpaid",
+  "monthly_price": 38,
+  "currency": "MYR",
+  "data_gb": 300,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Unlimited Calls to all network"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "postpaidPLUS 48",
+  "category": "mobile_postpaid",
+  "monthly_price": 48,
+  "currency": "MYR",
+  "data_gb": 500,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Unlimited Calls to all network"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "redplanPLUS 38",
+  "category": "mobile_postpaid",
+  "monthly_price": 38,
+  "currency": "MYR",
+  "data_gb": 300,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 6,
+  "features": [
+   "Unlimited Calls to all networks",
+   "Fast-track to a free 5G phone"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "redplanPLUS 48",
+  "category": "mobile_postpaid",
+  "monthly_price": 48,
+  "currency": "MYR",
+  "data_gb": 500,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 6,
+  "features": [
+   "Unlimited Calls to all networks",
+   "Fast-track to a free 5G phone"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "postpaidFAMILY",
+  "category": "mobile_postpaid",
+  "monthly_price": 128,
+  "currency": "MYR",
+  "data_gb": 1000,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Unlimited Calls to all network",
+   "Up to 5 lines"
+  ],
+  "promotion_badge": null
+ }
+]

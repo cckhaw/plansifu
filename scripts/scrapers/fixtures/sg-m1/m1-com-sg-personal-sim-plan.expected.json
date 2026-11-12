@@ -1,0 +1,122 @@
+[
+ {
+  "title": "M1 Bespoke SIM-only 300GB",
+  "category": "mobile_postpaid",
+  "monthly_price": 14.95,
+  "currency": "SGD",
+  "data_gb": 300,
+  "speed_mbps": null,
+  "talktime_mins": 1000,
+  "sms_count": 1000,
+  "contract_months": 0,
+  "features": [
+   "Usual data 150GB",
+   "True 5G",
+   "Opt for FREE eSIM and start using the service instantly",
+   "Free 12 months Unlimited Weekend Data",
+   "Roam daily at just $0.99 across 100+ destinations",
+   "Comes with $15/mth Device Voucher"
+  ],
+  "promotion_badge": "MOST POPULAR | $11.95/mth: $3 off first 3 months for new sign-ups and port-ins only"
+ },
+ {
+  "title": "M1 Bespoke SIM-only 1TB",
+  "category": "mobile_postpaid",
+  "monthly_price": 17.95,
+  "currency": "SGD",
+  "data_gb": 1000,
+  "speed_mbps": null,
+  "talktime_mins": 1000,
+  "sms_count": 1000,
+  "contract_months": 0,
+  "features": [
+   "Usual data 300GB",
+   "True 5G",
+   "Opt for FREE eSIM and start using the service instantly",
+   "Free 12 months Unlimited Weekend Data",
+   "Roam daily at just $0.99 across 100+ destinations",
+   "Comes with $15/mth Device Voucher"
+  ],
+  "promotion_badge": "$14.95/mth: $3 off first 3 months for new sign-ups and port-ins only"
+ },
+ {
+  "title": "M1 Bespoke SIM-only 1TB + 1GB Worldwide Roaming",
+  "category": "mobile_postpaid",
+  "monthly_price": 22.95,
+  "currency": "SGD",
+  "data_gb": 1000,
+  "speed_mbps": null,
+  "talktime_mins": 1000,
+  "sms_count": 1000,
+  "contract_months": 0,
+  "features": [
+   "Usual data 350GB",
+   "1GB Worldwide Roaming",
+   "True 5G",
+   "Opt for FREE eSIM and start using the service instantly",
+   "Free 12 months Unlimited Weekend Data",
+   "Roam daily at just $0.99 across 100+ destinations"
+  ],
+  "promotion_badge": "$17.95/mth: $5 off for first 3 months for new sign-ups and port-ins only"
+ },
+ {
+  "title": "M1 Silver SIM-only 300GB",
+  "category": "mobile_postpaid",
+  "monthly_price": 14.95,
+  "currency": "SGD",
+  "data_gb": 300,
+  "speed_mbps": null,
+  "talktime_mins": 1000,
+  "sms_count": 1000,
+  "contract_months": 0,
+  "features": [
+   "Usual data 150GB",
+   "Free 3 months VIU Premium and TVB Anywhere+",
+   "True 5G",
+   "Opt for FREE eSIM and start using the service instantly",
+   "Free 12 months Unlimited Weekend Data",
+   "Roam daily at just $0.99 across 100+ destinations"
+  ],
+  "promotion_badge": "MOST POPULAR | $5/mth: $9.95 off first 12 months"
+ },
+ {
+  "title": "M1 Silver SIM-only 1TB",
+  "category": "mobile_postpaid",
+  "monthly_price": 17.95,
+  "currency": "SGD",
+  "data_gb": 1000,
+  "speed_mbps": null,
+  "talktime_mins": 1000,
+  "sms_count": 1000,
+  "contract_months": 0,
+  "features": [
+   "Usual data 300GB",
+   "Free 3 months VIU Premium and TVB Anywhere+",
+   "True 5G",
+   "Opt for FREE eSIM and start using the service instantly",
+   "Free 12 months Unlimited Weekend Data",
+   "Roam daily at just $0.99 across 100+ destinations"
+  ],
+  "promotion_badge": "$6/mth: $11.95 off first 12 months"
+ },
+ {
+  "title": "M1 Silver SIM-only 1TB + 1GB Worldwide Roaming",
+  "category": "mobile_postpaid",
+  "monthly_price": 22.95,
+  "currency": "SGD",
+  "data_gb": 1000,
+  "speed_mbps": null,
+  "talktime_mins": 1000,
+  "sms_count": 1000,
+  "contract_months": 0,
+  "features": [
+   "Usual data 350GB",
+   "1GB Worldwide Roaming",
+   "Free 3 months VIU Premium and TVB Anywhere+",
+   "True 5G",
+   "Opt for FREE eSIM and start using the service instantly",
+   "Free 12 months Unlimited Weekend Data"
+  ],
+  "promotion_badge": "$7/mth: $15.95 off first 12 months"
+ }
+]

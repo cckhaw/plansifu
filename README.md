@@ -1,7 +1,7 @@
 # PlanSifu
 
 Compare mobile (postpaid / prepaid) and home fibre broadband plans across Malaysia 🇲🇾 and Singapore 🇸🇬.
-Next.js 15 · React 19 · Tailwind v4 · Supabase · Playwright + Claude Haiku · GitHub Actions · Vercel.
+Next.js 15 · React 19 · Tailwind v4 · Supabase · Playwright + per-site parsers · GitHub Actions · Vercel.
 
 See [`CLAUDE.md`](./CLAUDE.md) for architecture and conventions.
 
@@ -26,7 +26,6 @@ Without Supabase env vars the site renders built-in sample plans (`src/lib/sampl
 |---|---|---|
 | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Next.js (read plans) | Safe for the browser |
 | `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` | Scrapers, `/api/redirect` | **Secret** – server only |
-| `ANTHROPIC_API_KEY` | Scrapers | From [console.anthropic.com](https://console.anthropic.com); Claude Haiku extracts plans (about $0.10 per full crawl) |
 | `VERCEL_DEPLOY_HOOK_URL` | GitHub Action | Triggers a rebuild after each crawl |
 
 ## 2. Run the scrapers
@@ -36,15 +35,16 @@ npx playwright install chromium   # one-time
 npm run scrape
 ```
 
-Each page is rendered in headless Chromium (Playwright), which opens tabs, "show more" buttons and accordions and records any JSON price
-feeds the page loads. The text and feeds go to Claude Haiku, which returns structured plans; when that finds nothing, tiled
-screenshots of the page are read by Haiku vision instead. StarHub and Zym have dedicated parsers (no model call). A page that fails to load or extract makes
-that provider fail without touching its existing plans. Results are upserted on `(provider_id, title)`, plans that disappear are marked
+Each page is rendered in headless Chromium (Playwright), which opens tabs, "show more" buttons and accordions and records any JSON
+price feeds the page loads. A parser written for that specific page (`scripts/scrapers/providers/*.ts`, and
+`scripts/esim/parsers/*.ts` for Travel eSIM brands) turns it into plans: **no model or paid service is involved, so a crawl
+costs nothing**. See `scripts/scrapers/README.md` for how to write or fix a parser. A page that fails to load or parse makes that
+provider fail without touching its existing plans. Results are upserted on `(provider_id, title)`, plans that disappear are marked
 inactive, and every run is recorded in `crawling_logs`. Hand-edited `affiliate_url`s are preserved, so
 **set your real affiliate links in the `plans.affiliate_url` column** — scrapers only supply the landing page as default.
 
-Scraper selectors/URLs are in `scripts/scrapers/providers/*.ts`; provider sites change often, so check
-`crawling_logs` for failures.
+Provider sites change often: when a parser stops finding plans the crawl report names the page; capture it again
+(`npm run crawl:capture -- "<provider>"`), fix the parser and run `npm run test:parsers`.
 
 ## 3. GitHub Actions (nightly crawl)
 
@@ -53,11 +53,11 @@ Scraper selectors/URLs are in `scripts/scrapers/providers/*.ts`; provider sites 
 - `telco_providers`: `all` (default), `none`, `Malaysia`, `Singapore`, or comma-separated names (`M1, Maxx`; `CMLink (SG)` when a name exists in both countries).
 - `esim_providers`: `none` (default), `all`, or comma-separated Travel eSIM brands (`Airalo, Saily`).
 
-A targeted run (anything other than all/none) also logs the raw model output. The value lists in the workflow are static: update them when you add a provider or brand (an unknown name fails the run with the full list of valid values).
+A targeted run (anything other than all/none) also logs which extracted rows the filters dropped. The value lists in the workflow are static: update them when you add a provider or brand (an unknown name fails the run with the full list of valid values).
 The nightly run crawls every telco and no eSIM. The **Travel eSIM** crawl runs separately once a week, Sundays about 03:40 MYT/SGT (`37 19 * * 6` UTC). Run `supabase/migrations/03_travel_esim.sql` before its first run.
 
 Add under **Settings → Secrets and variables → Actions → Repository secrets**:
-`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`, `VERCEL_DEPLOY_HOOK_URL`.
+`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `VERCEL_DEPLOY_HOOK_URL`. The crawl calls no paid service, so no model API key is needed.
 
 ## 4. Deploy to Vercel
 
@@ -73,3 +73,13 @@ All "Get Deal" buttons point to `/api/redirect?plan_id=<id>`, which logs the cli
 ## Scripts
 
 `npm run dev | build | start | lint | typecheck | scrape`
+
+## 4. Importing pages the crawler cannot reach (M1, Maxx)
+
+`m1.com.sg` and `maxxonline.sg` show a CAPTCHA to datacenter networks (GitHub, Vercel), so they are imported from your own browser:
+
+1. Open `https://<your site>/import?key=<CRAWL_REPORT_KEY>` and drag **Send to PlanSifu** to your bookmarks bar (once).
+2. Open each listed page on the provider's site, wait for the plans to load, and click the bookmark (allow the pop-up the first time). Keep the import window open.
+3. Press **Check** to preview the parsed plans, then **Save to PlanSifu**. If a page cannot be sent, use "or upload" with a saved copy (Ctrl+S, "Webpage, HTML only").
+
+If every page of a provider is supplied, plans that no longer appear are deactivated; otherwise existing plans stay as they are. The parsers for these two providers live in `scripts/scrapers/sources/` and are written against real captured pages ("Download the captured pages" on the import page saves them as a file).

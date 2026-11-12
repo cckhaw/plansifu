@@ -1,0 +1,34 @@
+[
+ {
+  "coverage": null,
+  "data_gb": 3,
+  "data_note": "\"From\" price: smallest of the 3-50GB options",
+  "validity_days": null,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [],
+  "title": "3GB (from price)",
+  "price": 16,
+  "currency": "MYR",
+  "destination_key": "japan"
+ },
+ {
+  "coverage": null,
+  "data_gb": 5,
+  "data_note": "\"From\" price: smallest of the 5-50GB options",
+  "validity_days": null,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "5G"
+  ],
+  "title": "5GB (from price)",
+  "price": 15,
+  "currency": "MYR",
+  "destination_key": "japan"
+ }
+]

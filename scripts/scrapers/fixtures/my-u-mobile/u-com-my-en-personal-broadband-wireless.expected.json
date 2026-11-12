@@ -1,0 +1,95 @@
+[
+ {
+  "title": "ULTRA Home 5G Pro",
+  "category": "broadband",
+  "monthly_price": 98,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Unlimited Home Wi-Fi",
+   "5G & 4G Connectivity",
+   "2,000GB FUP quota with up to 2X faster speeds*",
+   "WiFi 7 5G Router worth RM1,200",
+   "AI-powered Game Turbo"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "ULTRA Home 5G Pro x sooka Premium",
+  "category": "broadband",
+  "monthly_price": 128,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Unlimited Home Wi-Fi",
+   "5G & 4G Connectivity",
+   "2,000GB FUP quota with up to 2X faster speeds*",
+   "WiFi 7 5G Router worth RM1,200",
+   "AI-powered Game Turbo",
+   "sooka Premium on 3 devices, including 1 TV worth RM80.10"
+  ],
+  "promotion_badge": "Bundle value RM178.10/mth, now RM128/mth"
+ },
+ {
+  "title": "ULTRA Home 5G (SIM + 5G Router)",
+  "category": "broadband",
+  "monthly_price": 78,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Unlimited Home Wi-Fi",
+   "5G & 4G Connectivity",
+   "1,000GB FUP quota",
+   "WiFi 6 5G Router worth RM799"
+  ],
+  "promotion_badge": "RM68/mth promo price"
+ },
+ {
+  "title": "ULTRA Home 5G x sooka Premium",
+  "category": "broadband",
+  "monthly_price": 98,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Unlimited Home Wi-Fi",
+   "5G & 4G Connectivity",
+   "1,000GB FUP quota",
+   "WiFi 6 5G Router worth RM799",
+   "sooka Premium on 3 devices, including 1 TV worth RM80.10"
+  ],
+  "promotion_badge": "Bundle value RM158.10/mth, now RM98/mth"
+ },
+ {
+  "title": "ULTRA Home 5G (SIM Only)",
+  "category": "broadband",
+  "monthly_price": 78,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Unlimited Home Wi-Fi",
+   "5G & 4G Connectivity",
+   "1,000GB FUP quota"
+  ],
+  "promotion_badge": "RM68/mth promo price"
+ }
+]

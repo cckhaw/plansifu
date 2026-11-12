@@ -9,17 +9,21 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "scrape": "tsx scripts/scrapers/run-scrapers.ts",
-    "scrape:esim": "tsx scripts/esim/run-esim.ts"
+    "scrape:esim": "tsx scripts/esim/run-esim.ts",
+    "test:parsers": "node --import tsx --test scripts/scrapers/parsers.test.ts scripts/scrapers/import.test.ts scripts/esim/parsers.test.ts",
+    "crawl:capture": "tsx scripts/scrapers/capture.ts",
+    "crawl:try": "tsx scripts/scrapers/try.ts",
+    "esim:capture": "tsx scripts/esim/capture.ts",
+    "esim:try": "tsx scripts/esim/try.ts"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.132.1",
     "@supabase/supabase-js": "^2.117.3",
+    "cheerio": "^1.2.0",
     "next": "^15.5.27",
     "playwright": "^1.64.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
-    "server-only": "^0.0.1",
-    "zod": "^4.6.5"
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.7",

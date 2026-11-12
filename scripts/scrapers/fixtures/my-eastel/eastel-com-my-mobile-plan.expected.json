@@ -1,0 +1,128 @@
+[
+ {
+  "title": "EZ35",
+  "category": "mobile_prepaid",
+  "monthly_price": 35,
+  "currency": "MYR",
+  "data_gb": 200,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": 10,
+  "contract_months": 0,
+  "features": [
+   "100GB Hotspot",
+   "Unlimited calls",
+   "30 Days",
+   "Data can be carried forward"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "EZ50",
+  "category": "mobile_prepaid",
+  "monthly_price": 50,
+  "currency": "MYR",
+  "data_gb": 500,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": 10,
+  "contract_months": 0,
+  "features": [
+   "Full Hotspot",
+   "3GB Data Roaming",
+   "Unlimited calls",
+   "30 Days",
+   "Data can be carried forward"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "EZ68",
+  "category": "mobile_prepaid",
+  "monthly_price": 68,
+  "currency": "MYR",
+  "data_gb": 700,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": 10,
+  "contract_months": 0,
+  "features": [
+   "Full Hotspot",
+   "5GB Data Roaming",
+   "Unlimited calls",
+   "30 Days",
+   "Data can be carried forward"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "EZ98",
+  "category": "mobile_prepaid",
+  "monthly_price": 98,
+  "currency": "MYR",
+  "data_gb": 999,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": 10,
+  "contract_months": 0,
+  "features": [
+   "Full Hotspot",
+   "10GB Data Roaming",
+   "Unlimited calls",
+   "30 Days",
+   "Data can be carried forward"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "EZ15",
+  "category": "mobile_prepaid",
+  "monthly_price": 15,
+  "currency": "MYR",
+  "data_gb": 30,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": 5,
+  "contract_months": 0,
+  "features": [
+   "Full Hotspot",
+   "Unlimited calls",
+   "15 Days"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "EZDAY 5GB",
+  "category": "mobile_prepaid",
+  "monthly_price": 3,
+  "currency": "MYR",
+  "data_gb": 5,
+  "speed_mbps": null,
+  "talktime_mins": 30,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Full Hotspot",
+   "30 Minutes Call",
+   "1 Day"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "EZWEEK 10GB",
+  "category": "mobile_prepaid",
+  "monthly_price": 7,
+  "currency": "MYR",
+  "data_gb": 10,
+  "speed_mbps": null,
+  "talktime_mins": 30,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Full Hotspot",
+   "30 Minutes Call",
+   "7 Days"
+  ],
+  "promotion_badge": null
+ }
+]

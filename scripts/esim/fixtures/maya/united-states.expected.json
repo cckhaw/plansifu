@@ -1,0 +1,86 @@
+[
+ {
+  "coverage": null,
+  "data_gb": -1,
+  "data_note": null,
+  "validity_days": 14,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "Hotspot allowed",
+   "5G",
+   "Auto top-up",
+   "24/7 support",
+   "Works in 165+ countries"
+  ],
+  "title": "Unlimited / 14 days",
+  "price": 27.99,
+  "currency": "USD",
+  "destination_key": "united-states"
+ },
+ {
+  "coverage": null,
+  "data_gb": -1,
+  "data_note": null,
+  "validity_days": 30,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "Hotspot allowed",
+   "5G",
+   "Auto top-up",
+   "24/7 support",
+   "Works in 165+ countries"
+  ],
+  "title": "Unlimited / 30 days",
+  "price": 49.99,
+  "currency": "USD",
+  "destination_key": "united-states"
+ },
+ {
+  "coverage": null,
+  "data_gb": -1,
+  "data_note": null,
+  "validity_days": 3,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "Hotspot allowed",
+   "5G",
+   "Auto top-up",
+   "24/7 support",
+   "Works in 165+ countries"
+  ],
+  "title": "Unlimited / 3 days",
+  "price": 9.99,
+  "currency": "USD",
+  "destination_key": "united-states"
+ },
+ {
+  "coverage": null,
+  "data_gb": -1,
+  "data_note": null,
+  "validity_days": 7,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "Hotspot allowed",
+   "5G",
+   "Auto top-up",
+   "24/7 support",
+   "Works in 165+ countries"
+  ],
+  "title": "Unlimited / 7 days",
+  "price": 19.99,
+  "currency": "USD",
+  "destination_key": "united-states"
+ }
+]

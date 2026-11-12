@@ -1,0 +1,62 @@
+[
+ {
+  "title": "Maxx 700GB",
+  "category": "mobile_postpaid",
+  "monthly_price": 12,
+  "currency": "SGD",
+  "data_gb": 700,
+  "speed_mbps": null,
+  "talktime_mins": 500,
+  "sms_count": 50,
+  "contract_months": 0,
+  "features": [
+   "TRUE 5G",
+   "20GB APAC Roaming (20 countries incl. South Korea, Taiwan, Australia)",
+   "7GB International Roaming (100+ countries and destinations)",
+   "Unlimited Voice Roaming",
+   "600 minutes IDD call to Malaysia, Bangladesh, India, China, Indonesia, Philippines, Myanmar and 17 other countries",
+   "Unlimited Local Incoming Calls"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Maxx 750GB",
+  "category": "mobile_postpaid",
+  "monthly_price": 15,
+  "currency": "SGD",
+  "data_gb": 750,
+  "speed_mbps": null,
+  "talktime_mins": 500,
+  "sms_count": 50,
+  "contract_months": 0,
+  "features": [
+   "TRUE 5G",
+   "20GB APAC Roaming (20 countries incl. South Korea, Taiwan, Australia)",
+   "8GB International Roaming (100+ countries and destinations)",
+   "Unlimited Voice Roaming",
+   "720 mins IDD calls to Malaysia, Bangladesh, India, China / 700 mins IDD calls to Indonesia, Philippines, Myanmar and 17 other countries",
+   "Unlimited Local Incoming Calls"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Maxx 500GB",
+  "category": "mobile_postpaid",
+  "monthly_price": 10,
+  "currency": "SGD",
+  "data_gb": 500,
+  "speed_mbps": null,
+  "talktime_mins": 500,
+  "sms_count": 50,
+  "contract_months": 0,
+  "features": [
+   "TRUE 5G",
+   "13GB APAC Roaming (11 countries)",
+   "3GB International Roaming (100+ countries and destinations)",
+   "Unlimited Voice Roaming",
+   "500 minutes IDD call to Malaysia, Bangladesh, India, China, Indonesia, Philippines, Myanmar and 17 other countries",
+   "Unlimited Local Incoming Calls"
+  ],
+  "promotion_badge": null
+ }
+]

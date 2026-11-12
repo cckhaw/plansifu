@@ -1,0 +1,64 @@
+[
+ {
+  "coverage": null,
+  "data_gb": -1,
+  "data_note": "Unlimited data per day (price is per day, \"from\")",
+  "validity_days": null,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [],
+  "title": "Unlimited / per day",
+  "price": 8,
+  "currency": "MYR",
+  "destination_key": "thailand"
+ },
+ {
+  "coverage": null,
+  "data_gb": 15,
+  "data_note": "\"From\" price: smallest of the 15-50GB options",
+  "validity_days": null,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "5G"
+  ],
+  "title": "15GB (from price)",
+  "price": 29.9,
+  "currency": "MYR",
+  "destination_key": "thailand"
+ },
+ {
+  "coverage": null,
+  "data_gb": 3,
+  "data_note": "\"From\" price: smallest of the 3-10GB options",
+  "validity_days": null,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [],
+  "title": "3GB (from price)",
+  "price": 11,
+  "currency": "MYR",
+  "destination_key": "thailand"
+ },
+ {
+  "coverage": "Asia 5: Indonesia, Thailand, Hong Kong, Singapore, Malaysia",
+  "data_gb": 300,
+  "data_note": null,
+  "validity_days": null,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [],
+  "title": "300GB (from price)",
+  "price": 94.5,
+  "currency": "MYR",
+  "destination_key": "thailand"
+ }
+]

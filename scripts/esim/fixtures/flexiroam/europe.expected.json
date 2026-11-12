@@ -1,0 +1,78 @@
+[
+ {
+  "coverage": "39 countries in Europe",
+  "data_gb": 10,
+  "data_note": null,
+  "validity_days": 3,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "Free eSIM included",
+   "Flexible start date",
+   "No hidden roaming charges"
+  ],
+  "title": "10GB / 3 days",
+  "price": 13.5,
+  "currency": "USD",
+  "destination_key": "europe"
+ },
+ {
+  "coverage": "39 countries in Europe",
+  "data_gb": 20,
+  "data_note": null,
+  "validity_days": 5,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "Free eSIM included",
+   "Flexible start date",
+   "No hidden roaming charges"
+  ],
+  "title": "20GB / 5 days",
+  "price": 26.5,
+  "currency": "USD",
+  "destination_key": "europe"
+ },
+ {
+  "coverage": "39 countries in Europe",
+  "data_gb": 50,
+  "data_note": null,
+  "validity_days": 10,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "Free eSIM included",
+   "Flexible start date",
+   "No hidden roaming charges"
+  ],
+  "title": "50GB / 10 days",
+  "price": 52,
+  "currency": "USD",
+  "destination_key": "europe"
+ },
+ {
+  "coverage": "39 countries in Europe",
+  "data_gb": 100,
+  "data_note": null,
+  "validity_days": 15,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "Free eSIM included",
+   "Flexible start date",
+   "No hidden roaming charges"
+  ],
+  "title": "100GB / 15 days",
+  "price": 87.99,
+  "currency": "USD",
+  "destination_key": "europe"
+ }
+]
