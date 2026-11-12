@@ -1,4 +1,25 @@
 import { type EsimDestination } from "../../src/lib/esim-destinations";
+import type { EsimParser } from "./types";
+import { airalo } from "./parsers/airalo";
+import { holafly } from "./parsers/holafly";
+import { saily } from "./parsers/saily";
+import { nomad } from "./parsers/nomad";
+import { jetpac } from "./parsers/jetpac";
+import { eskimo } from "./parsers/eskimo";
+import { roamless } from "./parsers/roamless";
+import { mobimatter } from "./parsers/mobimatter";
+import { yesim } from "./parsers/yesim";
+import { simlocal } from "./parsers/simlocal";
+import { firsty } from "./parsers/firsty";
+import { easysim } from "./parsers/easysim";
+import { flexiroam } from "./parsers/flexiroam";
+import { maya } from "./parsers/maya";
+import { bnesim } from "./parsers/bnesim";
+import { gigsky } from "./parsers/gigsky";
+import { alosim } from "./parsers/alosim";
+import { ubigi } from "./parsers/ubigi";
+import { instabridge } from "./parsers/instabridge";
+import { gogoroaming } from "./parsers/gogoroaming";
 
 export interface EsimBrand {
   name: string;
@@ -7,10 +28,10 @@ export interface EsimBrand {
   pattern?: (slug: string) => string;
   /** Full control instead of `pattern`: candidate URLs for a destination (empty = brand has no such page). */
   urls?: (d: EsimDestination) => string[];
-  /** Extra guidance for the model about this brand's pages. */
-  hint?: string;
   /** Fetch via our Vercel relay (sites that block the CI network). */
   relay?: boolean;
+  /** The brand's parser: one destination page in, plans out (see scripts/esim/parsers). */
+  parse: EsimParser;
 }
 
 export function candidateUrls(b: EsimBrand, d: EsimDestination): string[] {
@@ -19,25 +40,26 @@ export function candidateUrls(b: EsimBrand, d: EsimDestination): string[] {
 }
 
 export const ESIM_BRANDS: EsimBrand[] = [
-  { name: "Airalo", website: "https://www.airalo.com", pattern: (s) => `https://www.airalo.com/${s}-esim` },
-  { name: "Holafly", website: "https://esim.holafly.com", pattern: (s) => `https://esim.holafly.com/esim-${s}/` },
-  { name: "Saily", website: "https://saily.com", pattern: (s) => `https://saily.com/esim-${s}/` },
-  { name: "Nomad", website: "https://www.nomadesim.com", pattern: (s) => `https://www.nomadesim.com/${s}-eSIM` },
-  { name: "Jetpac", website: "https://www.jetpacglobal.com", pattern: (s) => `https://www.jetpacglobal.com/product-details/${s}-esim` },
-  { name: "Eskimo", website: "https://www.eskimo.travel", pattern: (s) => `https://www.eskimo.travel/en/plans/${s}-esim` },
-  { name: "Roamless", website: "https://roamless.com", pattern: (s) => `https://roamless.com/esim/${s}-esim` },
-  { name: "MobiMatter", website: "https://mobimatter.com", pattern: (s) => `https://mobimatter.com/esim-${s}` },
-  { name: "Yesim", website: "https://yesim.app", urls: (d) => [...d.slugs.map((s) => `https://yesim.app/country/${s}/`), ...d.slugs.map((s) => `https://yesim.app/regions/${s}-esim/`)] },
-  { name: "SimLocal", website: "https://www.simlocal.com", pattern: (s) => `https://www.simlocal.com/plan-selection/${s}` },
-  { name: "Firsty", website: "https://www.firsty.app", urls: (d) => [...d.slugs.map((s) => `https://www.firsty.app/${s}-esim`), ...d.slugs.map((s) => `https://www.firsty.app/esim-${s}`)] },
-  { name: "easySim", website: "https://www.easysim.global", pattern: (s) => `https://www.easysim.global/destination/${s}` },
-  { name: "Flexiroam", website: "https://www.flexiroam.com", pattern: (s) => `https://www.flexiroam.com/shop/esim-${s}` },
-  { name: "Maya", website: "https://maya.net", pattern: (s) => `https://maya.net/esim/${s}` },
-  { name: "BNESIM", website: "https://www.bnesim.com", urls: (d) => (d.iso2 ? [`https://www.bnesim.com/plans/${d.iso2}/`] : []) },
+  { name: "Airalo", website: "https://www.airalo.com", pattern: (s) => `https://www.airalo.com/${s}-esim`, parse: airalo },
+  { name: "Holafly", website: "https://esim.holafly.com", pattern: (s) => `https://esim.holafly.com/esim-${s}/`, parse: holafly },
+  { name: "Saily", website: "https://saily.com", pattern: (s) => `https://saily.com/esim-${s}/`, parse: saily },
+  { name: "Nomad", website: "https://www.nomadesim.com", pattern: (s) => `https://www.nomadesim.com/${s}-eSIM`, parse: nomad },
+  { name: "Jetpac", website: "https://www.jetpacglobal.com", pattern: (s) => `https://www.jetpacglobal.com/product-details/${s}-esim`, parse: jetpac },
+  { name: "Eskimo", website: "https://www.eskimo.travel", pattern: (s) => `https://www.eskimo.travel/en/plans/${s}-esim`, parse: eskimo },
+  { name: "Roamless", website: "https://roamless.com", pattern: (s) => `https://roamless.com/esim/${s}-esim`, parse: roamless },
+  { name: "MobiMatter", website: "https://mobimatter.com", pattern: (s) => `https://mobimatter.com/esim-${s}`, parse: mobimatter },
+  { name: "Yesim", website: "https://yesim.app", urls: (d) => [...d.slugs.map((s) => `https://yesim.app/country/${s}/`), ...d.slugs.map((s) => `https://yesim.app/regions/${s}-esim/`)], parse: yesim },
+  { name: "SimLocal", website: "https://www.simlocal.com", pattern: (s) => `https://www.simlocal.com/plan-selection/${s}`, parse: simlocal },
+  { name: "Firsty", website: "https://www.firsty.app", urls: (d) => [...d.slugs.map((s) => `https://www.firsty.app/${s}-esim`), ...d.slugs.map((s) => `https://www.firsty.app/esim-${s}`)], parse: firsty },
+  { name: "easySim", website: "https://www.easysim.global", pattern: (s) => `https://www.easysim.global/destination/${s}`, parse: easysim },
+  { name: "Flexiroam", website: "https://www.flexiroam.com", pattern: (s) => `https://www.flexiroam.com/shop/esim-${s}`, parse: flexiroam },
+  { name: "Maya", website: "https://maya.net", pattern: (s) => `https://maya.net/esim/${s}`, parse: maya },
+  { name: "BNESIM", website: "https://www.bnesim.com", urls: (d) => (d.iso2 ? [`https://www.bnesim.com/plans/${d.iso2}/`] : []), parse: bnesim },
   {
     name: "GigSky",
     website: "https://www.gigsky.com",
     urls: (d) => d.slugs.flatMap((s) => (d.type === "country" ? [`https://www.gigsky.com/country/esim-in-${s}`] : [`https://www.gigsky.com/region/esim-in-${s}`, `https://www.gigsky.com/country/esim-in-${s}`])),
+    parse: gigsky,
   },
   {
     name: "aloSIM",
@@ -46,22 +68,24 @@ export const ESIM_BRANDS: EsimBrand[] = [
       d.type === "country"
         ? d.slugs.map((s) => `https://alosim.com/destinations/${d.continent ?? "asia"}-esim/${s}-esim/`)
         : d.slugs.map((s) => `https://alosim.com/destinations/${s}-esim/`),
+    parse: alosim,
   },
   {
     name: "Ubigi",
     website: "https://ubigi.com",
     urls: (d) => (d.iso3 ? [`https://cellulardata.ubigi.com/data-plans-and-coverage/ubigi-esim-data-plans/?destination=${d.iso3}`] : d.slugs.map((s) => `https://cellulardata.ubigi.com/data-plans-and-coverage/ubigi-esim-data-plans/?region=${s}`)),
+    parse: ubigi,
   },
   {
     name: "Instabridge",
     website: "https://store.instabridge.com",
     urls: (d) => (d.iso2 ? [`https://store.instabridge.com/mobile-data/${d.iso2.toUpperCase()}/10gb`] : d.slugs.map((s) => `https://store.instabridge.com/mobile-data/${s}`)),
+    parse: instabridge,
   },
   {
     // A Malaysian reseller: pages group several countries, so the model is told to keep only plans for the destination.
     name: "GogoRoaming",
     website: "https://www.gogoroaming.my",
-    hint: "Each page lists eSIM products covering several countries. Keep only products that work in the requested destination. Prices are in MYR (RM). Unlimited 'per day' products: title them 'Unlimited / N days' only if a duration is stated.",
     urls: (d) => {
       const m: Record<string, string> = {
         japan: "japan-taiwan-korea-esim", "south-korea": "japan-taiwan-korea-esim", taiwan: "japan-taiwan-korea-esim",
@@ -72,5 +96,6 @@ export const ESIM_BRANDS: EsimBrand[] = [
       };
       return m[d.key] ? [`https://www.gogoroaming.my/${m[d.key]}/`] : [];
     },
+    parse: gogoroaming,
   },
 ];

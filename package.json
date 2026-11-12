@@ -10,9 +10,11 @@
     "typecheck": "tsc --noEmit",
     "scrape": "tsx scripts/scrapers/run-scrapers.ts",
     "scrape:esim": "tsx scripts/esim/run-esim.ts",
-    "test:parsers": "node --import tsx --test scripts/scrapers/parsers.test.ts",
+    "test:parsers": "node --import tsx --test scripts/scrapers/parsers.test.ts scripts/esim/parsers.test.ts",
     "crawl:capture": "tsx scripts/scrapers/capture.ts",
-    "crawl:try": "tsx scripts/scrapers/try.ts"
+    "crawl:try": "tsx scripts/scrapers/try.ts",
+    "esim:capture": "tsx scripts/esim/capture.ts",
+    "esim:try": "tsx scripts/esim/try.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.132.1",

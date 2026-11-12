@@ -1,12 +1,12 @@
-import { closeBrowser, cleanPageText, renderPageText } from "../scrapers/browser";
+import { closeBrowser, cleanPageText, renderPage } from "../scrapers/browser";
 import { errorMessage, finishRun, logCrawl, resolveProviderId, startRun } from "../scrapers/db-upsert";
-import { extractEsimPlansWithLlm, llmUsage, llmUsageSummary, type RawEsimPlan } from "../scrapers/llm-extract";
 import { short } from "../scrapers/report";
 import { selectByName } from "../scrapers/select";
 import { ESIM_DESTINATIONS, type EsimDestination } from "../../src/lib/esim-destinations";
 import type { CrawlPageReport, CrawlWarning } from "../../src/types/database";
 import { ESIM_BRANDS, candidateUrls, type EsimBrand } from "./brands";
 import { refreshFxRates, upsertEsimPlans, type EsimRow } from "./db";
+import { clean } from "./clean";
 
 const CONCURRENCY = Number(process.env.SCRAPE_CONCURRENCY ?? 4);
 /** SCRAPE_ONLY="Airalo,Saily" limits the brands; "all" (default) or "none"; see scrapers/select.ts. */
@@ -15,42 +15,6 @@ const only = process.env.SCRAPE_ONLY?.trim();
 const onlyDest = process.env.ESIM_DESTINATIONS?.split(",").map((s) => s.trim()).filter(Boolean);
 
 const PRICE_RE = /(?:US\$|A\$|S\$|HK\$|NT\$|\$|€|£|¥|RM|USD|EUR|GBP|AUD|SGD|MYR)\s?\d|\d\s?(?:USD|EUR|GBP|AUD|SGD|MYR)\b/;
-
-function clean(raw: RawEsimPlan[], d: EsimDestination, url: string): { rows: EsimRow[]; dropped: { title: string; reason: string }[] } {
-  const rows: EsimRow[] = [];
-  const dropped: { title: string; reason: string }[] = [];
-  const seen = new Set<string>();
-  const offers = new Set<string>();
-  for (const p of raw) {
-    const title = p.title.replace(/\s+/g, " ").trim().slice(0, 80);
-    const currency = (p.currency || "").trim().toUpperCase();
-    if (!title) dropped.push({ title: "(empty)", reason: "no title" });
-    else if (!/^[A-Z]{3}$/.test(currency)) dropped.push({ title, reason: `bad currency "${p.currency}"` });
-    else if (!(p.price > 0) || p.price > 2000) dropped.push({ title, reason: `price out of range (${p.price})` });
-    else if (p.data_gb === null) dropped.push({ title, reason: "data amount not stated" });
-    else if (p.data_gb !== null && p.data_gb !== -1 && (p.data_gb <= 0 || p.data_gb > 2000)) dropped.push({ title, reason: `data out of range (${p.data_gb})` });
-    else {
-      // 999GB-style figures mean "unlimited" on some sites.
-      const data = p.data_gb !== null && p.data_gb >= 900 && p.data_gb <= 1000 ? -1 : p.data_gb;
-      // The same offer listed twice (same data, validity, price and coverage) is one plan.
-      const offer = [data, p.validity_days, p.price, currency, p.coverage ?? ""].join("|");
-      if (offers.has(offer)) {
-        dropped.push({ title, reason: "duplicate offer" });
-        continue;
-      }
-      offers.add(offer);
-      let t = title;
-      if (seen.has(t.toLowerCase())) t = `${title} · ${p.coverage ?? `${currency} ${p.price}`}`.slice(0, 80);
-      if (seen.has(t.toLowerCase())) t = `${title} · ${currency} ${p.price}`;
-      if (seen.has(t.toLowerCase())) dropped.push({ title, reason: "duplicate" });
-      else {
-        seen.add(t.toLowerCase());
-        rows.push({ ...p, data_gb: data, title: t, currency, destination_key: d.key, perks: p.perks.slice(0, 6), affiliate_url: url });
-      }
-    }
-  }
-  return { rows, dropped };
-}
 
 interface BrandResult {
   rows: EsimRow[];
@@ -66,15 +30,16 @@ async function scrapeBrand(b: EsimBrand, destinations: EsimDestination[]): Promi
     let done = false;
     for (const url of candidateUrls(b, d)) {
       const started = Date.now();
-      const page: CrawlPageReport = { url, engine: "browser+llm", raw_count: 0, kept_count: 0, dropped: [] };
+      const page: CrawlPageReport = { url, engine: "custom parser", raw_count: 0, kept_count: 0, dropped: [] };
       try {
-        const text = cleanPageText(await renderPageText(url, 500, "nodes", b.relay));
+        const rendered = await renderPage(url, { minChars: 500, mode: "nodes", relay: b.relay, feeds: true });
+        const text = cleanPageText(rendered.text);
         page.text_chars = text.length;
         if (text.length < 400 || !PRICE_RE.test(text)) {
           tried.push(`${short(url)}: no plan page`);
           continue;
         }
-        const raw = await extractEsimPlansWithLlm({ brand: b.name, destination: d.name, url, pageText: text, hint: b.hint });
+        const raw = b.parse({ url, html: rendered.html, text, feeds: rendered.feeds }, d);
         const { rows, dropped } = clean(raw, d, url);
         Object.assign(page, { raw_count: raw.length, kept_count: rows.length, dropped, ms: Date.now() - started });
         if (rows.length === 0) {
@@ -132,7 +97,7 @@ async function runBrand(b: EsimBrand, destinations: EsimDestination[], runId: st
       runId,
       status: "success",
       itemsScraped: stats.count,
-      engine: "browser+llm",
+      engine: "custom parser",
       pages: r.pages,
       warnings,
       stats,
@@ -179,17 +144,15 @@ async function main() {
       }
     }),
   ).finally(closeBrowser);
-  const usage = llmUsage();
-  console.log(`LLM usage: ${llmUsageSummary()}`);
   const failed = results.filter((r) => !r.ok).length;
   console.log(`Done: ${results.length - failed}/${results.length} brands succeeded`);
   await finishRun(runId, {
     ok: results.length - failed,
     failed,
     warnings: results.reduce((n, r) => n + r.issues, 0),
-    llmCalls: usage.calls,
-    llmCostUsd: usage.costUsd,
-    llmSummary: llmUsageSummary(),
+    llmCalls: 0,
+    llmCostUsd: 0,
+    llmSummary: "No model calls: every brand has its own parser",
   });
   if (failed === results.length) process.exit(1);
 }

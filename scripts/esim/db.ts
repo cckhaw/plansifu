@@ -1,7 +1,7 @@
 
 import { fetchLiveRates } from "../../src/lib/fx";
 import { errorMessage, getAdminClient } from "../scrapers/db-upsert";
-import type { RawEsimPlan } from "../scrapers/llm-extract";
+import type { RawEsimPlan } from "./types";
 
 export interface EsimRow extends Omit<RawEsimPlan, "perks"> {
   destination_key: string;
