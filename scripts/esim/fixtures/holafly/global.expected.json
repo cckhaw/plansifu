@@ -1,0 +1,116 @@
+[
+ {
+  "coverage": "142 destinations",
+  "data_gb": -1,
+  "data_note": null,
+  "validity_days": 3,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "perks": [
+   "5G where available",
+   "Hotspot allowed",
+   "Always On included"
+  ],
+  "title": "Unlimited / 3 days",
+  "price": 24.9,
+  "currency": "USD",
+  "destination_key": "global"
+ },
+ {
+  "coverage": "142 destinations",
+  "data_gb": -1,
+  "data_note": null,
+  "validity_days": 5,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "perks": [
+   "5G where available",
+   "Hotspot allowed",
+   "Always On included"
+  ],
+  "title": "Unlimited / 5 days",
+  "price": 36.9,
+  "currency": "USD",
+  "destination_key": "global"
+ },
+ {
+  "coverage": "142 destinations",
+  "data_gb": -1,
+  "data_note": null,
+  "validity_days": 7,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "perks": [
+   "5G where available",
+   "Hotspot allowed",
+   "Always On included"
+  ],
+  "title": "Unlimited / 7 days",
+  "price": 46.9,
+  "currency": "USD",
+  "destination_key": "global"
+ },
+ {
+  "coverage": "142 destinations",
+  "data_gb": -1,
+  "data_note": null,
+  "validity_days": 10,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "perks": [
+   "5G where available",
+   "Hotspot allowed",
+   "Always On included"
+  ],
+  "title": "Unlimited / 10 days",
+  "price": 66.5,
+  "currency": "USD",
+  "destination_key": "global"
+ },
+ {
+  "coverage": "142 destinations",
+  "data_gb": -1,
+  "data_note": null,
+  "validity_days": 15,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "perks": [
+   "5G where available",
+   "Hotspot allowed",
+   "Always On included"
+  ],
+  "title": "Unlimited / 15 days",
+  "price": 96.9,
+  "currency": "USD",
+  "destination_key": "global"
+ },
+ {
+  "coverage": "142 destinations",
+  "data_gb": -1,
+  "data_note": null,
+  "validity_days": 30,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "perks": [
+   "5G where available",
+   "Hotspot allowed",
+   "Always On included"
+  ],
+  "title": "Unlimited / 30 days",
+  "price": 161.5,
+  "currency": "USD",
+  "destination_key": "global"
+ }
+]
