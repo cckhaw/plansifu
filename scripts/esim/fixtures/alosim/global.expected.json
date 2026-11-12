@@ -1,0 +1,112 @@
+[
+ {
+  "coverage": "Worldwide (multi-region)",
+  "data_gb": 1,
+  "data_note": null,
+  "validity_days": 7,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": true,
+  "perks": [
+   "Hotspot allowed",
+   "Free phone number",
+   "Most Popular"
+  ],
+  "title": "1GB / 7 days",
+  "price": 10,
+  "currency": "USD",
+  "destination_key": "global"
+ },
+ {
+  "coverage": "Worldwide (multi-region)",
+  "data_gb": 2,
+  "data_note": null,
+  "validity_days": 15,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": true,
+  "perks": [
+   "Hotspot allowed",
+   "Free phone number"
+  ],
+  "title": "2GB / 15 days",
+  "price": 18,
+  "currency": "USD",
+  "destination_key": "global"
+ },
+ {
+  "coverage": "Worldwide (multi-region)",
+  "data_gb": 3,
+  "data_note": null,
+  "validity_days": 30,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": true,
+  "perks": [
+   "Hotspot allowed",
+   "Free phone number"
+  ],
+  "title": "3GB / 30 days",
+  "price": 26,
+  "currency": "USD",
+  "destination_key": "global"
+ },
+ {
+  "coverage": "Worldwide (multi-region)",
+  "data_gb": 5,
+  "data_note": null,
+  "validity_days": 30,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": true,
+  "perks": [
+   "Hotspot allowed",
+   "Free phone number"
+  ],
+  "title": "5GB / 30 days",
+  "price": 35,
+  "currency": "USD",
+  "destination_key": "global"
+ },
+ {
+  "coverage": "Worldwide (multi-region)",
+  "data_gb": 10,
+  "data_note": null,
+  "validity_days": 30,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": true,
+  "perks": [
+   "Hotspot allowed",
+   "Free phone number"
+  ],
+  "title": "10GB / 30 days",
+  "price": 50,
+  "currency": "USD",
+  "destination_key": "global"
+ },
+ {
+  "coverage": "Worldwide (multi-region)",
+  "data_gb": 20,
+  "data_note": null,
+  "validity_days": 30,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": true,
+  "perks": [
+   "Hotspot allowed",
+   "Free phone number",
+   "Best Value"
+  ],
+  "title": "20GB / 30 days",
+  "price": 62,
+  "currency": "USD",
+  "destination_key": "global"
+ }
+]

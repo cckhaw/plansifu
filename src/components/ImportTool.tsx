@@ -35,6 +35,8 @@ function trimHtml(html: string): string {
   });
   doc.querySelectorAll("*").forEach((el) => {
     el.removeAttribute("style");
+    // Never send credentials that a page happens to carry in data attributes (parsers don't need them).
+    for (const name of el.getAttributeNames()) if (/secret|token|password|api-?key|credential/i.test(name)) el.removeAttribute(name);
     for (const attr of ["src", "href", "srcset"]) if (/^data:/i.test(el.getAttribute(attr) ?? "")) el.removeAttribute(attr);
   });
   return "<!doctype html>" + doc.documentElement.outerHTML;

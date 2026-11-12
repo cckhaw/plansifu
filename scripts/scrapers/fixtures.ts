@@ -36,6 +36,10 @@ export function trimHtml(html: string): string {
   });
   $("*").each((_, el) => {
     for (const attr of ["style", "srcset", "d", "viewbox"]) $(el).removeAttr(attr);
+    // Pages sometimes carry credentials in data attributes (e.g. data-client-secret-id): never keep those, parsers don't need them.
+    for (const attr of Object.keys((el as { attribs?: Record<string, string> }).attribs ?? {})) {
+      if (/secret|token|password|api-?key|credential/i.test(attr)) $(el).removeAttr(attr);
+    }
     for (const attr of ["src", "href"]) if (/^data:/i.test($(el).attr(attr) ?? "")) $(el).removeAttr(attr);
   });
   return $.html().replace(/[ \t]+\n/g, "\n").replace(/\n{2,}/g, "\n");
