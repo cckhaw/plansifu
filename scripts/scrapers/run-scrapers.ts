@@ -1,19 +1,9 @@
 import { closeBrowser } from "./browser";
-import { llmUsage, llmUsageSummary } from "./llm-extract";
 import { errorMessage, finishRun, logCrawl, resolveProviderId, startRun, upsertPlans } from "./db-upsert";
-import { celcomdigi } from "./providers/celcomdigi";
-import { m1 } from "./providers/m1";
-import { malaysiaProviders } from "./providers/malaysia";
-import { maxis } from "./providers/maxis";
-import { singaporeProviders } from "./providers/singapore";
-import { singtel } from "./providers/singtel";
+import { providers as scrapers } from "./providers";
 import { selectByName } from "./select";
 import { buildWarnings, engineOf, short } from "./report";
-import { starhub } from "./providers/starhub";
-import { zym } from "./providers/zym";
 import type { ProviderScraper, ScrapeResult } from "./types";
-
-const scrapers: ProviderScraper[] = [maxis, singtel, celcomdigi, m1, ...malaysiaProviders, starhub, zym, ...singaporeProviders];
 
 /** Providers run in parallel, capped so the model API and headless browsers aren't swamped. */
 const CONCURRENCY = Number(process.env.SCRAPE_CONCURRENCY ?? 4);
@@ -110,17 +100,15 @@ async function main() {
     selected.length,
   );
   const results = await runPool(selected, CONCURRENCY, (s) => runOne(s, runId)).finally(closeBrowser);
-  const usage = llmUsage();
-  console.log(`LLM usage: ${llmUsageSummary()}`);
   const failed = results.filter((r) => !r.ok).length;
   console.log(`Done: ${results.length - failed}/${results.length} providers succeeded`);
   await finishRun(runId, {
     ok: results.length - failed,
     failed,
     warnings: results.reduce((n, r) => n + r.issues, 0),
-    llmCalls: usage.calls,
-    llmCostUsd: usage.costUsd,
-    llmSummary: llmUsageSummary(),
+    llmCalls: 0,
+    llmCostUsd: 0,
+    llmSummary: "No model calls: every site has its own parser",
   });
   // Fail the job only if everything failed, so one broken site doesn't block the deploy hook.
   if (failed === results.length) process.exit(1);

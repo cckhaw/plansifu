@@ -2,6 +2,7 @@ import { renderPageText } from "../browser";
 import { scrapeTargets } from "../extract";
 import type { CrawlPageReport, ScrapedPlan } from "../../../src/types/database";
 import type { ProviderScraper, ScrapeResult } from "../types";
+import { todo } from "../parse-utils";
 import { t } from "./define";
 
 const POSTPAID_URL = "https://consumer.starhub.com/personal/store/mobile-plans";
@@ -75,8 +76,8 @@ export const starhub: ProviderScraper = {
 
     const rest = await scrapeTargets(
       [
-        t.pre("https://www.starhub.com/personal/mobile/starhub-prepaid.html"),
-        t.bb("https://www.starhub.com/personal/broadband.html"),
+        t.pre("https://www.starhub.com/personal/mobile/starhub-prepaid.html", todo("StarHub")),
+        t.bb("https://www.starhub.com/personal/broadband.html", todo("StarHub")),
       ],
       "SG",
       "StarHub",
