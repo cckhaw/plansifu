@@ -23,7 +23,7 @@ function parsePostpaid(page: PageData): RawPlan[] {
     // A struck-through price means the big price is a limited-time offer: the regular price is the struck one.
     const regular = struck !== null && shown !== null && struck > shown ? struck : shown;
     const promo = regular !== shown ? shown : null;
-    const dataText = clean(card.find(".cd-paragraph").first().text());
+    const dataText = clean(card.find(".plan-label").first().parent().text().replace(name, ""));
     const offer = clean(card.find(".cd-cards-badge-txt-16, .cd-txt-label-s-3").first().text());
     const badges = [promo !== null ? `RM${promo}/mth limited-time offer` : "", offer && !/^limited/i.test(offer) ? offer : ""].filter(Boolean);
     const rebate = clean(card.find(".cd-pc-grid-lines-6").filter((_, l) => /port-in rebate/i.test($(l).text())).first().text());
@@ -31,7 +31,7 @@ function parsePostpaid(page: PageData): RawPlan[] {
     return plan({
       title: name,
       monthly_price: regular,
-      data_gb: dataGb(dataText),
+      data_gb: dataGb(dataText) ?? (/unlimited/i.test(dataText) ? -1 : null),
       supplementary_line_price: suppPrice.get(name.toLowerCase()),
       promotion_badge: badges.join(" - ") || undefined,
       features: [rebate, suppLine, "Unlimited calls"].filter((f) => f && (f !== "Unlimited calls" || /unlimited\s*calls/i.test(card.text()))),
@@ -52,6 +52,8 @@ function parseFibre(page: PageData): RawPlan[] {
     const shown = price(card.find(".home-fibre-plan-price").first().text());
     const regular = struck ?? shown;
     if (speed === null || regular === null) return;
+    // The page repeats the cards for existing and new customers: keep the first of each speed.
+    if (out.some((p) => p.speed_mbps === speed)) return;
     out.push(
       plan({
         title: `CelcomDigi Home Fibre ${speedText.replace(/\s+/g, "")}`,
@@ -75,7 +77,7 @@ function parseFibre(page: PageData): RawPlan[] {
 function parseHomeWifi(page: PageData): RawPlan[] {
   const $ = dom(page);
   const out: RawPlan[] = [];
-  $(".cd-card-outline-2.blurb").each((_, el) => {
+  $(".cd-card-outline-2").filter((_, e) => $(e).find(".home-wifi-plan-price").length > 0).each((_, el) => {
     const card = $(el);
     const title = clean(card.find(".cd-home-fibre-card-txt-26-2").first().text());
     const struck = price(card.find(".cd-home-wifi-stroke-price").first().text());

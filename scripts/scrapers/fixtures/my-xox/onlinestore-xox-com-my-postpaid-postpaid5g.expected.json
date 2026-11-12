@@ -1,0 +1,125 @@
+[
+ {
+  "title": "Postpaid B33",
+  "category": "mobile_postpaid",
+  "monthly_price": 33,
+  "currency": "MYR",
+  "data_gb": 150,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "SMS: Pay Per Use",
+   "Hotspot enabled",
+   "Free 2 Months Yearly",
+   "Free 3 Months VIU Premium Voucher"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Postpaid Y38",
+  "category": "mobile_postpaid",
+  "monthly_price": 38,
+  "currency": "MYR",
+  "data_gb": 200,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "SMS: Pay Per Use",
+   "Hotspot enabled",
+   "Free China Travel eSIM"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Postpaid B50",
+  "category": "mobile_postpaid",
+  "monthly_price": 50,
+  "currency": "MYR",
+  "data_gb": 600,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": 200,
+  "contract_months": 0,
+  "features": [
+   "SMS: 200",
+   "Hotspot enabled",
+   "RM60* Bill Rebate *Save RM10 x 6 months on bill"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Postpaid ETS38",
+  "category": "mobile_postpaid",
+  "monthly_price": 38,
+  "currency": "MYR",
+  "data_gb": 200,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "SMS: Pay Per Use",
+   "Hotspot enabled",
+   "FREE ETS Ticket",
+   "Free 7 Days Viu Premium Voucher"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Postpaid Y48",
+  "category": "mobile_postpaid",
+  "monthly_price": 48,
+  "currency": "MYR",
+  "data_gb": 600,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": 100,
+  "contract_months": 0,
+  "features": [
+   "SMS: 100",
+   "Hotspot enabled",
+   "Free China Travel eSIM"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Postpaid B88",
+  "category": "mobile_postpaid",
+  "monthly_price": 88,
+  "currency": "MYR",
+  "data_gb": 600,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": 200,
+  "contract_months": 0,
+  "features": [
+   "SMS: 200",
+   "Hotspot enabled",
+   "88 Countries 18GB Roaming",
+   "18GB Roaming",
+   "RM60* Bill Rebate *Save RM10 x 6 months on bill"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Postpaid B89DB",
+  "category": "mobile_postpaid",
+  "monthly_price": 89,
+  "currency": "MYR",
+  "data_gb": 800,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": 200,
+  "contract_months": 0,
+  "features": [
+   "SMS: 200",
+   "Hotspot enabled",
+   "RM60* Bill Rebate *Save RM10 x 6 months on bill"
+  ],
+  "promotion_badge": null
+ }
+]

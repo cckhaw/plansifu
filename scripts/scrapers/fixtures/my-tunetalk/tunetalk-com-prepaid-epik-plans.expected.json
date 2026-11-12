@@ -1,0 +1,57 @@
+[
+ {
+  "title": "Epik+ 50",
+  "category": "mobile_prepaid",
+  "monthly_price": 50,
+  "currency": "MYR",
+  "data_gb": 500,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "All-day Ultra Fast 5G",
+   "FREE Global E-Roaming (Beta)**",
+   "Uncapped Speed up to 900Mbps (NO FUP)",
+   "Unlimited Calls to All Networks in Malaysia",
+   "Hotspot-enabled"
+  ],
+  "promotion_badge": "Best Value - As low as RM46/mth"
+ },
+ {
+  "title": "Epik+ 35",
+  "category": "mobile_prepaid",
+  "monthly_price": 35,
+  "currency": "MYR",
+  "data_gb": 250,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "All-day Ultra Fast 5G",
+   "Uncapped Speed up to 900Mbps (NO FUP)",
+   "Unlimited Calls to All Networks in Malaysia",
+   "Hotspot-enabled"
+  ],
+  "promotion_badge": "As low as RM33/mth"
+ },
+ {
+  "title": "Epik+ 28",
+  "category": "mobile_prepaid",
+  "monthly_price": 28,
+  "currency": "MYR",
+  "data_gb": 100,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "All-day Ultra Fast 5G",
+   "Uncapped Speed up to 900Mbps (NO FUP)",
+   "Unlimited Calls to All Networks in Malaysia",
+   "Hotspot-enabled"
+  ],
+  "promotion_badge": "As low as RM26/mth"
+ }
+]

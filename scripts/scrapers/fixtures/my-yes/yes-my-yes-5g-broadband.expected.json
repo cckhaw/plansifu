@@ -1,0 +1,73 @@
+[
+ {
+  "title": "Gateway (36-month contract)",
+  "category": "broadband",
+  "monthly_price": 68,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 36,
+  "features": [
+   "Uncapped 5g advanced data & speed",
+   "500GB 4G data with uncapped speed",
+   "FREE Infinite Gateway MAX Router (RRP: RM1199)",
+   "7 days return policy"
+  ],
+  "promotion_badge": "Limited time offer"
+ },
+ {
+  "title": "Gateway (24-month contract)",
+  "category": "broadband",
+  "monthly_price": 99,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 24,
+  "features": [
+   "Uncapped 5g advanced data & speed",
+   "500GB 4G data with uncapped speed",
+   "FREE Infinite Gateway MAX Router (RRP: RM1199)",
+   "7 days return policy"
+  ],
+  "promotion_badge": "RM75/mth yes postpaid user"
+ },
+ {
+  "title": "Gateway (12-month contract)",
+  "category": "broadband",
+  "monthly_price": 99,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 12,
+  "features": [
+   "Uncapped 5g advanced data & speed",
+   "500GB 4G data with uncapped speed",
+   "Infinite Gateway MAX Router RM299 (RRP: RM1199)",
+   "7 days return policy"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Flexi",
+  "category": "broadband",
+  "monthly_price": 58,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Uncapped 5g advanced data & speed",
+   "100GB 4G data with uncapped speed",
+   "With SIM only"
+  ],
+  "promotion_badge": null
+ }
+]

@@ -1,0 +1,59 @@
+[
+ {
+  "title": "5g advanced starter pack",
+  "category": "mobile_prepaid",
+  "monthly_price": 10,
+  "currency": "MYR",
+  "data_gb": 20,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "5g advanced & 4G",
+   "20GB data with uncapped speed",
+   "Shared hotspot",
+   "Unlimited on-net SMS",
+   "30 days validity"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "5g advanced prepaid 20",
+  "category": "mobile_prepaid",
+  "monthly_price": 20,
+  "currency": "MYR",
+  "data_gb": 50,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "5g advanced & 4G",
+   "50GB data with uncapped speed",
+   "Shared hotspot",
+   "Unlimited on-net SMS",
+   "30 days validity"
+  ],
+  "promotion_badge": "Data Rollover*"
+ },
+ {
+  "title": "5g advanced prepaid 30",
+  "category": "mobile_prepaid",
+  "monthly_price": 30,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Uncapped 5g advanced data and speed",
+   "Uncapped 4G data up to 7Mbps",
+   "12GB hotspot",
+   "Unlimited on-net SMS",
+   "30 days validity"
+  ],
+  "promotion_badge": "RM5 OFF with AutoPay"
+ }
+]

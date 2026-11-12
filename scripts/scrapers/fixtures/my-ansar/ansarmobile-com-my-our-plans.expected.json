@@ -1,0 +1,127 @@
+[
+ {
+  "title": "Lite Package",
+  "category": "mobile_prepaid",
+  "monthly_price": 170,
+  "currency": "MYR",
+  "data_gb": 120,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "360 days line validity",
+   "10GB/month for 12 months"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Premium Package",
+  "category": "mobile_prepaid",
+  "monthly_price": 420,
+  "currency": "MYR",
+  "data_gb": 360,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "360 days line validity",
+   "30GB/month for 12 months"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Monthly Unlimited Pass 3Mbps",
+  "category": "mobile_prepaid",
+  "monthly_price": 30,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": 3,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "30 days line validity"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Monthly Unlimited Pass 3Mbps + Calls & Hotspot",
+  "category": "mobile_prepaid",
+  "monthly_price": 40,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": 3,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "30 days line validity",
+   "Unlimited calls & hotspot"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Monthly Unlimited Pass 6Mbps + Calls & Hotspot",
+  "category": "mobile_prepaid",
+  "monthly_price": 50,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": 6,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "30 days line validity",
+   "Unlimited calls & hotspot"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Monthly Unlimited Pass 18Mbps + Calls & Hotspot",
+  "category": "mobile_prepaid",
+  "monthly_price": 60,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": 18,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "30 days line validity",
+   "Unlimited calls & hotspot"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Weekly Unlimited Pass 3Mbps",
+  "category": "mobile_prepaid",
+  "monthly_price": 12,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": 3,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "7 days line validity"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Daily Unlimited Pass 3Mbps",
+  "category": "mobile_prepaid",
+  "monthly_price": 3,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": 3,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "1 day line validity"
+  ],
+  "promotion_badge": null
+ }
+]
