@@ -8,7 +8,9 @@ inspired by CompareHero.my.
 - Supabase Postgres via `@supabase/supabase-js`
 - Scraping: Playwright renders each page (free, runs in GitHub Actions) and Claude Haiku
   (`claude-haiku-5-5`, via `@anthropic-ai/sdk` structured outputs) extracts plans from the page text.
-  Firecrawl (`@mendable/firecrawl-js`) is only a backup, used per page when Playwright + Haiku errors or finds nothing (`SCRAPE_ENGINE=firecrawl` flips the order).
+  Each page is read in order: (1) the rendered text plus any JSON price feeds the page itself loaded (tabs, "show more" buttons and accordions are opened first),
+  with a second, deeper pass when few plans come back compared with the prices on the page; (2) if that errors or finds nothing, tiled screenshots read by Haiku vision
+  (`browser+vision`, not used for relayed pages or bot-blocked pages). Firecrawl was retired (no key or env var needed); old reports may still show its badge.
   Sites that 403 GitHub's network (CelcomDigi) use `t.relay(...)`: HTML is fetched by `/api/fetch-page` on our Vercel deployment (Singapore region, auth = service-role key, host allowlist).
   Sites with a regular layout get a dedicated parser instead (StarHub, Zym - no model needed).
 - Scripts run with `tsx`

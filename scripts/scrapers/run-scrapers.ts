@@ -14,7 +14,7 @@ import type { ProviderScraper, ScrapeResult } from "./types";
 
 const scrapers: ProviderScraper[] = [maxis, singtel, celcomdigi, m1, ...malaysiaProviders, starhub, zym, ...singaporeProviders];
 
-/** Providers run in parallel, capped so Firecrawl rate limits and headless browsers aren't swamped. */
+/** Providers run in parallel, capped so the model API and headless browsers aren't swamped. */
 const CONCURRENCY = Number(process.env.SCRAPE_CONCURRENCY ?? 4);
 /** Optional: SCRAPE_ONLY="Maxis,M1" limits a run to named providers (handy when debugging). */
 const only = process.env.SCRAPE_ONLY?.split(",").map((s) => s.trim().toLowerCase()).filter(Boolean);

@@ -7,7 +7,7 @@ import { t } from "./define";
 const POSTPAID_URL = "https://consumer.starhub.com/personal/store/mobile-plans";
 
 /**
- * The store page is an OutSystems app that Firecrawl can't reliably render, and its text has a
+ * The store page is an OutSystems app that generic text extraction can't reliably read, and its text has a
  * regular layout: `<name>`, `$NN.00`, `/mth`, ..., `Select plan`. Parse that directly.
  */
 export function parseStarhubPostpaid(text: string): ScrapedPlan[] {

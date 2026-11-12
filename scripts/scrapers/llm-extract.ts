@@ -67,46 +67,49 @@ const isFatal = (err: unknown) =>
   err instanceof Anthropic.PermissionDeniedError ||
   (err instanceof Anthropic.BadRequestError && /credit balance/i.test(err.message));
 
-export async function extractPlansWithLlm(opts: {
+export interface ExtractInput {
   provider: string;
   country: Country;
   url: string;
   category: PlanCategory;
-  pageText: string;
   hint?: string;
-}): Promise<RawPlan[]> {
-  if (unavailable) throw new Error(unavailable);
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) throw new Error("ANTHROPIC_API_KEY not set");
-  client ??= new Anthropic({ apiKey, maxRetries: 4 });
+}
 
+function header(opts: ExtractInput): string {
   const currency = opts.country === "MY" ? "MYR (RM)" : "SGD (S$)";
-  const user =
+  return (
     `Provider: ${opts.provider} (${opts.country}, prices in ${currency})\n` +
     `Page: ${opts.url}\n` +
     `This page is mainly about: ${opts.category.replace("_", " ")} plans (use it as the default category).\n` +
-    (opts.hint ? `Note about this page: ${opts.hint}\n` : "") +
-    "\n" +
-    `<page_text>\n${opts.pageText}\n</page_text>`;
+    (opts.hint ? `Note about this page: ${opts.hint}\n` : "")
+  );
+}
 
-  const priceMentions = (opts.pageText.match(/(?:RM|S?\$)\s?\d/g) ?? []).length;
-  const ask = (effort: "medium" | "high") =>
-    client!.messages.parse({
+/** Distinct price values mentioned in the text, e.g. {"49", "89", "129.9"}. */
+function distinctPrices(text: string): Set<string> {
+  const out = new Set<string>();
+  for (const m of text.matchAll(/(?:RM|S\$|\$)\s?(\d+(?:\.\d{1,2})?)/g)) out.add(String(Number(m[1])));
+  return out;
+}
+
+type Content = string | Anthropic.Messages.ContentBlockParam[];
+
+async function ask(content: Content, effort: "medium" | "high") {
+  client ??= new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY!, maxRetries: 4 });
+  try {
+    const response = await client.messages.parse({
       model: MODEL,
       max_tokens: 12_000,
       system: SYSTEM,
-      messages: [{ role: "user", content: user }],
+      messages: [{ role: "user", content }],
       output_config: { effort, format: zodOutputFormat(ResultSchema) },
     });
-
-  let response;
-  try {
-    response = await ask("medium");
-    // A page full of prices that yields nothing is more likely a miss than a plan-less page: think harder once.
-    if (response.parsed_output?.plans.length === 0 && priceMentions >= 6) {
-      track(response);
-      response = await ask("high");
+    track(response);
+    if (response.stop_reason === "refusal" || response.stop_reason === "max_tokens") {
+      throw new Error(`model stopped with ${response.stop_reason}`);
     }
+    if (!response.parsed_output) throw new Error("model returned no parseable plans");
+    return response.parsed_output.plans;
   } catch (err) {
     if (isFatal(err)) {
       unavailable = `Anthropic API unavailable: ${(err as Error).message}`;
@@ -114,16 +117,71 @@ export async function extractPlansWithLlm(opts: {
     }
     throw err;
   }
+}
 
-  track(response);
-  if (response.stop_reason === "refusal" || response.stop_reason === "max_tokens") {
-    throw new Error(`model stopped with ${response.stop_reason}`);
+function ready() {
+  if (unavailable) throw new Error(unavailable);
+  if (!process.env.ANTHROPIC_API_KEY) throw new Error("ANTHROPIC_API_KEY not set");
+}
+
+const titleKey = (t?: string | null) => (t ?? "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+
+/** Extract plans from rendered page text, plus any JSON price feeds the page itself loaded. */
+export async function extractPlansWithLlm(
+  opts: ExtractInput & { pageText: string; feeds?: { url: string; body: string }[] },
+): Promise<{ plans: RawPlan[]; notes: string[] }> {
+  ready();
+  const notes: string[] = [];
+  const feeds = opts.feeds?.length
+    ? "\n<data_feeds>\nJSON the page itself loaded. It may include navigation menus or unrelated data: use it only to find plans or prices that the page text is missing, and never to override what the page text shows.\n" +
+      opts.feeds.map((f) => `<feed url="${f.url}">\n${f.body}\n</feed>`).join("\n") +
+      "\n</data_feeds>"
+    : "";
+  const user = `${header(opts)}\n<page_text>\n${opts.pageText}\n</page_text>${feeds}`;
+
+  let plans = await ask(user, "medium");
+  const prices = distinctPrices(opts.pageText);
+  // A page full of prices that yields nothing is more likely a miss than a plan-less page: think harder once.
+  if (plans.length === 0 && (opts.pageText.match(/(?:RM|S?\$)\s?\d/g) ?? []).length >= 6) {
+    plans = await ask(user, "high");
+    if (plans.length) notes.push("Recovered with a second, deeper pass (first pass found nothing)");
+  } else if (prices.size >= 8 && plans.length < prices.size * 0.3) {
+    // Few plans compared with the number of distinct prices on the page: ask for a more careful, complete read.
+    const again = await ask(
+      `${user}\n\nA first pass returned only ${plans.length} plans, but the page shows ${prices.size} distinct prices. Read the page again carefully and return every distinct plan, including the ones already found.`,
+      "high",
+    );
+    const known = new Set(plans.map((p) => titleKey(p.title)));
+    const added = again.filter((p) => !known.has(titleKey(p.title)));
+    if (added.length) {
+      plans = [...plans, ...added];
+      notes.push(`Completeness check: the first pass found ${plans.length - added.length} plans but the page shows ${prices.size} distinct prices; a second pass added ${added.length}`);
+    }
   }
-  if (!response.parsed_output) throw new Error("model returned no parseable plans");
-
-  const plans = response.parsed_output.plans;
   if (process.env.SCRAPE_DEBUG) {
     console.log(`[debug] ${opts.url} -> ${plans.length} raw: ` + plans.slice(0, 14).map((p) => `${p.title} (${p.monthly_price})`).join("; "));
+  }
+  return { plans, notes };
+}
+
+/** Same extraction, but reading screenshots of the page (for plans that never appear in the page text). */
+export async function extractPlansFromScreenshots(opts: ExtractInput & { shots: Buffer[]; pageText?: string }): Promise<RawPlan[]> {
+  ready();
+  const content: Anthropic.Messages.ContentBlockParam[] = [
+    ...opts.shots.map((b, i) => [
+      { type: "text" as const, text: `Screenshot ${i + 1} of ${opts.shots.length} (top to bottom of the page):` },
+      { type: "image" as const, source: { type: "base64" as const, media_type: "image/jpeg" as const, data: b.toString("base64") } },
+    ]).flat(),
+    {
+      type: "text",
+      text:
+        `${header(opts)}\nThe images above are screenshots of the page; the text could not be extracted reliably. Read the plans from the images exactly as shown.` +
+        (opts.pageText ? `\n\nWhatever text could be read (may be incomplete):\n<page_text>\n${opts.pageText.slice(0, 8000)}\n</page_text>` : ""),
+    },
+  ];
+  const plans = await ask(content, "medium");
+  if (process.env.SCRAPE_DEBUG) {
+    console.log(`[debug] vision ${opts.url} -> ${plans.length} raw: ` + plans.slice(0, 14).map((p) => `${p.title} (${p.monthly_price})`).join("; "));
   }
   return plans;
 }

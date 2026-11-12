@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.132.1",
-    "@mendable/firecrawl-js": "^4.46.0",
     "@supabase/supabase-js": "^2.117.3",
     "next": "^15.5.27",
     "playwright": "^1.64.0",

@@ -31,7 +31,8 @@ export interface Plan {
   updated_at: string;
 }
 
-export type CrawlEngine = "browser+llm" | "firecrawl" | "custom parser";
+/** "firecrawl" is kept only so crawl reports from before it was retired still display. */
+export type CrawlEngine = "browser+llm" | "browser+vision" | "firecrawl" | "custom parser";
 
 export interface CrawlPageReport {
   url: string;
@@ -41,11 +42,13 @@ export interface CrawlPageReport {
   /** Plans kept after filtering. */
   kept_count: number;
   dropped: { title: string; reason: string }[];
-  /** Characters of page text sent to the model (browser+llm only). */
+  /** Characters of page text sent to the model (text reads only). */
   text_chars?: number;
   error?: string;
   /** True for pages known to list no plans (an empty result is not a warning). */
   expect_empty?: boolean;
+  /** Things worth knowing about how this page was read (screenshot fallback, completeness re-read, data feeds). */
+  notes?: string[];
   ms?: number;
 }
 
