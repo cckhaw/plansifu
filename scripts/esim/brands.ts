@@ -40,21 +40,21 @@ export function candidateUrls(b: EsimBrand, d: EsimDestination): string[] {
 }
 
 export const ESIM_BRANDS: EsimBrand[] = [
-  { name: "Airalo", website: "https://www.airalo.com", pattern: (s) => `https://www.airalo.com/${s}-esim`, parse: airalo },
+  { name: "Airalo", website: "https://www.airalo.com", urls: (d) => (d.key === "global" ? ["https://www.airalo.com/discover-esim"] : d.slugs.map((s) => `https://www.airalo.com/${s}-esim`)), parse: airalo },
   { name: "Holafly", website: "https://esim.holafly.com", pattern: (s) => `https://esim.holafly.com/esim-${s}/`, parse: holafly },
   { name: "Saily", website: "https://saily.com", pattern: (s) => `https://saily.com/esim-${s}/`, parse: saily },
   { name: "Nomad", website: "https://www.nomadesim.com", pattern: (s) => `https://www.nomadesim.com/${s}-eSIM`, parse: nomad },
   { name: "Jetpac", website: "https://www.jetpacglobal.com", pattern: (s) => `https://www.jetpacglobal.com/product-details/${s}-esim`, parse: jetpac },
   { name: "Eskimo", website: "https://www.eskimo.travel", pattern: (s) => `https://www.eskimo.travel/en/plans/${s}-esim`, parse: eskimo },
-  { name: "Roamless", website: "https://roamless.com", pattern: (s) => `https://roamless.com/esim/${s}-esim`, parse: roamless },
+  { name: "Roamless", website: "https://roamless.com", urls: (d) => (d.type === "country" ? d.slugs.map((s) => `https://roamless.com/esim/${s}-esim`) : d.slugs.map((s) => `https://roamless.com/esim-region/${s}-esim`)), parse: roamless },
   { name: "MobiMatter", website: "https://mobimatter.com", pattern: (s) => `https://mobimatter.com/esim-${s}`, parse: mobimatter },
-  { name: "Yesim", website: "https://yesim.app", urls: (d) => [...d.slugs.map((s) => `https://yesim.app/country/${s}/`), ...d.slugs.map((s) => `https://yesim.app/regions/${s}-esim/`)], parse: yesim },
+  { name: "Yesim", website: "https://yesim.app", urls: (d) => (d.key === "global" ? ["https://yesim.app/global/global-package-esim/"] : [...d.slugs.map((s) => `https://yesim.app/country/${s}/`), ...d.slugs.map((s) => `https://yesim.app/regions/${s}-esim/`)]), parse: yesim },
   { name: "SimLocal", website: "https://www.simlocal.com", pattern: (s) => `https://www.simlocal.com/plan-selection/${s}`, parse: simlocal },
-  { name: "Firsty", website: "https://www.firsty.app", urls: (d) => [...d.slugs.map((s) => `https://www.firsty.app/${s}-esim`), ...d.slugs.map((s) => `https://www.firsty.app/esim-${s}`)], parse: firsty },
+  { name: "Firsty", website: "https://www.firsty.app", urls: (d) => d.slugs.map((s) => `https://www.firsty.app/${s}-esim`), parse: firsty },
   { name: "easySim", website: "https://www.easysim.global", pattern: (s) => `https://www.easysim.global/destination/${s}`, parse: easysim },
   { name: "Flexiroam", website: "https://www.flexiroam.com", pattern: (s) => `https://www.flexiroam.com/shop/esim-${s}`, parse: flexiroam },
   { name: "Maya", website: "https://maya.net", pattern: (s) => `https://maya.net/esim/${s}`, parse: maya },
-  { name: "BNESIM", website: "https://www.bnesim.com", urls: (d) => (d.iso2 ? [`https://www.bnesim.com/plans/${d.iso2}/`] : []), parse: bnesim },
+  { name: "BNESIM", website: "https://www.bnesim.com", urls: (d) => (d.iso2 ? [`https://www.bnesim.com/plans/${d.iso2}/`] : d.slugs.map((s) => `https://www.bnesim.com/plans/${s}/`)), parse: bnesim },
   {
     name: "GigSky",
     website: "https://www.gigsky.com",

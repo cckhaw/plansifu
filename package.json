@@ -17,15 +17,13 @@
     "esim:try": "tsx scripts/esim/try.ts"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.132.1",
     "@supabase/supabase-js": "^2.117.3",
     "cheerio": "^1.2.0",
     "next": "^15.5.27",
     "playwright": "^1.64.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
-    "server-only": "^0.0.1",
-    "zod": "^4.6.5"
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.7",

@@ -22,7 +22,7 @@ function variant(name: string, destination: EsimDestination): string {
   return words.length === 1 && !/^(and|the|plus)$/i.test(words[0]) ? words[0] : ""; // longer leftovers are country names, not a plan tier
 }
 
-export const mobimatter: EsimParser = (page, destination) => {
+const parseAll: EsimParser = (page, destination) => {
   const $ = dom(page);
 
   // Currency: the menu button label ("USD"); the JSON-LD AggregateOffer states the same code.
@@ -100,4 +100,22 @@ export const mobimatter: EsimParser = (page, destination) => {
     });
   });
   return plans;
+};
+
+/**
+ * A marketplace lists dozens of offers per destination (87 on Japan), many of them other brands' plans that differ only in
+ * price. For a comparison one MobiMatter row per size is enough: the cheapest offer for each data amount, validity and
+ * single-/multi-country combination, at most MAX_ROWS, smallest plans first.
+ */
+const MAX_ROWS = 16;
+export const mobimatter: EsimParser = (page, destination) => {
+  const cheapest = new Map<string, RawEsimPlan>();
+  for (const p of parseAll(page, destination)) {
+    const key = [p.data_gb, p.validity_days, p.coverage ? "multi" : "single", p.currency].join("|");
+    const best = cheapest.get(key);
+    if (!best || p.price < best.price) cheapest.set(key, p);
+  }
+  return [...cheapest.values()]
+    .sort((a, b) => (a.data_gb === -1 ? 1e9 : (a.data_gb ?? 0)) - (b.data_gb === -1 ? 1e9 : (b.data_gb ?? 0)) || (a.validity_days ?? 0) - (b.validity_days ?? 0))
+    .slice(0, MAX_ROWS);
 };

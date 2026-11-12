@@ -29,10 +29,10 @@ export const ESIM_DESTINATIONS: EsimDestination[] = [
   { key: "singapore", name: "Singapore", type: "country", flag: "🇸🇬", iso2: "sg", iso3: "sgp", continent: "asia", slugs: ["singapore"] },
   { key: "malaysia", name: "Malaysia", type: "country", flag: "🇲🇾", iso2: "my", iso3: "mys", continent: "asia", slugs: ["malaysia"] },
   { key: "australia", name: "Australia", type: "country", flag: "🇦🇺", iso2: "au", iso3: "aus", continent: "oceania", slugs: ["australia"] },
-  { key: "united-states", name: "United States", type: "country", flag: "🇺🇸", iso2: "us", iso3: "usa", continent: "north-america", slugs: ["united-states", "usa", "us"] },
+  { key: "united-states", name: "United States", type: "country", flag: "🇺🇸", iso2: "us", iso3: "usa", continent: "north-america", slugs: ["united-states", "usa", "us", "united-states-of-america"] },
   { key: "united-kingdom", name: "United Kingdom", type: "country", flag: "🇬🇧", iso2: "gb", iso3: "gbr", continent: "europe", slugs: ["united-kingdom", "uk", "great-britain"] },
   { key: "europe", name: "Europe (multi-country)", type: "region", flag: "🇪🇺", slugs: ["europe", "europe-and-uk", "european-union"] },
-  { key: "asia", name: "Asia (multi-country)", type: "region", flag: "🌏", slugs: ["asia", "asia-pacific"] },
+  { key: "asia", name: "Asia (multi-country)", type: "region", flag: "🌏", slugs: ["asia", "asia-pacific", "asia-and-oceania"] },
   { key: "global", name: "Worldwide (multi-region)", type: "global", flag: "🌍", slugs: ["global", "worldwide", "world"] },
 ];
 

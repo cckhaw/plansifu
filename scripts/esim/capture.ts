@@ -7,6 +7,7 @@
 import { cleanPageText, closeBrowser, renderPage } from "../scrapers/browser";
 import { ESIM_DESTINATIONS } from "../../src/lib/esim-destinations";
 import { ESIM_BRANDS, candidateUrls } from "./brands";
+import { clean } from "./clean";
 import { saveEsimFixture } from "./fixtures";
 import { selectByName } from "../scrapers/select";
 
@@ -30,7 +31,19 @@ async function main() {
             console.log(`  ${b.name} ${key}: no plan page at ${url}`);
             continue;
           }
-          console.log(`saved ${saveEsimFixture(b.name, key, { url, html: r.html, text, feeds: r.feeds })} (${text.length} chars, ${r.feeds.length} feeds) from ${url}`);
+          const page = { url, html: r.html, text, feeds: r.feeds };
+          // A 404 page can look like a plan page (it contains a price-like string): only keep pages the parser reads plans from.
+          let found = 0;
+          try {
+            found = clean(b.parse(page, d), d, url).rows.length;
+          } catch {
+            /* placeholder parser or a page the parser cannot read */
+          }
+          if (!found && !b.parse.toString().includes("no parser written yet")) {
+            console.log(`  ${b.name} ${key}: ${url} has no plans the parser can read, trying the next URL`);
+            continue;
+          }
+          console.log(`saved ${saveEsimFixture(b.name, key, page)} (${text.length} chars, ${r.feeds.length} feeds, ${found} plans) from ${url}`);
           saved = true;
           break;
         } catch (e) {
