@@ -1,0 +1,149 @@
+[
+ {
+  "coverage": null,
+  "data_note": null,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "title": "1GB / 30 days",
+  "data_gb": 1,
+  "validity_days": 30,
+  "price": 3.12,
+  "currency": "USD",
+  "perks": [
+   "5G",
+   "Hotspot allowed",
+   "Top-up anytime",
+   "No KYC",
+   "24/7 support"
+  ],
+  "destination_key": "thailand"
+ },
+ {
+  "coverage": null,
+  "data_note": null,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "title": "5GB / 30 days",
+  "data_gb": 5,
+  "validity_days": 30,
+  "price": 8.4,
+  "currency": "USD",
+  "perks": [
+   "5G",
+   "Hotspot allowed",
+   "Top-up anytime",
+   "No KYC",
+   "24/7 support"
+  ],
+  "destination_key": "thailand"
+ },
+ {
+  "coverage": null,
+  "data_note": null,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "title": "10GB / 30 days",
+  "data_gb": 10,
+  "validity_days": 30,
+  "price": 13.2,
+  "currency": "USD",
+  "perks": [
+   "5G",
+   "Hotspot allowed",
+   "Top-up anytime",
+   "No KYC",
+   "24/7 support"
+  ],
+  "destination_key": "thailand"
+ },
+ {
+  "coverage": null,
+  "data_note": null,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "title": "20GB / 30 days",
+  "data_gb": 20,
+  "validity_days": 30,
+  "price": 20.4,
+  "currency": "USD",
+  "perks": [
+   "5G",
+   "Hotspot allowed",
+   "Top-up anytime",
+   "No KYC",
+   "24/7 support"
+  ],
+  "destination_key": "thailand"
+ },
+ {
+  "coverage": null,
+  "data_note": null,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "title": "30GB / 30 days",
+  "data_gb": 30,
+  "validity_days": 30,
+  "price": 27.6,
+  "currency": "USD",
+  "perks": [
+   "5G",
+   "Hotspot allowed",
+   "Top-up anytime",
+   "No KYC",
+   "24/7 support"
+  ],
+  "destination_key": "thailand"
+ },
+ {
+  "coverage": null,
+  "data_note": null,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "title": "50GB / 30 days",
+  "data_gb": 50,
+  "validity_days": 30,
+  "price": 40.8,
+  "currency": "USD",
+  "perks": [
+   "5G",
+   "Hotspot allowed",
+   "Top-up anytime",
+   "No KYC",
+   "24/7 support"
+  ],
+  "destination_key": "thailand"
+ },
+ {
+  "coverage": null,
+  "data_note": null,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "title": "Unlimited / 1 day",
+  "data_gb": -1,
+  "validity_days": 1,
+  "price": 3.84,
+  "currency": "USD",
+  "perks": [
+   "5G",
+   "Hotspot allowed",
+   "Top-up anytime",
+   "No KYC",
+   "24/7 support"
+  ],
+  "destination_key": "thailand"
+ }
+]

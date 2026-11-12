@@ -1,0 +1,173 @@
+[
+ {
+  "title": "1GB / 30 days",
+  "coverage": null,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "data_gb": 1,
+  "data_note": null,
+  "validity_days": 30,
+  "price": 3.95,
+  "currency": "USD",
+  "perks": [
+   "Hotspot allowed",
+   "5G",
+   "Free 500 MB trial"
+  ],
+  "destination_key": "japan"
+ },
+ {
+  "title": "3GB / 30 days",
+  "coverage": null,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "data_gb": 3,
+  "data_note": null,
+  "validity_days": 30,
+  "price": 7.95,
+  "currency": "USD",
+  "perks": [
+   "Hotspot allowed",
+   "5G",
+   "Free 500 MB trial"
+  ],
+  "destination_key": "japan"
+ },
+ {
+  "title": "5GB / 30 days",
+  "coverage": null,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "data_gb": 5,
+  "data_note": null,
+  "validity_days": 30,
+  "price": 9.95,
+  "currency": "USD",
+  "perks": [
+   "Hotspot allowed",
+   "5G",
+   "Free 500 MB trial"
+  ],
+  "destination_key": "japan"
+ },
+ {
+  "title": "10GB / 30 days",
+  "coverage": null,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "data_gb": 10,
+  "data_note": null,
+  "validity_days": 30,
+  "price": 14.95,
+  "currency": "USD",
+  "perks": [
+   "Hotspot allowed",
+   "5G",
+   "Free 500 MB trial"
+  ],
+  "destination_key": "japan"
+ },
+ {
+  "title": "20GB / 30 days",
+  "coverage": null,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "data_gb": 20,
+  "data_note": null,
+  "validity_days": 30,
+  "price": 22.95,
+  "currency": "USD",
+  "perks": [
+   "Hotspot allowed",
+   "5G",
+   "Free 500 MB trial"
+  ],
+  "destination_key": "japan"
+ },
+ {
+  "title": "50GB / 30 days",
+  "coverage": null,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "data_gb": 50,
+  "data_note": null,
+  "validity_days": 30,
+  "price": 45.95,
+  "currency": "USD",
+  "perks": [
+   "Hotspot allowed",
+   "5G",
+   "Free 500 MB trial"
+  ],
+  "destination_key": "japan"
+ },
+ {
+  "title": "Unlimited / 1 day",
+  "coverage": null,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "data_gb": -1,
+  "data_note": "3GB/day at full speed, then 1 Mbps",
+  "validity_days": 1,
+  "price": 3.84,
+  "currency": "USD",
+  "perks": [
+   "Hotspot allowed",
+   "5G",
+   "Free 500 MB trial"
+  ],
+  "destination_key": "japan"
+ },
+ {
+  "title": "Unlimited / 3 days",
+  "coverage": null,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "data_gb": -1,
+  "data_note": "3GB/day at full speed, then 1 Mbps",
+  "validity_days": 3,
+  "price": 11.43,
+  "currency": "USD",
+  "perks": [
+   "Hotspot allowed",
+   "5G",
+   "Free 500 MB trial"
+  ],
+  "destination_key": "japan"
+ },
+ {
+  "title": "Unlimited / 7 days",
+  "coverage": null,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": false,
+  "data_gb": -1,
+  "data_note": "3GB/day at full speed, then 1 Mbps",
+  "validity_days": 7,
+  "price": 23.52,
+  "currency": "USD",
+  "perks": [
+   "Hotspot allowed",
+   "5G",
+   "Free 500 MB trial"
+  ],
+  "destination_key": "japan"
+ }
+]

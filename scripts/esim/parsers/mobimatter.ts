@@ -64,6 +64,10 @@ export const mobimatter: EsimParser = (page, destination) => {
         const unit = d[2].toUpperCase();
         gb = +d[1] * (unit === "MB" ? 0.001 : unit === "TB" ? 1000 : 1);
         dataLabel = `${d[1]}${unit}`;
+        if (gb >= 900 && gb <= 1000) {
+          gb = -1; // "999 GB" means unlimited
+          dataLabel = "Unlimited";
+        }
       }
     }
     const price = /^[^\d]*(\d[\d,]*(?:\.\d+)?)$/.exec(priceText);
