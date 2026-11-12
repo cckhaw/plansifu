@@ -1,0 +1,70 @@
+[
+ {
+  "title": "U Home Fibre 100Mbps",
+  "category": "broadband",
+  "monthly_price": 99,
+  "currency": "MYR",
+  "data_gb": null,
+  "speed_mbps": 100,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "100Mbps",
+   "Entry-level broadband",
+   "Great for homes with up to 5 devices"
+  ],
+  "promotion_badge": "RM79/mth promo price"
+ },
+ {
+  "title": "U Home Fibre 300Mbps",
+  "category": "broadband",
+  "monthly_price": 139,
+  "currency": "MYR",
+  "data_gb": null,
+  "speed_mbps": 300,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "300Mbps",
+   "Crystal-clear streaming that keeps up with every lifestyle",
+   "Tailored for busy families and professionals"
+  ],
+  "promotion_badge": "RM119/mth promo price"
+ },
+ {
+  "title": "U Home Fibre 500Mbps",
+  "category": "broadband",
+  "monthly_price": 159,
+  "currency": "MYR",
+  "data_gb": null,
+  "speed_mbps": 500,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "500Mbps",
+   "Work, learn, game and stream effortlessly",
+   "Perfect for homes with up to 10 devices"
+  ],
+  "promotion_badge": "RM139/mth promo price"
+ },
+ {
+  "title": "U Home Fibre 1Gbps",
+  "category": "broadband",
+  "monthly_price": 289,
+  "currency": "MYR",
+  "data_gb": null,
+  "speed_mbps": 1000,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "1Gbps",
+   "Fastest connectivity available",
+   "Best for homes with up to 10 or more devices"
+  ],
+  "promotion_badge": "RM269/mth promo price"
+ }
+]

@@ -22,8 +22,9 @@ function parseBroadband(page: PageData): RawPlan[] {
     const priceEl = card.find(`.latest-price.${id.replace("package", "")}-bbonly`).first();
     const monthly = price(`RM${text(priceEl)}`);
     if (speed === null || monthly === null) return;
-    const rrp = text(card.find(".price-slashed").first());
-    const offer = text(card.find(".limited-time-offer, .free-forever").first());
+    // The card shows the offer price with the regular price (RRP) next to it; the regular price is the plan price.
+    const rrp = price(text(card.find(`.price-slashed.${id.replace("package", "")}-bbonly`).first()));
+    const offerText = text(card.find(".limited-time-offer, .free-forever").first());
     const label = text(card.find(".card-label").first());
     const included = card
       .find(".card-included .included-item")
@@ -35,11 +36,12 @@ function parseBroadband(page: PageData): RawPlan[] {
     out.push(
       plan({
         title: `${label || "Unifi Home"} ${text(card.find(".card-speed").first())}`,
-        monthly_price: monthly,
+        monthly_price: rrp ?? monthly,
         speed_mbps: speed,
         contract_months: months ? Number(months[1]) : 24,
         features: included,
-        promotion_badge: [offer, rrp && `${rrp.replace(/\/mth$/, "")} regular`].filter(Boolean).join(" · ") || undefined,
+        promotion_badge:
+          [rrp && rrp !== monthly ? `RM${monthly}/mth offer price` : "", offerText].filter(Boolean).join(" · ") || undefined,
       }),
     );
   });

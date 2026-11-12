@@ -1,0 +1,125 @@
+[
+ {
+  "title": "Vibe17",
+  "category": "mobile_prepaid",
+  "monthly_price": 17,
+  "currency": "MYR",
+  "data_gb": 20,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Mobile Only: 10GB",
+   "Mobile & Hotspot: 10GB",
+   "Plan Validity: 30 Days",
+   "Calls: Unlimited",
+   "FREE Roaming*: 3 Countries"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Vibe27",
+  "category": "mobile_prepaid",
+  "monthly_price": 27,
+  "currency": "MYR",
+  "data_gb": 50,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Mobile Only: 25GB",
+   "Mobile & Hotspot: 25GB",
+   "Plan Validity: 30 Days",
+   "Calls: Unlimited",
+   "FREE Roaming*: 3 Countries"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Vibe37",
+  "category": "mobile_prepaid",
+  "monthly_price": 37,
+  "currency": "MYR",
+  "data_gb": 300,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Mobile Only: 200GB",
+   "Mobile & Hotspot: 100GB",
+   "Plan Validity: 30 Days",
+   "Calls: Unlimited",
+   "FREE Roaming*: Up to 23 Countries"
+  ],
+  "promotion_badge": "300GB total data (was 200GB)"
+ },
+ {
+  "title": "Vibe47",
+  "category": "mobile_prepaid",
+  "monthly_price": 47,
+  "currency": "MYR",
+  "data_gb": 600,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Mobile & Hotspot: 600GB",
+   "Plan Validity: 30 Days",
+   "Data Sharing: YES",
+   "Calls: Unlimited",
+   "FREE Roaming*: Up to 23 Countries"
+  ],
+  "promotion_badge": "600GB total data (was 300GB)"
+ },
+ {
+  "title": "Vibe Daily",
+  "category": "mobile_prepaid",
+  "monthly_price": 3,
+  "currency": "MYR",
+  "data_gb": 3,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Uncapped Speed"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Vibe Weekly",
+  "category": "mobile_prepaid",
+  "monthly_price": 10,
+  "currency": "MYR",
+  "data_gb": 15,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Unlimited Call",
+   "Uncapped Speed"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Vibe Yearly",
+  "category": "mobile_prepaid",
+  "monthly_price": 150,
+  "currency": "MYR",
+  "data_gb": 10,
+  "speed_mbps": null,
+  "talktime_mins": 60,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "60 min / month",
+   "+ RM15 for Unlimited Calls"
+  ],
+  "promotion_badge": null
+ }
+]

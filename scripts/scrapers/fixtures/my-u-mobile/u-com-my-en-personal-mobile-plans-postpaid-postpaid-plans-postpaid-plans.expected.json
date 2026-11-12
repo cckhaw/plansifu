@@ -1,0 +1,59 @@
+[
+ {
+  "title": "ULTRA Global 98",
+  "category": "mobile_postpaid",
+  "monthly_price": 98,
+  "currency": "MYR",
+  "data_gb": 1000,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "FREE Global Roaming in Over 60 Destinations - 15GB/month",
+   "FREE 3x ULTRA5G Priority Passes",
+   "FREE 3 Months ULTRA Security Pro",
+   "Best deals of Latest Flagship Android & iPhone",
+   "FREE 6 Months of ULTRA WatchShare",
+   "FREE Incoming Calls from Abroad in Over 60 Destinations"
+  ],
+  "promotion_badge": "Port in & get RM10 off for 12 months"
+ },
+ {
+  "title": "ULTRA Postpaid 68",
+  "category": "mobile_postpaid",
+  "monthly_price": 68,
+  "currency": "MYR",
+  "data_gb": 1000,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "FREE Data Roaming in 3 Destinations - 15GB/month",
+   "FREE 2x ULTRA5G Priority Passes",
+   "FREE 3 Months ULTRA Security Pro",
+   "Best deals of Latest Flagship Android & iPhone",
+   "FREE 6 Months of ULTRA WatchShare",
+   "FREE Incoming Calls from Abroad in SG, IDN & TH"
+  ],
+  "promotion_badge": "Port in & get RM10 off for 12 months"
+ },
+ {
+  "title": "ULTRA Postpaid 45",
+  "category": "mobile_postpaid",
+  "monthly_price": 45,
+  "currency": "MYR",
+  "data_gb": 500,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "FREE 1x ULTRA5G Priority Pass",
+   "FREE 3 Months ULTRA Security Pro",
+   "FREE 6 Months of ULTRA WatchShare"
+  ],
+  "promotion_badge": "Port in & get RM10 off for 12 months"
+ }
+]

@@ -2,7 +2,7 @@
  {
   "title": "Unifi Home 100 Mbps",
   "category": "broadband",
-  "monthly_price": 89,
+  "monthly_price": 99,
   "currency": "MYR",
   "data_gb": null,
   "speed_mbps": 100,
@@ -14,12 +14,12 @@
    "Wi-Fi 6 Combo Box",
    "24 Hrs Service Guarantee"
   ],
-  "promotion_badge": "Limited Time: RM10 Off + 3 Months Free! · RRP RM99 regular"
+  "promotion_badge": "RM89/mth offer price · Limited Time: RM10 Off + 3 Months Free!"
  },
  {
   "title": "Unifi Home 300 Mbps",
   "category": "broadband",
-  "monthly_price": 129,
+  "monthly_price": 139,
   "currency": "MYR",
   "data_gb": null,
   "speed_mbps": 300,
@@ -31,12 +31,12 @@
    "Wi-Fi 6 Combo Box",
    "24 Hrs Service Guarantee"
   ],
-  "promotion_badge": "Limited Time: RM10 Off + 3 Months Free! · RRP RM139 regular"
+  "promotion_badge": "RM129/mth offer price · Limited Time: RM10 Off + 3 Months Free!"
  },
  {
   "title": "Unifi Home 500 Mbps",
   "category": "broadband",
-  "monthly_price": 149,
+  "monthly_price": 159,
   "currency": "MYR",
   "data_gb": null,
   "speed_mbps": 500,
@@ -48,12 +48,12 @@
    "Wi-Fi 6 Combo Box",
    "24 Hrs Service Guarantee"
   ],
-  "promotion_badge": "Limited Time: RM10 Off + 3 Months Free! · RRP RM159 regular"
+  "promotion_badge": "RM149/mth offer price · Limited Time: RM10 Off + 3 Months Free!"
  },
  {
   "title": "Unifi Home 1 Gbps",
   "category": "broadband",
-  "monthly_price": 249,
+  "monthly_price": 289,
   "currency": "MYR",
   "data_gb": null,
   "speed_mbps": 1000,
@@ -66,7 +66,7 @@
    "12 Business Hours Service Restoration",
    "Premium services"
   ],
-  "promotion_badge": "Save RM40 · RRP RM289 regular"
+  "promotion_badge": "RM249/mth offer price · Save RM40"
  },
  {
   "title": "Unifi Home 2 Gbps",

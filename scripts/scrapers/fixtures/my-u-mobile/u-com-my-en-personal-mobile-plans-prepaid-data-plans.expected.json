@@ -1,0 +1,88 @@
+[
+ {
+  "title": "ULTRA Prepaid 50",
+  "category": "mobile_prepaid",
+  "monthly_price": 50,
+  "currency": "MYR",
+  "data_gb": 500,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "30 Days validity",
+   "Unlimited Speed",
+   "Hotspot based on quota",
+   "2x FREE ULTRA5G Priority Passes"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "ULTRA Prepaid 38",
+  "category": "mobile_prepaid",
+  "monthly_price": 38,
+  "currency": "MYR",
+  "data_gb": 250,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "30 Days validity",
+   "Unlimited Speed",
+   "Hotspot based on quota"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "ULTRA Prepaid 28",
+  "category": "mobile_prepaid",
+  "monthly_price": 28,
+  "currency": "MYR",
+  "data_gb": 50,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "30 Days validity",
+   "Unlimited Speed",
+   "5GB Hotspot"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "ULTRA Weekly 20GB",
+  "category": "mobile_prepaid",
+  "monthly_price": 15,
+  "currency": "MYR",
+  "data_gb": 20,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "7 Days validity",
+   "Unlimited Speed",
+   "Hotspot based on quota"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "ULTRA Weekly 10GB",
+  "category": "mobile_prepaid",
+  "monthly_price": 12,
+  "currency": "MYR",
+  "data_gb": 10,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "7 Days validity",
+   "Unlimited Speed",
+   "Hotspot based on quota"
+  ],
+  "promotion_badge": null
+ }
+]
