@@ -7,6 +7,7 @@ import { malaysiaProviders } from "./providers/malaysia";
 import { maxis } from "./providers/maxis";
 import { singaporeProviders } from "./providers/singapore";
 import { singtel } from "./providers/singtel";
+import { selectByName } from "./select";
 import { buildWarnings, engineOf, short } from "./report";
 import { starhub } from "./providers/starhub";
 import { zym } from "./providers/zym";
@@ -16,8 +17,11 @@ const scrapers: ProviderScraper[] = [maxis, singtel, celcomdigi, m1, ...malaysia
 
 /** Providers run in parallel, capped so the model API and headless browsers aren't swamped. */
 const CONCURRENCY = Number(process.env.SCRAPE_CONCURRENCY ?? 4);
-/** Optional: SCRAPE_ONLY="Maxis,M1" limits a run to named providers (handy when debugging). */
-const only = process.env.SCRAPE_ONLY?.split(",").map((s) => s.trim().toLowerCase()).filter(Boolean);
+/**
+ * Optional: SCRAPE_ONLY limits a run. "Maxis,M1" by name, "Malaysia" / "Singapore" for a whole country,
+ * "all" (the default) or "none"; see select.ts.
+ */
+const only = process.env.SCRAPE_ONLY?.trim();
 
 interface ProviderOutcome {
   ok: boolean;
@@ -89,16 +93,17 @@ async function main() {
   for (const key of ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY"]) {
     if (!process.env[key]) throw new Error(`${key} must be set`);
   }
-  const selected = only?.length ? scrapers.filter((s) => only.includes(s.name.toLowerCase())) : scrapers;
+  const selected = selectByName(only, scrapers, "telco provider");
   if (!selected.length) {
     console.log("No telco providers selected; skipping.");
     return;
   }
+  console.log(`Crawling ${selected.length} telco provider${selected.length === 1 ? "" : "s"}: ${selected.map((s) => `${s.name} (${s.country})`).join(", ")}`);
   const env = process.env;
   const runId = await startRun(
     {
       trigger: env.GITHUB_EVENT_NAME ?? "local",
-      scope: only?.length ? only.join(", ") : null,
+      scope: selected.length === scrapers.length ? null : selected.map((s) => s.name).join(", "),
       gitSha: env.GITHUB_SHA ?? null,
       runUrl: env.GITHUB_RUN_ID ? `${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}` : null,
     },

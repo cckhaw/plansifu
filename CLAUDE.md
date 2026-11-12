@@ -29,7 +29,7 @@ inspired by CompareHero.my.
 ## Commands
 - `npm run dev` / `npm run build` / `npm run lint` / `npm run typecheck`
 - `npm run scrape` — run all provider scrapers (needs `SUPABASE_URL`,
-  `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`). `SCRAPE_ONLY="Maxis,M1"` limits providers;
+  `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`). `SCRAPE_ONLY` limits providers: `"Maxis,M1"` by name, `Malaysia` / `Singapore` for a country, `all` (default) or `none` (`scripts/scrapers/select.ts`; also used by `npm run scrape:esim` for brands);
   `SCRAPE_DEBUG=1` logs the raw model output; the run ends with a token/cost summary.
 
 ## Conventions
