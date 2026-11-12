@@ -6,7 +6,8 @@ export const singaporeProviders = [
   ]),
   defineProvider("SIMBA", "SG", "https://simba.sg", [t.mixed("https://simba.sg/")]),
   defineProvider("Giga", "SG", "https://www.giga.com.sg", [t.mixed("https://www.giga.com.sg/")]),
-  defineProvider("Maxx", "SG", "https://maxxonline.sg", [t.mixed("https://maxxonline.sg")]),
+  // maxxonline.sg shows a CAPTCHA bot wall to GitHub's network, so it goes through the Vercel relay.
+  defineProvider("Maxx", "SG", "https://maxxonline.sg", [t.relay(t.mixed("https://maxxonline.sg"))]),
   defineProvider("Gomo", "SG", "https://www.gomo.sg", [
     t.post("https://www.gomo.sg/personal/mobile/plans"),
     t.bb("https://www.gomo.sg/personal/broadband"),

@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 export const preferredRegion = "sin1";
 
 /** Only sites that block the scraper's CI network, never an open proxy. */
-const ALLOWED_HOSTS = new Set(["www.celcomdigi.com", "www.eight.com.sg"]);
+const ALLOWED_HOSTS = new Set(["www.celcomdigi.com", "www.eight.com.sg", "www.m1.com.sg", "maxxonline.sg", "www.maxxonline.sg"]);
 
 const digest = (s: string) => createHash("sha256").update(s).digest();
 
