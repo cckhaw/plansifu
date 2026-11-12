@@ -97,6 +97,10 @@ export function normalizePlans(
   return { plans: [...seen.values()], dropped };
 }
 
+/** Wording of the bot-check / CAPTCHA / 403 pages sites show to datacenter networks. */
+const BOT_WALL =
+  /^\s*403 ERROR|Request blocked|Access Denied|made us think that you are a bot|solve this CAPTCHA|verify (?:that )?you are (?:a )?human|Attention Required|Just a moment\.\.\.|unusual traffic/i;
+
 /** Why a page's primary text read can't be trusted, so the screenshot fallback should be tried. */
 class TextReadError extends Error {
   constructor(message: string, readonly blocked = false) {
@@ -121,8 +125,8 @@ async function viaBrowserAndLlm(
     feeds = r.feeds;
   }
   // Blocked, empty or still-loading pages must fail loudly instead of "succeeding" with nothing.
-  if (/^\s*403 ERROR|Request blocked|Access Denied/i.test(text.slice(0, 400))) {
-    throw new TextReadError("blocked by the site (403 bot filter on the CI network)", true);
+  if (BOT_WALL.test(text.slice(0, 800))) {
+    throw new TextReadError("blocked by the site's bot check on the CI network (CAPTCHA or 403 page)", true);
   }
   if (text.length < 300) throw new TextReadError(`page rendered only ${text.length} characters (blocked or not loaded)`);
   const { plans, notes } = await extractPlansWithLlm({ provider, country, url: target.url, category: target.category, pageText: text, hint: target.hint, feeds });
