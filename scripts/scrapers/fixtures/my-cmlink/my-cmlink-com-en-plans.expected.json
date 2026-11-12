@@ -1,0 +1,74 @@
+[
+ {
+  "title": "40GB Monthly Plan",
+  "category": "mobile_prepaid",
+  "monthly_price": 30,
+  "currency": "MYR",
+  "data_gb": 40,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": 10,
+  "contract_months": 0,
+  "features": [
+   "40GB Malaysia local data",
+   "Unlimited Malaysia call mins",
+   "10 pcs Malaysia local SMS",
+   "Plan switch flexibly"
+  ],
+  "promotion_badge": "Now RM25/mth"
+ },
+ {
+  "title": "200GB Monthly Plan",
+  "category": "mobile_prepaid",
+  "monthly_price": 35,
+  "currency": "MYR",
+  "data_gb": 200,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": 10,
+  "contract_months": 0,
+  "features": [
+   "200GB Malaysia local data",
+   "Unlimited Malaysia call mins",
+   "10 pcs Malaysia local SMS",
+   "5GB Mainland China roaming data"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "350GB Monthly Plan",
+  "category": "mobile_prepaid",
+  "monthly_price": 50,
+  "currency": "MYR",
+  "data_gb": 350,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "350GB Malaysia local data",
+   "10GB Mainland China roaming data",
+   "60 mins from local to Mainland China",
+   "30 mins Mainland China roaming voice"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Unlimited Monthly Plan",
+  "category": "mobile_prepaid",
+  "monthly_price": 100,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Unlimited Malaysia local data",
+   "20GB Mainland China roaming data",
+   "400 mins from local to Mainland China",
+   "50 mins Mainland China roaming voice"
+  ],
+  "promotion_badge": null
+ }
+]
