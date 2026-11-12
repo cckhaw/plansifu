@@ -18,8 +18,13 @@ export function buildWarnings(result: ScrapeResult, stats?: UpsertStats): CrawlW
     } else if (p.kept_count > 0 && p.expect_empty) {
       w.push({ level: "info", message: `${short(p.url)} was expected to list no plans but returned ${p.kept_count}` });
     } else if (p.dropped.length >= 3 && p.dropped.length > p.kept_count) {
-      w.push({ level: "info", message: `Filters dropped ${p.dropped.length} of ${p.raw_count} extracted rows on ${short(p.url)}` });
+      const reasons = new Map<string, number>();
+      for (const d of p.dropped) reasons.set(d.reason.replace(/\s*\(.*\)$/, ""), (reasons.get(d.reason.replace(/\s*\(.*\)$/, "")) ?? 0) + 1);
+      const why = [...reasons].map(([r, n]) => `${n} ${r}`).join(", ");
+      const sample = p.dropped.slice(0, 4).map((d) => d.title).join("; ");
+      w.push({ level: "info", message: `Filters dropped ${p.dropped.length} of ${p.raw_count} extracted rows on ${short(p.url)} (${why}): ${sample}` });
     }
+    for (const note of p.notes ?? []) w.push({ level: "info", message: `${short(p.url)}: ${note}` });
   }
   if (!result.complete) w.push({ level: "warn", message: "Incomplete crawl: some pages failed, so missing plans were left active" });
   if (stats) {
@@ -40,7 +45,7 @@ export function buildWarnings(result: ScrapeResult, stats?: UpsertStats): CrawlW
 }
 
 
-/** "browser+llm", "firecrawl", "custom parser", or a combination when a provider mixes methods. */
+/** "browser+llm", "browser+vision", "custom parser", or a combination when a provider mixes methods. */
 export function engineOf(pages: CrawlPageReport[]): string | undefined {
   const engines = [...new Set(pages.map((p) => p.engine))];
   return engines.length ? engines.join(" + ") : undefined;

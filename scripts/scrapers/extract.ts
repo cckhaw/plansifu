@@ -1,41 +1,7 @@
-import Firecrawl from "@mendable/firecrawl-js";
 import type { Country, CrawlEngine, CrawlPageReport, Currency, PlanCategory, ScrapedPlan } from "../../src/types/database";
-import { cleanPageText, renderPageText } from "./browser";
-import { extractPlansWithLlm } from "./llm-extract";
+import { cleanPageText, renderPage } from "./browser";
+import { extractPlansFromScreenshots, extractPlansWithLlm } from "./llm-extract";
 import type { RawPlan, ScrapeResult, ScrapeTarget } from "./types";
-
-const PLAN_SCHEMA = {
-  type: "object",
-  properties: {
-    plans: {
-      type: "array",
-      items: {
-        type: "object",
-        properties: {
-          title: { type: "string", description: "Plan name, e.g. 'Postpaid 5G 89'" },
-          category: {
-            type: "string",
-            enum: ["mobile_postpaid", "mobile_prepaid", "broadband"],
-            description:
-              "mobile_prepaid ONLY if the page calls it prepaid / tourist SIM / top-up / pay-as-you-go / daily-weekly pass. " +
-              "mobile_postpaid = monthly-billed SIM-only or phone plan (the default for monthly SIM-only plans). broadband = home fibre/wireless internet",
-          },
-          monthly_price: { type: "number", description: "Monthly fee as a number, no currency symbol" },
-          data_gb: { type: "number", description: "Data in GB; -1 if unlimited; omit if unknown" },
-          speed_mbps: { type: "number", description: "Broadband speed in Mbps (1Gbps = 1000)" },
-          talktime_mins: { type: "number", description: "Included call minutes; -1 if unlimited" },
-          sms_count: { type: "number" },
-          contract_months: { type: "number", description: "0 if no contract" },
-          features: { type: "array", items: { type: "string" }, description: "Perks, e.g. Free Router, Disney+" },
-          promotion_badge: { type: "string", description: "Headline promotion / rebate / voucher" },
-          supplementary_line_price: { type: "number", description: "Price of an extra/supplementary line on this plan, if stated" },
-        },
-        required: ["title", "monthly_price"],
-      },
-    },
-  },
-  required: ["plans"],
-};
 
 const CATEGORIES = ["mobile_postpaid", "mobile_prepaid", "broadband"] as const;
 const CURRENCY: Record<Country, Currency> = { MY: "MYR", SG: "SGD" };
@@ -131,101 +97,58 @@ export function normalizePlans(
   return { plans: [...seen.values()], dropped };
 }
 
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
-/** Firecrawl's plan allows ~10 req/min; space request starts out across all providers. */
-const FIRECRAWL_GAP_MS = Number(process.env.FIRECRAWL_GAP_MS ?? 6500);
-let nextSlot = 0;
-async function firecrawlSlot(): Promise<void> {
-  const now = Date.now();
-  const start = Math.max(now, nextSlot);
-  nextSlot = start + FIRECRAWL_GAP_MS;
-  if (start > now) await sleep(start - now);
-}
-
-/** Once Firecrawl reports no credits, stop calling it for the rest of the run. */
-let outOfCredits = false;
-const isOutOfCredits = (err: unknown) => /insufficient credits|payment required|\b402\b/i.test(err instanceof Error ? err.message : String(err));
-
-const isRateLimit = (err: unknown) => /rate limit|429/i.test(err instanceof Error ? err.message : String(err));
-
-async function viaFirecrawl(url: string, hint?: string): Promise<RawPlan[]> {
-  for (let attempt = 0; ; attempt++) {
-    await firecrawlSlot();
-    try {
-      return await firecrawlOnce(url, hint);
-    } catch (err) {
-      if (isOutOfCredits(err)) {
-        outOfCredits = true;
-        throw new Error("Firecrawl credits exhausted - top up your plan at firecrawl.dev");
-      }
-      if (!isRateLimit(err) || attempt >= 3) throw err;
-      const wait = Number(String(err).match(/retry after (\d+)s/i)?.[1] ?? 15);
-      console.warn(`[extract] rate limited on ${url}; waiting ${wait + 2}s (attempt ${attempt + 1})`);
-      nextSlot = Math.max(nextSlot, Date.now() + (wait + 2) * 1000);
-    }
+/** Why a page's primary text read can't be trusted, so the screenshot fallback should be tried. */
+class TextReadError extends Error {
+  constructor(message: string, readonly blocked = false) {
+    super(message);
   }
-}
-
-async function firecrawlOnce(url: string, hint?: string): Promise<RawPlan[]> {
-  if (outOfCredits) throw new Error("Firecrawl credits exhausted - top up your plan at firecrawl.dev");
-  const apiKey = process.env.FIRECRAWL_API_KEY;
-  if (!apiKey) throw new Error("FIRECRAWL_API_KEY not set");
-  const app = new Firecrawl({ apiKey });
-  const doc = await app.scrape(url, {
-    formats: [
-      {
-        type: "json",
-        schema: PLAN_SCHEMA,
-        prompt:
-          "Extract every consumer mobile (postpaid, prepaid, SIM-only, eSIM) or home broadband plan listed on this page. " +
-          "monthly_price is the recurring price per month, or the pack price for prepaid packs. " +
-          "Skip: business/enterprise plans, devices, smartwatch / wearable / tablet / device bundles, add-ons, roaming-only passes, " +
-          "and any plan shown only inside a comparison table against OTHER telcos (competitors). " +
-          "Postpaid pages often show PRINCIPAL LINE and SUPPLEMENTARY LINE views: return only principal-line standalone plans, and put a stated supplementary-line price in supplementary_line_price instead of listing it as a plan. " +
-          "Set category for each plan." +
-          (hint ? ` Note about this page: ${hint}` : ""),
-      },
-    ],
-    waitFor: 4000,
-  });
-  const json = doc.json as { plans?: RawPlan[] } | undefined;
-  const plans = json?.plans ?? [];
-  if (process.env.SCRAPE_DEBUG) {
-    console.log(`[debug] ${url} -> ${plans.length} raw: ` + plans.slice(0, 12).map((p) => `${p.title} (${p.monthly_price})`).join("; "));
-  }
-  return plans;
 }
 
 /**
- * Default engine: render the page in our own headless browser (free) and have Claude Haiku turn
- * the visible text into structured plans. `SCRAPE_ENGINE=firecrawl` selects the Firecrawl engine.
+ * Primary method: render the page in our own headless browser (free) and have Claude Haiku turn the
+ * visible text, plus any JSON price feeds the page loaded, into structured plans.
  */
 async function viaBrowserAndLlm(
   target: ScrapeTarget,
   country: Country,
   provider: string,
-): Promise<{ raw: RawPlan[]; textChars: number }> {
+): Promise<{ raw: RawPlan[]; textChars: number; notes: string[] }> {
   let text = "";
+  let feeds: { url: string; body: string }[] = [];
   for (let attempt = 0; attempt < 2 && text.length < 300; attempt++) {
-    text = cleanPageText(await renderPageText(target.url, 800, "nodes", target.relay));
+    const r = await renderPage(target.url, { minChars: 800, mode: "nodes", relay: target.relay, feeds: true });
+    text = cleanPageText(r.text);
+    feeds = r.feeds;
   }
   // Blocked, empty or still-loading pages must fail loudly instead of "succeeding" with nothing.
-  if (text.length < 300) throw new Error(`page rendered only ${text.length} characters (blocked or not loaded)`);
   if (/^\s*403 ERROR|Request blocked|Access Denied/i.test(text.slice(0, 400))) {
-    throw new Error("blocked by the site (403 bot filter on the CI network)");
+    throw new TextReadError("blocked by the site (403 bot filter on the CI network)", true);
   }
-  const raw = await extractPlansWithLlm({ provider, country, url: target.url, category: target.category, pageText: text, hint: target.hint });
-  if (process.env.SCRAPE_DEBUG && raw.length === 0) {
+  if (text.length < 300) throw new TextReadError(`page rendered only ${text.length} characters (blocked or not loaded)`);
+  const { plans, notes } = await extractPlansWithLlm({ provider, country, url: target.url, category: target.category, pageText: text, hint: target.hint, feeds });
+  if (feeds.length) notes.push(`Read ${feeds.length} data feed${feeds.length === 1 ? "" : "s"} the page loaded`);
+  if (process.env.SCRAPE_DEBUG && plans.length === 0) {
     console.log(`[debug] 0 plans from ${text.length} chars at ${target.url}; text starts: ${text.slice(0, 700).replace(/\n/g, " | ")}`);
   }
+  return { raw: plans, textChars: text.length, notes };
+}
+
+/** Fallback: screenshot the page and let the model read the plans off the images. Not available through the relay. */
+async function viaScreenshots(target: ScrapeTarget, country: Country, provider: string): Promise<{ raw: RawPlan[]; textChars: number }> {
+  if (target.relay) throw new Error("screenshots are not available for relayed pages");
+  const r = await renderPage(target.url, { minChars: 300, mode: "nodes", shots: true });
+  if (!r.shots.length) throw new Error("could not take screenshots");
+  const text = cleanPageText(r.text);
+  const raw = await extractPlansFromScreenshots({ provider, country, url: target.url, category: target.category, hint: target.hint, shots: r.shots, pageText: text });
   return { raw, textChars: text.length };
 }
 
 /**
- * Scrape one page. There is deliberately no fallback to a generic text parser: it produced junk
- * rows (page furniture, call rates) that replaced good data. A failed page is reported with its
- * error, and the provider keeps its existing plans.
+ * Scrape one page. Playwright + Haiku on the page text (and the site's own JSON feeds) comes first; when that
+ * errors or finds nothing on a page that should have plans, the page is screenshotted and read by the model
+ * as an image. There is deliberately no fallback to a generic text parser: it produced junk rows (page
+ * furniture, call rates) that replaced good data. A failed page is reported with its error, and the provider
+ * keeps its existing plans.
  */
 export async function scrapeTarget(
   target: ScrapeTarget,
@@ -242,44 +165,39 @@ export async function scrapeTarget(
     dropped: [],
     expect_empty: target.expectEmpty || undefined,
   };
-  // Playwright + Haiku is the primary method. Firecrawl is only a backup, tried when the primary
-  // errors or finds nothing on a page that should have plans. SCRAPE_ENGINE=firecrawl flips the order.
-  const firecrawlFirst = process.env.SCRAPE_ENGINE === "firecrawl";
-  const attempts: CrawlEngine[] = firecrawlFirst ? ["firecrawl", "browser+llm"] : ["browser+llm", "firecrawl"];
   const problems: string[] = [];
-  let best: { engine: CrawlEngine; raw: RawPlan[]; textChars?: number } | undefined;
-  for (const engine of attempts) {
-    if (engine === "firecrawl" && (!process.env.FIRECRAWL_API_KEY || outOfCredits)) {
-      if (best) break;
-      problems.push(outOfCredits ? "Firecrawl backup unavailable (credits exhausted)" : "Firecrawl backup not configured");
-      continue;
-    }
+  let best: { engine: CrawlEngine; raw: RawPlan[]; textChars?: number; notes: string[] } | undefined;
+
+  let tryVision = true;
+  try {
+    const r = await viaBrowserAndLlm(target, country, provider);
+    if (r.raw.length > 0 || target.expectEmpty) best = { engine: "browser+llm", raw: r.raw, textChars: r.textChars, notes: r.notes };
+    else problems.push("Playwright + Haiku found no plans");
+  } catch (err) {
+    problems.push(`Playwright + Haiku: ${(err as Error).message}`);
+    // A bot-block page looks the same in a screenshot, so don't spend a model call on it.
+    if (err instanceof TextReadError && err.blocked) tryVision = false;
+  }
+
+  if (!best && tryVision && !target.relay) {
     try {
-      let raw: RawPlan[];
-      let textChars: number | undefined;
-      if (engine === "firecrawl") {
-        raw = await viaFirecrawl(target.url, target.hint);
-      } else {
-        const r = await viaBrowserAndLlm(target, country, provider);
-        raw = r.raw;
-        textChars = r.textChars;
-      }
-      best = { engine, raw, textChars };
-      if (raw.length > 0 || target.expectEmpty) break;
-      problems.push(`${engine === "firecrawl" ? "Firecrawl" : "Playwright + Haiku"} found no plans`);
-      best = undefined;
+      const r = await viaScreenshots(target, country, provider);
+      if (r.raw.length > 0) best = { engine: "browser+vision", raw: r.raw, textChars: r.textChars, notes: [] };
+      else problems.push("Screenshot read found no plans");
     } catch (err) {
-      problems.push(`${engine === "firecrawl" ? "Firecrawl" : "Playwright + Haiku"}: ${(err as Error).message}`);
+      problems.push(`Screenshot read: ${(err as Error).message}`);
     }
   }
+
   if (!best) {
     const message = problems.join(" | ") || "no engine available";
     console.warn(`[extract] failed ${target.url}: ${message}`);
     return { plans: [], page: { ...page, error: message, ms: Date.now() - started } };
   }
   const { plans, dropped } = normalizePlans(best.raw, opts);
-  const usedBackup = best.engine !== attempts[0];
-  console.log(`[extract] ${best.engine}${usedBackup ? " (backup)" : ""} ${plans.length}/${best.raw.length} plans  ${target.url}`);
+  const usedFallback = best.engine !== "browser+llm";
+  const notes = [...best.notes, ...(usedFallback ? [`Read from screenshots because the text read failed: ${problems.join(" | ")}`] : [])];
+  console.log(`[extract] ${best.engine}${usedFallback ? " (fallback)" : ""} ${plans.length}/${best.raw.length} plans  ${target.url}`);
   return {
     plans,
     page: {
@@ -288,7 +206,8 @@ export async function scrapeTarget(
       text_chars: best.textChars,
       raw_count: best.raw.length,
       kept_count: plans.length,
-      dropped: usedBackup ? [{ title: "(backup used)", reason: `primary method failed: ${problems.join(" | ")}` }, ...dropped] : dropped,
+      dropped,
+      notes: notes.length ? notes : undefined,
       ms: Date.now() - started,
     },
   };

@@ -42,12 +42,14 @@ const ORDER: Record<Status, number> = { failed: 0, stale: 1, warning: 2, ok: 3 }
 
 const ENGINE_STYLE: Record<string, string> = {
   "browser+llm": "bg-sky-50 text-sky-700 ring-sky-200",
+  "browser+vision": "bg-emerald-50 text-emerald-700 ring-emerald-200",
   firecrawl: "bg-orange-50 text-orange-700 ring-orange-200",
   "custom parser": "bg-violet-50 text-violet-700 ring-violet-200",
 };
 const ENGINE_LABEL: Record<string, string> = {
   "browser+llm": "Playwright + Haiku",
-  firecrawl: "Firecrawl",
+  "browser+vision": "Screenshot + Haiku",
+  firecrawl: "Firecrawl (retired)",
   "custom parser": "Custom parser",
 };
 
