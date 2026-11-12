@@ -58,6 +58,7 @@ function parsePostpaid(page: PageData): RawPlan[] {
   $(".package-item").each((_, el) => {
     const card = $(el);
     if (!card.find(".package-pricing").length) return;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- the element type cheerio passes to filter callbacks is not exported
     const isDefault = (_: number, e: any) => {
       const v = $(e).attr("data-option-toggle");
       return v === undefined || v === "default";

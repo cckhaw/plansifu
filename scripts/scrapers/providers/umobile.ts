@@ -96,7 +96,15 @@ function parseBroadband(page: PageData): RawPlan[] {
   const $ = dom(page);
   const out: RawPlan[] = [];
   $(".card-detail-plan[data-plan-detail]").each((_, el) => {
-    let d: any;
+    let d: {
+      planShortName?: string;
+      currentPrice?: string | number;
+      slashedPrice?: string;
+      planID?: string;
+      rightCtaPath?: string;
+      planValueTab?: { leftColText?: string }[];
+      keyFeatures?: { keyFeatureDesc?: string }[];
+    };
     try {
       d = JSON.parse($(el).attr("data-plan-detail")!);
     } catch {
@@ -109,8 +117,8 @@ function parseBroadband(page: PageData): RawPlan[] {
     const bundle = / x /i.test(name);
     const monthly = slashed !== null && !bundle ? slashed : current;
     const features: string[] = [
-      ...(d.planValueTab ?? []).map((v: any) => strip(v?.leftColText)),
-      ...(d.keyFeatures ?? []).map((k: any) => strip(k?.keyFeatureDesc)),
+      ...(d.planValueTab ?? []).map((v) => strip(v?.leftColText)),
+      ...(d.keyFeatures ?? []).map((k) => strip(k?.keyFeatureDesc)),
     ].filter(Boolean);
     const speed = speedMbps(name) ?? speedMbps(String(d.planID ?? ""));
     const unlimited = features.some((f) => /unlimited/i.test(f));
