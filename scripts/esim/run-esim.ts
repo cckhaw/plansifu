@@ -2,13 +2,15 @@ import { closeBrowser, cleanPageText, renderPageText } from "../scrapers/browser
 import { errorMessage, finishRun, logCrawl, resolveProviderId, startRun } from "../scrapers/db-upsert";
 import { extractEsimPlansWithLlm, llmUsage, llmUsageSummary, type RawEsimPlan } from "../scrapers/llm-extract";
 import { short } from "../scrapers/report";
+import { selectByName } from "../scrapers/select";
 import { ESIM_DESTINATIONS, type EsimDestination } from "../../src/lib/esim-destinations";
 import type { CrawlPageReport, CrawlWarning } from "../../src/types/database";
 import { ESIM_BRANDS, candidateUrls, type EsimBrand } from "./brands";
 import { refreshFxRates, upsertEsimPlans, type EsimRow } from "./db";
 
 const CONCURRENCY = Number(process.env.SCRAPE_CONCURRENCY ?? 4);
-const only = process.env.SCRAPE_ONLY?.split(",").map((s) => s.trim().toLowerCase()).filter(Boolean);
+/** SCRAPE_ONLY="Airalo,Saily" limits the brands; "all" (default) or "none"; see scrapers/select.ts. */
+const only = process.env.SCRAPE_ONLY?.trim();
 /** ESIM_DESTINATIONS="japan,europe" limits the destinations (debugging). */
 const onlyDest = process.env.ESIM_DESTINATIONS?.split(",").map((s) => s.trim()).filter(Boolean);
 
@@ -150,7 +152,7 @@ async function main() {
   for (const key of ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY"]) {
     if (!process.env[key]) throw new Error(`${key} must be set`);
   }
-  const brands = only?.length ? ESIM_BRANDS.filter((b) => only.includes(b.name.toLowerCase())) : ESIM_BRANDS;
+  const brands = selectByName(only, ESIM_BRANDS, "Travel eSIM brand");
   const destinations = onlyDest?.length ? ESIM_DESTINATIONS.filter((d) => onlyDest.includes(d.key)) : ESIM_DESTINATIONS;
   if (!brands.length) {
     console.log("No Travel eSIM brands selected; skipping.");
@@ -161,7 +163,7 @@ async function main() {
   const runId = await startRun(
     {
       trigger: env.GITHUB_EVENT_NAME ?? "local",
-      scope: `Travel eSIM${only?.length ? `: ${only.join(", ")}` : ""}`,
+      scope: `Travel eSIM${brands.length === ESIM_BRANDS.length ? "" : `: ${brands.map((b) => b.name).join(", ")}`}`,
       gitSha: env.GITHUB_SHA ?? null,
       runUrl: env.GITHUB_RUN_ID ? `${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}` : null,
     },

@@ -1,6 +1,6 @@
 import { getAdminClient } from "../scrapers/db-upsert";
 
-/** Prints a quality summary of the active Travel eSIM data (run from CI: Actions -> suite = audit). */
+/** Prints a quality summary of the active Travel eSIM data (read-only; run locally with `AUDIT_DEST=japan npx tsx scripts/esim/audit.ts`). */
 async function main() {
   const db = getAdminClient();
   const all: Record<string, unknown>[] = [];

@@ -49,8 +49,12 @@ Scraper selectors/URLs are in `scripts/scrapers/providers/*.ts`; provider sites 
 ## 3. GitHub Actions (nightly crawl)
 
 `.github/workflows/daily-scraper.yml` runs once a day at about 02:30 MYT/SGT (`23 18 * * *` UTC) and can be run manually
-(**Actions → Daily Scraper → Run workflow**, with `suite` = all / telco / esim).
-The **Travel eSIM** crawl runs separately once a week, Sundays about 03:40 MYT/SGT (`37 19 * * 6` UTC). Run `supabase/migrations/03_travel_esim.sql` before its first run.
+(**Actions → Daily Scraper → Run workflow**). Two inputs, each listing its valid values in the form:
+- `telco_providers`: `all` (default), `none`, `Malaysia`, `Singapore`, or comma-separated names (`M1, Maxx`; `CMLink (SG)` when a name exists in both countries).
+- `esim_providers`: `none` (default), `all`, or comma-separated Travel eSIM brands (`Airalo, Saily`).
+
+A targeted run (anything other than all/none) also logs the raw model output. The value lists in the workflow are static: update them when you add a provider or brand (an unknown name fails the run with the full list of valid values).
+The nightly run crawls every telco and no eSIM. The **Travel eSIM** crawl runs separately once a week, Sundays about 03:40 MYT/SGT (`37 19 * * 6` UTC). Run `supabase/migrations/03_travel_esim.sql` before its first run.
 
 Add under **Settings → Secrets and variables → Actions → Repository secrets**:
 `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`, `VERCEL_DEPLOY_HOOK_URL`.

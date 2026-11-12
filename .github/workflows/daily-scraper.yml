@@ -6,14 +6,19 @@ on:
     - cron: "37 19 * * 6" # ~03:37 MYT/SGT Sunday (19:37 UTC Saturday): Travel eSIM crawl, once a week
   workflow_dispatch:
     inputs:
-      providers:
-        description: "Optional comma-separated provider names to scrape (default: all)"
-        required: false
-        default: ""
-      suite:
-        description: "What to run: all (default), telco, esim (Travel eSIM crawl) or audit (print a Travel eSIM data-quality summary)"
+      telco_providers:
+        description: >-
+          Telco providers to crawl: all, none, Malaysia, Singapore, or comma-separated names.
+          MY: Ansar, CelcomDigi, CMLink (MY), Eastel, HelloSIM, Hotlink, Maxis, Spark, TuneTalk, U Mobile, Unifi, Vibe, XOX, Yes, redONE.
+          SG: CMLink (SG), Cuniq, Eight, Giga, Gomo, M1, Maxx, SIMBA, Singtel, Singtel hi!, StarHub, Vivifi, Zero1, Zym.
         required: false
         default: "all"
+      esim_providers:
+        description: >-
+          Travel eSIM brands to crawl: none (default), all, or comma-separated names.
+          Airalo, Holafly, Saily, Nomad, Jetpac, Eskimo, Roamless, MobiMatter, Yesim, SimLocal, Firsty, easySim, Flexiroam, Maya, BNESIM, GigSky, aloSIM, Ubigi, Instabridge, GogoRoaming.
+        required: false
+        default: "none"
 
 concurrency:
   group: daily-scraper
@@ -24,6 +29,37 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 75
     steps:
+      # Scheduled runs: the nightly cron crawls every telco and no eSIM; the Sunday cron crawls only eSIM.
+      # Manual runs use the two inputs above (an empty field means the default).
+      - name: Decide what to run
+        id: plan
+        env:
+          EVENT: ${{ github.event_name }}
+          SCHEDULE: ${{ github.event.schedule }}
+          IN_TELCO: ${{ inputs.telco_providers }}
+          IN_ESIM: ${{ inputs.esim_providers }}
+        run: |
+          if [ "$EVENT" = "workflow_dispatch" ]; then
+            telco="${IN_TELCO:-all}"
+            esim="${IN_ESIM:-none}"
+          elif [ "$SCHEDULE" = "37 19 * * 6" ]; then
+            telco="none"
+            esim="all"
+          else
+            telco="all"
+            esim="none"
+          fi
+          norm() { echo "$1" | tr '[:upper:]' '[:lower:]' | tr -d ' '; }
+          echo "telco=$telco" >> "$GITHUB_OUTPUT"
+          echo "esim=$esim" >> "$GITHUB_OUTPUT"
+          echo "run_telco=$([ "$(norm "$telco")" = none ] && echo false || echo true)" >> "$GITHUB_OUTPUT"
+          echo "run_esim=$([ "$(norm "$esim")" = none ] && echo false || echo true)" >> "$GITHUB_OUTPUT"
+          # Targeted manual runs (a country or specific names) log the raw model output for debugging.
+          is_targeted() { case "$(norm "$1")" in all|none) return 1 ;; *) return 0 ;; esac; }
+          if is_targeted "$telco" || is_targeted "$esim"; then debug=1; else debug=""; fi
+          echo "debug=$debug" >> "$GITHUB_OUTPUT"
+          echo "Telco providers: $telco | Travel eSIM brands: $esim"
+
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
@@ -36,35 +72,27 @@ jobs:
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
-      - name: Run scrapers
-        if: ${{ github.event.schedule == '23 18 * * *' || (github.event_name == 'workflow_dispatch' && (inputs.suite == 'all' || inputs.suite == 'telco')) }}
+      - name: Run telco scrapers
+        if: ${{ steps.plan.outputs.run_telco == 'true' }}
         run: npm run scrape
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          SCRAPE_ONLY: ${{ inputs.providers }}
-          SCRAPE_DEBUG: ${{ inputs.providers != '' && '1' || '' }}
+          SCRAPE_ONLY: ${{ steps.plan.outputs.telco }}
+          SCRAPE_DEBUG: ${{ steps.plan.outputs.debug }}
 
-      # Travel eSIM brands: weekly (Sunday 04:00 MYT) or on demand. A failure here must not block the deploy hook.
+      # A failure here must not block the deploy hook.
       - name: Run Travel eSIM scrapers
-        if: ${{ !cancelled() && (github.event.schedule == '37 19 * * 6' || (github.event_name == 'workflow_dispatch' && (inputs.suite == 'all' || inputs.suite == 'esim'))) }}
+        if: ${{ !cancelled() && steps.plan.outputs.run_esim == 'true' }}
         continue-on-error: true
         run: npm run scrape:esim
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          SCRAPE_ONLY: ${{ inputs.providers }}
-          SCRAPE_DEBUG: ${{ inputs.providers != '' && '1' || '' }}
-
-      - name: Audit Travel eSIM data
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.suite == 'audit' }}
-        run: npx tsx scripts/esim/audit.ts
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          AUDIT_DEST: ${{ inputs.providers }}
+          SCRAPE_ONLY: ${{ steps.plan.outputs.esim }}
+          SCRAPE_DEBUG: ${{ steps.plan.outputs.debug }}
 
       - name: Trigger Vercel deploy
         if: success()
