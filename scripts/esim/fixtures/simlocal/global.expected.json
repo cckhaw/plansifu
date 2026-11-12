@@ -1,0 +1,125 @@
+[
+ {
+  "coverage": "116 countries",
+  "data_gb": 100,
+  "data_note": null,
+  "validity_days": 31,
+  "voice_included": true,
+  "sms_included": true,
+  "voice_sms_note": "Calls and SMS included",
+  "phone_number": null,
+  "perks": [
+   "4G / 5G"
+  ],
+  "title": "100GB / 31 days",
+  "price": 90.5,
+  "currency": "USD",
+  "destination_key": "global"
+ },
+ {
+  "coverage": "117 countries",
+  "data_gb": 50,
+  "data_note": null,
+  "validity_days": 31,
+  "voice_included": true,
+  "sms_included": true,
+  "voice_sms_note": "Calls and SMS included",
+  "phone_number": null,
+  "perks": [
+   "4G / 5G"
+  ],
+  "title": "50GB / 31 days",
+  "price": 67.75,
+  "currency": "USD",
+  "destination_key": "global"
+ },
+ {
+  "coverage": "71 countries",
+  "data_gb": 30,
+  "data_note": null,
+  "validity_days": 30,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "5G",
+   "Roaming included"
+  ],
+  "title": "30GB / 30 days",
+  "price": 46.25,
+  "currency": "USD",
+  "destination_key": "global"
+ },
+ {
+  "coverage": "72 countries",
+  "data_gb": 20,
+  "data_note": null,
+  "validity_days": 31,
+  "voice_included": true,
+  "sms_included": true,
+  "voice_sms_note": "Calls and SMS included",
+  "phone_number": null,
+  "perks": [
+   "4G",
+   "Roaming included"
+  ],
+  "title": "20GB / 31 days",
+  "price": 34,
+  "currency": "USD",
+  "destination_key": "global"
+ },
+ {
+  "coverage": "71 countries",
+  "data_gb": 18,
+  "data_note": null,
+  "validity_days": 30,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "5G",
+   "Roaming included"
+  ],
+  "title": "18GB / 30 days",
+  "price": 26.5,
+  "currency": "USD",
+  "destination_key": "global"
+ },
+ {
+  "coverage": "71 countries",
+  "data_gb": 12,
+  "data_note": null,
+  "validity_days": 30,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "5G",
+   "Roaming included"
+  ],
+  "title": "12GB / 30 days",
+  "price": 19.75,
+  "currency": "USD",
+  "destination_key": "global"
+ },
+ {
+  "coverage": "109 countries",
+  "data_gb": 3,
+  "data_note": null,
+  "validity_days": 31,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "4G"
+  ],
+  "title": "3GB / 31 days",
+  "price": 10.25,
+  "currency": "USD",
+  "destination_key": "global"
+ }
+]

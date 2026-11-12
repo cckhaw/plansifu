@@ -1,0 +1,172 @@
+[
+ {
+  "coverage": null,
+  "data_gb": -1,
+  "data_note": null,
+  "validity_days": 4,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "4G / 5G"
+  ],
+  "title": "Unlimited / 4 days",
+  "price": 13,
+  "currency": "USD",
+  "destination_key": "japan"
+ },
+ {
+  "coverage": null,
+  "data_gb": -1,
+  "data_note": null,
+  "validity_days": 10,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "4G / 5G"
+  ],
+  "title": "Unlimited / 10 days",
+  "price": 26,
+  "currency": "USD",
+  "destination_key": "japan"
+ },
+ {
+  "coverage": null,
+  "data_gb": -1,
+  "data_note": null,
+  "validity_days": 15,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "4G / 5G"
+  ],
+  "title": "Unlimited / 15 days",
+  "price": 39,
+  "currency": "USD",
+  "destination_key": "japan"
+ },
+ {
+  "coverage": null,
+  "data_gb": -1,
+  "data_note": null,
+  "validity_days": 7,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "4G / 5G"
+  ],
+  "title": "Unlimited / 7 days",
+  "price": 19,
+  "currency": "USD",
+  "destination_key": "japan"
+ },
+ {
+  "coverage": null,
+  "data_gb": -1,
+  "data_note": null,
+  "validity_days": 31,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "4G / 5G"
+  ],
+  "title": "Unlimited / 31 days",
+  "price": 77.5,
+  "currency": "USD",
+  "destination_key": "japan"
+ },
+ {
+  "coverage": null,
+  "data_gb": 20,
+  "data_note": null,
+  "validity_days": 30,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "4G"
+  ],
+  "title": "20GB / 30 days",
+  "price": 25.5,
+  "currency": "USD",
+  "destination_key": "japan"
+ },
+ {
+  "coverage": null,
+  "data_gb": 10,
+  "data_note": null,
+  "validity_days": 30,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "4G"
+  ],
+  "title": "10GB / 30 days",
+  "price": 16.25,
+  "currency": "USD",
+  "destination_key": "japan"
+ },
+ {
+  "coverage": null,
+  "data_gb": 5,
+  "data_note": null,
+  "validity_days": 30,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "4G"
+  ],
+  "title": "5GB / 30 days",
+  "price": 11,
+  "currency": "USD",
+  "destination_key": "japan"
+ },
+ {
+  "coverage": null,
+  "data_gb": 3,
+  "data_note": null,
+  "validity_days": 7,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "4G"
+  ],
+  "title": "3GB / 7 days",
+  "price": 7.5,
+  "currency": "USD",
+  "destination_key": "japan"
+ },
+ {
+  "coverage": null,
+  "data_gb": 1,
+  "data_note": null,
+  "validity_days": 3,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "4G"
+  ],
+  "title": "1GB / 3 days",
+  "price": 4,
+  "currency": "USD",
+  "destination_key": "japan"
+ }
+]

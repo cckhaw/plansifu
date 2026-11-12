@@ -1,0 +1,347 @@
+[
+ {
+  "coverage": "36 countries",
+  "data_gb": -1,
+  "data_note": "10GB/day of high-speed data",
+  "validity_days": 7,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "5G"
+  ],
+  "title": "Unlimited (10GB/day) / 7 days",
+  "price": 30.25,
+  "currency": "USD",
+  "destination_key": "europe"
+ },
+ {
+  "coverage": "36 countries",
+  "data_gb": -1,
+  "data_note": "10GB/day of high-speed data",
+  "validity_days": 15,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "5G"
+  ],
+  "title": "Unlimited (10GB/day) / 15 days",
+  "price": 50.25,
+  "currency": "USD",
+  "destination_key": "europe"
+ },
+ {
+  "coverage": "36 countries",
+  "data_gb": -1,
+  "data_note": "10GB/day of high-speed data",
+  "validity_days": 30,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "5G"
+  ],
+  "title": "Unlimited (10GB/day) / 30 days",
+  "price": 72.5,
+  "currency": "USD",
+  "destination_key": "europe"
+ },
+ {
+  "coverage": "36 countries",
+  "data_gb": -1,
+  "data_note": "10GB/day of high-speed data",
+  "validity_days": 60,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "5G"
+  ],
+  "title": "Unlimited (10GB/day) / 60 days",
+  "price": 132,
+  "currency": "USD",
+  "destination_key": "europe"
+ },
+ {
+  "coverage": "36 countries",
+  "data_gb": -1,
+  "data_note": "10GB/day of high-speed data",
+  "validity_days": 90,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "5G"
+  ],
+  "title": "Unlimited (10GB/day) / 90 days",
+  "price": 198,
+  "currency": "USD",
+  "destination_key": "europe"
+ },
+ {
+  "coverage": "36 countries",
+  "data_gb": -1,
+  "data_note": "5GB/day of high-speed data",
+  "validity_days": 7,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "5G"
+  ],
+  "title": "Unlimited (5GB/day) / 7 days",
+  "price": 25,
+  "currency": "USD",
+  "destination_key": "europe"
+ },
+ {
+  "coverage": "36 countries",
+  "data_gb": -1,
+  "data_note": "5GB/day of high-speed data",
+  "validity_days": 15,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "5G"
+  ],
+  "title": "Unlimited (5GB/day) / 15 days",
+  "price": 42.25,
+  "currency": "USD",
+  "destination_key": "europe"
+ },
+ {
+  "coverage": "36 countries",
+  "data_gb": -1,
+  "data_note": "5GB/day of high-speed data",
+  "validity_days": 30,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "5G"
+  ],
+  "title": "Unlimited (5GB/day) / 30 days",
+  "price": 59.5,
+  "currency": "USD",
+  "destination_key": "europe"
+ },
+ {
+  "coverage": "36 countries",
+  "data_gb": 20,
+  "data_note": null,
+  "validity_days": 30,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "5G"
+  ],
+  "title": "20GB / 30 days",
+  "price": 39.5,
+  "currency": "USD",
+  "destination_key": "europe"
+ },
+ {
+  "coverage": "36 countries",
+  "data_gb": 10,
+  "data_note": null,
+  "validity_days": 30,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "5G"
+  ],
+  "title": "10GB / 30 days",
+  "price": 28.5,
+  "currency": "USD",
+  "destination_key": "europe"
+ },
+ {
+  "coverage": "44 countries",
+  "data_gb": 20,
+  "data_note": null,
+  "validity_days": 31,
+  "voice_included": true,
+  "sms_included": true,
+  "voice_sms_note": "Calls and SMS included",
+  "phone_number": null,
+  "perks": [
+   "4G",
+   "Roaming included"
+  ],
+  "title": "20GB / 31 days",
+  "price": 22.5,
+  "currency": "USD",
+  "destination_key": "europe"
+ },
+ {
+  "coverage": "36 countries",
+  "data_gb": 5,
+  "data_note": null,
+  "validity_days": 30,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "5G"
+  ],
+  "title": "5GB / 30 days",
+  "price": 15.75,
+  "currency": "USD",
+  "destination_key": "europe"
+ },
+ {
+  "coverage": "36 countries",
+  "data_gb": 3,
+  "data_note": null,
+  "validity_days": 7,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "5G"
+  ],
+  "title": "3GB / 7 days",
+  "price": 10,
+  "currency": "USD",
+  "destination_key": "europe"
+ },
+ {
+  "coverage": "36 countries",
+  "data_gb": 1,
+  "data_note": null,
+  "validity_days": 3,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "5G"
+  ],
+  "title": "1GB / 3 days",
+  "price": 4.5,
+  "currency": "USD",
+  "destination_key": "europe"
+ },
+ {
+  "coverage": "45 countries",
+  "data_gb": 50,
+  "data_note": null,
+  "validity_days": 31,
+  "voice_included": true,
+  "sms_included": true,
+  "voice_sms_note": "Calls and SMS included",
+  "phone_number": null,
+  "perks": [
+   "4G",
+   "Roaming included"
+  ],
+  "title": "50GB / 31 days",
+  "price": 45.25,
+  "currency": "USD",
+  "destination_key": "europe"
+ },
+ {
+  "coverage": "45 countries",
+  "data_gb": 100,
+  "data_note": null,
+  "validity_days": 31,
+  "voice_included": true,
+  "sms_included": true,
+  "voice_sms_note": "Calls and SMS included",
+  "phone_number": null,
+  "perks": [
+   "4G",
+   "Roaming included"
+  ],
+  "title": "100GB / 31 days",
+  "price": 56.5,
+  "currency": "USD",
+  "destination_key": "europe"
+ },
+ {
+  "coverage": "45 countries",
+  "data_gb": 200,
+  "data_note": null,
+  "validity_days": 31,
+  "voice_included": true,
+  "sms_included": true,
+  "voice_sms_note": "Calls and SMS included",
+  "phone_number": null,
+  "perks": [
+   "4G",
+   "Roaming included"
+  ],
+  "title": "200GB / 31 days",
+  "price": 90.5,
+  "currency": "USD",
+  "destination_key": "europe"
+ },
+ {
+  "coverage": "36 countries",
+  "data_gb": -1,
+  "data_note": "5GB/day of high-speed data",
+  "validity_days": 60,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "5G"
+  ],
+  "title": "Unlimited (5GB/day) / 60 days",
+  "price": 113.5,
+  "currency": "USD",
+  "destination_key": "europe"
+ },
+ {
+  "coverage": "36 countries",
+  "data_gb": -1,
+  "data_note": "5GB/day of high-speed data",
+  "validity_days": 90,
+  "voice_included": false,
+  "sms_included": false,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "5G"
+  ],
+  "title": "Unlimited (5GB/day) / 90 days",
+  "price": 146.5,
+  "currency": "USD",
+  "destination_key": "europe"
+ },
+ {
+  "coverage": "45 countries",
+  "data_gb": 500,
+  "data_note": null,
+  "validity_days": 90,
+  "voice_included": true,
+  "sms_included": true,
+  "voice_sms_note": "Calls and SMS included",
+  "phone_number": null,
+  "perks": [
+   "4G",
+   "Roaming included"
+  ],
+  "title": "500GB / 90 days",
+  "price": 243,
+  "currency": "USD",
+  "destination_key": "europe"
+ }
+]
