@@ -1,0 +1,70 @@
+[
+ {
+  "title": "First",
+  "category": "mobile_prepaid",
+  "monthly_price": 15,
+  "currency": "MYR",
+  "data_gb": 20,
+  "speed_mbps": null,
+  "talktime_mins": 100,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "For daily essentials",
+   "Hotspot included",
+   "5G/4G"
+  ],
+  "promotion_badge": "New subscriber exclusive"
+ },
+ {
+  "title": "Lite",
+  "category": "mobile_prepaid",
+  "monthly_price": 12,
+  "currency": "MYR",
+  "data_gb": 3,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "For light users",
+   "Hotspot included",
+   "4G"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Standard",
+  "category": "mobile_prepaid",
+  "monthly_price": 25,
+  "currency": "MYR",
+  "data_gb": 80,
+  "speed_mbps": null,
+  "talktime_mins": 300,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "For everyday routine",
+   "Hotspot included",
+   "5G/4G"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Plus",
+  "category": "mobile_prepaid",
+  "monthly_price": 65,
+  "currency": "MYR",
+  "data_gb": 400,
+  "speed_mbps": null,
+  "talktime_mins": 1000,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "For always-on users",
+   "Hotspot included",
+   "5G/4G"
+  ],
+  "promotion_badge": null
+ }
+]

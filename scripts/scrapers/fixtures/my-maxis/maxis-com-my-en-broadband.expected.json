@@ -1,0 +1,67 @@
+[
+ {
+  "title": "Maxis Home Fibre 100Mbps",
+  "category": "broadband",
+  "monthly_price": 99,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": 100,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [],
+  "promotion_badge": "RM89/mth for the first 24 months - REBATE: RM10x24 MONTHS"
+ },
+ {
+  "title": "Maxis Home Fibre 300Mbps",
+  "category": "broadband",
+  "monthly_price": 139,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": 300,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [],
+  "promotion_badge": "RM129/mth for the first 24 months - SAVE RM240 + RM50 TNG"
+ },
+ {
+  "title": "Maxis Home Fibre 500Mbps",
+  "category": "broadband",
+  "monthly_price": 159,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": 500,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [],
+  "promotion_badge": "RM149/mth for the first 24 months - SAVE RM240 + RM100 TNG"
+ },
+ {
+  "title": "Maxis Home Fibre 1Gbps",
+  "category": "broadband",
+  "monthly_price": 249,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": 1000,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [],
+  "promotion_badge": "FREE RM100 TNG"
+ },
+ {
+  "title": "Maxis Home Fibre 2Gbps",
+  "category": "broadband",
+  "monthly_price": 319,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": 2000,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [],
+  "promotion_badge": "FREE RM200 TNG"
+ }
+]

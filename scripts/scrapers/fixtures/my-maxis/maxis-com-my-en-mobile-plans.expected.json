@@ -1,0 +1,75 @@
+[
+ {
+  "title": "Maxis Postpaid 89",
+  "category": "mobile_postpaid",
+  "monthly_price": 89,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [],
+  "promotion_badge": "RM79/mth promo - SAVE RM60 AND FREE SOOKA"
+ },
+ {
+  "title": "Maxis Postpaid 109",
+  "category": "mobile_postpaid",
+  "monthly_price": 109,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Extra line RM50/mth"
+  ],
+  "promotion_badge": "RM99/mth promo - SAVE RM60 AND FREE SOOKA"
+ },
+ {
+  "title": "Maxis Postpaid 139",
+  "category": "mobile_postpaid",
+  "monthly_price": 139,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Extra line RM50/mth"
+  ],
+  "promotion_badge": "RM129/mth promo - SAVE RM60 AND FREE SOOKA"
+ },
+ {
+  "title": "Maxis Postpaid 169",
+  "category": "mobile_postpaid",
+  "monthly_price": 169,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Extra line RM50/mth"
+  ],
+  "promotion_badge": "RM159/mth promo - SAVE RM60 AND FREE SOOKA"
+ },
+ {
+  "title": "Maxis Postpaid 199",
+  "category": "mobile_postpaid",
+  "monthly_price": 199,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Extra line RM50/mth"
+  ],
+  "promotion_badge": "RM189/mth promo - SAVE RM60 AND FREE SOOKA"
+ }
+]

@@ -1,0 +1,127 @@
+[
+ {
+  "title": "Postpaid 5G 190",
+  "category": "mobile_postpaid",
+  "monthly_price": 190,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "RM120 port-in rebate",
+   "Up to 6 supplementary lines at 50% discount",
+   "Unlimited calls",
+   "Extra line RM95/mth"
+  ],
+  "promotion_badge": "Up to 3 months free with Easy360"
+ },
+ {
+  "title": "Postpaid 5G 160",
+  "category": "mobile_postpaid",
+  "monthly_price": 160,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "RM120 port-in rebate",
+   "Up to 6 supplementary lines at 50% discount",
+   "Unlimited calls",
+   "Extra line RM80/mth"
+  ],
+  "promotion_badge": "Up to 3 months free with Easy360"
+ },
+ {
+  "title": "Postpaid 5G 140",
+  "category": "mobile_postpaid",
+  "monthly_price": 140,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "RM120 port-in rebate",
+   "Up to 6 supplementary lines at 50% discount",
+   "Unlimited calls",
+   "Extra line RM70/mth"
+  ],
+  "promotion_badge": "Up to 3 months free with Easy360"
+ },
+ {
+  "title": "Postpaid 5G 120",
+  "category": "mobile_postpaid",
+  "monthly_price": 120,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "RM120 port-in rebate",
+   "Up to 6 supplementary lines at 10% discount",
+   "Unlimited calls",
+   "Extra line RM60/mth"
+  ],
+  "promotion_badge": "Up to 3 months free with Easy360"
+ },
+ {
+  "title": "Postpaid 5G 100",
+  "category": "mobile_postpaid",
+  "monthly_price": 100,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "RM120 port-in rebate",
+   "Up to 6 supplementary lines at 10% discount",
+   "Unlimited calls",
+   "Extra line RM50/mth"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Postpaid 5G 80",
+  "category": "mobile_postpaid",
+  "monthly_price": 80,
+  "currency": "MYR",
+  "data_gb": 600,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "RM120 port-in rebate",
+   "Up to 3 supplementary lines at 10% discount",
+   "Unlimited calls",
+   "Extra line RM40/mth"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Postpaid 5G 60 SE",
+  "category": "mobile_postpaid",
+  "monthly_price": 60,
+  "currency": "MYR",
+  "data_gb": 500,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "RM60 port-in rebate",
+   "Unlimited calls",
+   "Extra line RM25/mth"
+  ],
+  "promotion_badge": "RM50/mth limited-time offer"
+ }
+]

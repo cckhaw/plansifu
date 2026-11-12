@@ -1,0 +1,102 @@
+[
+ {
+  "title": "Hotlink Prepaid Uncapped Plan",
+  "category": "mobile_prepaid",
+  "monthly_price": 55,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Price RM55 / 30 days",
+   "Speed: Uncapped speed",
+   "Unlimited 5G all day",
+   "400GB fair usage policy",
+   "Unlimited call",
+   "Validity: 30 days"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Hotlink Prepaid 48Mbps Plan",
+  "category": "mobile_prepaid",
+  "monthly_price": 40,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Price RM40 / 30 days",
+   "Speed: 48Mbps",
+   "Unlimited 5G (8 PM–8 AM)",
+   "200GB fair usage policy",
+   "Unlimited call",
+   "Validity: 30 days"
+  ],
+  "promotion_badge": "Best Seller"
+ },
+ {
+  "title": "Hotlink Prepaid 18Mbps Plan",
+  "category": "mobile_prepaid",
+  "monthly_price": 30,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Price RM30 / 30 days",
+   "Speed: 18Mbps",
+   "Unlimited 5G (8 PM–8 AM)",
+   "50GB fair usage policy",
+   "Unlimited call",
+   "Validity: 30 days"
+  ],
+  "promotion_badge": "Best Value"
+ },
+ {
+  "title": "Hotlink Prepaid 6Mbps Plan (Weekly)",
+  "category": "mobile_prepaid",
+  "monthly_price": 12,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Price RM12 / 7 days",
+   "Speed: 6Mbps",
+   "Unlimited 5G (8 PM–8 AM)",
+   "20GB fair usage policy",
+   "Unlimited call",
+   "Validity: 7 days"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Hotlink Prepaid 6Mbps Plan (Daily)",
+  "category": "mobile_prepaid",
+  "monthly_price": 4,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "Price RM4 / 1 day",
+   "Speed: 6Mbps",
+   "Unlimited 5G (8 PM–8 AM)",
+   "6GB fair usage policy",
+   "Unlimited call",
+   "Validity: 1 day"
+  ],
+  "promotion_badge": null
+ }
+]
