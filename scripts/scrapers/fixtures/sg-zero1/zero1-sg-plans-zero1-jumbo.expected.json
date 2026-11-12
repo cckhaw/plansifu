@@ -1,0 +1,47 @@
+[
+ {
+  "title": "Zero1 Jumbo Joy",
+  "category": "mobile_postpaid",
+  "monthly_price": 12.7,
+  "currency": "SGD",
+  "data_gb": 501,
+  "speed_mbps": null,
+  "talktime_mins": 701,
+  "sms_count": 201,
+  "contract_months": 0,
+  "features": [
+   "5G+"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Zero1 Jumbo Value",
+  "category": "mobile_postpaid",
+  "monthly_price": 7.7,
+  "currency": "SGD",
+  "data_gb": 201,
+  "speed_mbps": null,
+  "talktime_mins": 301,
+  "sms_count": 101,
+  "contract_months": 0,
+  "features": [
+   "5G+"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Zero1 Jumbo Pro",
+  "category": "mobile_postpaid",
+  "monthly_price": 20.4,
+  "currency": "SGD",
+  "data_gb": 701,
+  "speed_mbps": null,
+  "talktime_mins": 1001,
+  "sms_count": 201,
+  "contract_months": 0,
+  "features": [
+   "5G+"
+  ],
+  "promotion_badge": null
+ }
+]

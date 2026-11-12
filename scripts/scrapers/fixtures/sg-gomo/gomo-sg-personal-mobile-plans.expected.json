@@ -1,0 +1,159 @@
+[
+ {
+  "title": "GOMO 5G+ Core",
+  "category": "mobile_postpaid",
+  "monthly_price": 21.99,
+  "currency": "SGD",
+  "data_gb": 700,
+  "speed_mbps": null,
+  "talktime_mins": 1000,
+  "sms_count": 1000,
+  "contract_months": 0,
+  "features": [
+   "36GB in Asia roaming (24 destinations)​",
+   "12GB in Worldwide roaming (210 destinations)​"
+  ],
+  "promotion_badge": "GOMO 8 Deal: $8.8/mth intro price"
+ },
+ {
+  "title": "GOMO 4G Pro (Now with 5G+)",
+  "category": "mobile_postpaid",
+  "monthly_price": 15.99,
+  "currency": "SGD",
+  "data_gb": 400,
+  "speed_mbps": null,
+  "talktime_mins": 500,
+  "sms_count": 500,
+  "contract_months": 0,
+  "features": [],
+  "promotion_badge": "Lucky 8 Deal: $10.8/mth intro price"
+ },
+ {
+  "title": "GOMO 5G+ Value",
+  "category": "mobile_postpaid",
+  "monthly_price": 19.99,
+  "currency": "SGD",
+  "data_gb": 400,
+  "speed_mbps": null,
+  "talktime_mins": 800,
+  "sms_count": 800,
+  "contract_months": 0,
+  "features": [
+   "28GB Asia (24 destinations)",
+   "10GB Worldwide (210 destinations)"
+  ],
+  "promotion_badge": "GOMO 8 Deal: $8/mth intro price"
+ },
+ {
+  "title": "GOMO 5G+ Asia Infinity",
+  "category": "mobile_postpaid",
+  "monthly_price": 30.99,
+  "currency": "SGD",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": -1,
+  "contract_months": 0,
+  "features": [
+   "Unlimited* Asia (24 destinations)​",
+   "18GB Worldwide (210 destinations)"
+  ],
+  "promotion_badge": "$12.4/mth intro price"
+ },
+ {
+  "title": "GOMO 5G+ Global Infinity",
+  "category": "mobile_postpaid",
+  "monthly_price": 50,
+  "currency": "SGD",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": -1,
+  "contract_months": 0,
+  "features": [
+   "Unlimited* Worldwide (210 destinations)​",
+   "50 Air Miles/mth (based on yuu Points)."
+  ],
+  "promotion_badge": "Widest coverage: $20/mth intro price"
+ },
+ {
+  "title": "GOMO 5G+ Senior+ (Ages 60 & above)",
+  "category": "mobile_postpaid",
+  "monthly_price": 10,
+  "currency": "SGD",
+  "data_gb": 500,
+  "speed_mbps": null,
+  "talktime_mins": 800,
+  "sms_count": 800,
+  "contract_months": 0,
+  "features": [
+   "8GB Asia (24 destinations)",
+   "3GB Worldwide (210 destinations)"
+  ],
+  "promotion_badge": "GOMO 8 Deal: $8/mth intro price"
+ },
+ {
+  "title": "GOMO 5G+ Senior (Ages 60 & above)",
+  "category": "mobile_postpaid",
+  "monthly_price": 8,
+  "currency": "SGD",
+  "data_gb": 400,
+  "speed_mbps": null,
+  "talktime_mins": 800,
+  "sms_count": 800,
+  "contract_months": 0,
+  "features": [
+   "6GB Asia (24 destinations)",
+   "3GB Worldwide (210 destinations)"
+  ],
+  "promotion_badge": "$6/mth intro price"
+ },
+ {
+  "title": "GOMO 5G+ Unlimited Senior (Ages 60 & above)",
+  "category": "mobile_postpaid",
+  "monthly_price": 20,
+  "currency": "SGD",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": -1,
+  "contract_months": 0,
+  "features": [
+   "Unlimited* Asia (24 destinations)​",
+   "4GB Worldwide (210 destinations)​"
+  ],
+  "promotion_badge": "GOMO 8 Deal: $8/mth intro price"
+ },
+ {
+  "title": "GOMO 5G+ Unlimited Student & NS (Ages 16 - 24)",
+  "category": "mobile_postpaid",
+  "monthly_price": 20,
+  "currency": "SGD",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": -1,
+  "contract_months": 0,
+  "features": [
+   "Unlimited* Asia (24 destinations)​",
+   "4GB Worldwide (210 destinations)​"
+  ],
+  "promotion_badge": "GOMO 8 Deal: $8/mth intro price"
+ },
+ {
+  "title": "GOMO 5G+ Student & NS (Ages 16 - 24)",
+  "category": "mobile_postpaid",
+  "monthly_price": 12,
+  "currency": "SGD",
+  "data_gb": 400,
+  "speed_mbps": null,
+  "talktime_mins": 800,
+  "sms_count": 800,
+  "contract_months": 0,
+  "features": [
+   "12GB Asia (24 destinations)",
+   "4GB Worldwide (210 destinations)"
+  ],
+  "promotion_badge": null
+ }
+]

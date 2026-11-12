@@ -1,0 +1,196 @@
+[
+ {
+  "title": "giga 800GB",
+  "category": "mobile_postpaid",
+  "monthly_price": 19.9,
+  "currency": "SGD",
+  "data_gb": 800,
+  "speed_mbps": null,
+  "talktime_mins": 1000,
+  "sms_count": 1000,
+  "contract_months": 0,
+  "features": [
+   "5G",
+   "Free Rollover Data",
+   "28GB Asia Roaming forever",
+   "10GB International Roaming forever"
+  ],
+  "promotion_badge": "$0.90 for the first month, $19.90 thereafter"
+ },
+ {
+  "title": "giga 300GB",
+  "category": "mobile_postpaid",
+  "monthly_price": 15.9,
+  "currency": "SGD",
+  "data_gb": 300,
+  "speed_mbps": null,
+  "talktime_mins": 300,
+  "sms_count": 300,
+  "contract_months": 0,
+  "features": [
+   "5G",
+   "Free Rollover Data",
+   "8GB Asia Roaming forever"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "giga 400GB",
+  "category": "mobile_postpaid",
+  "monthly_price": 18.9,
+  "currency": "SGD",
+  "data_gb": 400,
+  "speed_mbps": null,
+  "talktime_mins": 800,
+  "sms_count": 800,
+  "contract_months": 0,
+  "features": [
+   "5G",
+   "Free Rollover Data",
+   "10GB Asia Roaming forever",
+   "6GB International Roaming forever"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "giga 1.4TB",
+  "category": "mobile_postpaid",
+  "monthly_price": 20.9,
+  "currency": "SGD",
+  "data_gb": 1400,
+  "speed_mbps": null,
+  "talktime_mins": 1000,
+  "sms_count": 1000,
+  "contract_months": 0,
+  "features": [
+   "5G",
+   "Free Rollover Data",
+   "36GB Asia Roaming forever",
+   "12GB International Roaming forever"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "giga 2TB",
+  "category": "mobile_postpaid",
+  "monthly_price": 28.9,
+  "currency": "SGD",
+  "data_gb": 2000,
+  "speed_mbps": null,
+  "talktime_mins": 1500,
+  "sms_count": 1500,
+  "contract_months": 0,
+  "features": [
+   "5G",
+   "Free Rollover Data",
+   "96GB Asia Roaming forever",
+   "18GB International Roaming forever"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "giga 400GB (Ages 15 to 29)",
+  "category": "mobile_postpaid",
+  "monthly_price": 11.9,
+  "currency": "SGD",
+  "data_gb": 400,
+  "speed_mbps": null,
+  "talktime_mins": 800,
+  "sms_count": 800,
+  "contract_months": 0,
+  "features": [
+   "5G",
+   "Free Rollover Data",
+   "12GB Asia Roaming forever",
+   "4GB International Roaming forever"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "giga 100GB",
+  "category": "mobile_postpaid",
+  "monthly_price": 10.9,
+  "currency": "SGD",
+  "data_gb": 100,
+  "speed_mbps": null,
+  "talktime_mins": 300,
+  "sms_count": 300,
+  "contract_months": 0,
+  "features": [
+   "4G",
+   "Free Rollover Data",
+   "2GB Asia Roaming forever"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "giga 200GB",
+  "category": "mobile_postpaid",
+  "monthly_price": 12.9,
+  "currency": "SGD",
+  "data_gb": 200,
+  "speed_mbps": null,
+  "talktime_mins": 300,
+  "sms_count": 300,
+  "contract_months": 0,
+  "features": [
+   "4G",
+   "Free Rollover Data",
+   "4GB Asia Roaming forever"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "giga 3TB (6-month billing)",
+  "category": "mobile_postpaid",
+  "monthly_price": 18.32,
+  "currency": "SGD",
+  "data_gb": 3000,
+  "speed_mbps": null,
+  "talktime_mins": 6000,
+  "sms_count": 6000,
+  "contract_months": 0,
+  "features": [
+   "5G",
+   "Free Rollover Data",
+   "66GB Asia Roaming forever",
+   "48GB International Roaming forever"
+  ],
+  "promotion_badge": "Billed $109.9 every 6 months"
+ },
+ {
+  "title": "giga 6TB (6-month billing)",
+  "category": "mobile_postpaid",
+  "monthly_price": 23.3,
+  "currency": "SGD",
+  "data_gb": 6000,
+  "speed_mbps": null,
+  "talktime_mins": 9000,
+  "sms_count": 9000,
+  "contract_months": 0,
+  "features": [
+   "5G",
+   "Free Rollover Data",
+   "96GB Asia Roaming forever",
+   "72GB International Roaming forever"
+  ],
+  "promotion_badge": "Billed $139.9 every 6 months"
+ },
+ {
+  "title": "giga 600GB (6-month billing)",
+  "category": "mobile_postpaid",
+  "monthly_price": 10,
+  "currency": "SGD",
+  "data_gb": 600,
+  "speed_mbps": null,
+  "talktime_mins": 1800,
+  "sms_count": 1800,
+  "contract_months": 0,
+  "features": [
+   "4G",
+   "Free Rollover Data",
+   "12GB Asia Roaming forever"
+  ],
+  "promotion_badge": "Billed $59.9 every 6 months"
+ }
+]

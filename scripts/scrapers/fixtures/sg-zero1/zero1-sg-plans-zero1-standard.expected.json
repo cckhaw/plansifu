@@ -1,0 +1,61 @@
+[
+ {
+  "title": "Movemo Vibe",
+  "category": "mobile_postpaid",
+  "monthly_price": 12,
+  "currency": "SGD",
+  "data_gb": 700,
+  "speed_mbps": null,
+  "talktime_mins": 300,
+  "sms_count": 100,
+  "contract_months": 0,
+  "features": [
+   "Roam World 198 Destinations 30GB (365 Days)",
+   "Roam Malaysia Indonesia Thailand 600GB (365 Days)",
+   "RoamAP 30GB",
+   "IDD v019 400 Minutes",
+   "5G+"
+  ],
+  "promotion_badge": "Get up to 3 months Free Subscriptions - 3 mths free for non-singtel port-in Till 30 Nov 26"
+ },
+ {
+  "title": "Streamo Freedom RE (5G+)",
+  "category": "mobile_postpaid",
+  "monthly_price": 15,
+  "currency": "SGD",
+  "data_gb": 700,
+  "speed_mbps": null,
+  "talktime_mins": 600,
+  "sms_count": 100,
+  "contract_months": 0,
+  "features": [
+   "Roam World 198 Destinations 60GB (365 Days)",
+   "Roam Malaysia Indonesia Thailand 1TB (365 Days)",
+   "RoamAP 40GB",
+   "IDD v019 800 Minutes",
+   "5G+",
+   "Rollover included"
+  ],
+  "promotion_badge": "Get 3 Months Free + ROLLOVER^ - 3 mths free for new sign-up & non-singtel port-in Till 30 Nov 26"
+ },
+ {
+  "title": "Movemo Dash RE (5G+)",
+  "category": "mobile_postpaid",
+  "monthly_price": 20,
+  "currency": "SGD",
+  "data_gb": 800,
+  "speed_mbps": null,
+  "talktime_mins": 600,
+  "sms_count": 100,
+  "contract_months": 0,
+  "features": [
+   "Roam World 198 Destinations 60GB (365 Days)",
+   "Roam Malaysia Indonesia Thailand 1TB (365 Days)",
+   "RoamAP 45GB",
+   "IDD v019 500 Minutes",
+   "5G+",
+   "Rollover included"
+  ],
+  "promotion_badge": "Get 3 Months Free + ROLLOVER^ - 3 mths free for new sign-up & non-singtel port-in Till 30 Nov 26"
+ }
+]

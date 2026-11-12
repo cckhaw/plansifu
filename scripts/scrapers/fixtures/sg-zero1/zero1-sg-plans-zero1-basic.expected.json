@@ -1,0 +1,39 @@
+[
+ {
+  "title": "Streamo Bold (4G)",
+  "category": "mobile_postpaid",
+  "monthly_price": 10.1,
+  "currency": "SGD",
+  "data_gb": 600,
+  "speed_mbps": null,
+  "talktime_mins": 300,
+  "sms_count": 100,
+  "contract_months": 0,
+  "features": [
+   "Roam World 198 Destinations 30GB (365 Days)",
+   "RoamAP 15GB",
+   "Roam Malaysia Indonesia Thailand 600GB (365 Days)",
+   "IDD v019 300 Minutes"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "Streamo Edge (5G+)",
+  "category": "mobile_postpaid",
+  "monthly_price": 10.7,
+  "currency": "SGD",
+  "data_gb": 600,
+  "speed_mbps": null,
+  "talktime_mins": 300,
+  "sms_count": 100,
+  "contract_months": 0,
+  "features": [
+   "Roam World 198 Destinations 30GB (365 Days)",
+   "RoamAP 20GB",
+   "Roam Malaysia Indonesia Thailand 600GB (365 Days)",
+   "IDD v019 400 Minutes",
+   "5G+"
+  ],
+  "promotion_badge": "Get up to 3 months Free Subscriptions - 3 mths free for non-singtel port-in Till 30 Nov 26"
+ }
+]
