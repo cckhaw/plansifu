@@ -1,0 +1,110 @@
+[
+ {
+  "title": "UNI5G WOW 12 Months",
+  "category": "mobile_prepaid",
+  "monthly_price": 180,
+  "currency": "MYR",
+  "data_gb": 120,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "120GB Data (100GB 5G) + (20GB 5G/4G)",
+   "Uncapped 5G Speed, All-Day Long",
+   "Hotspot Enabled (Shared Quota)",
+   "365 Days Validity"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "UNI5G WOW 3 Months",
+  "category": "mobile_prepaid",
+  "monthly_price": 50,
+  "currency": "MYR",
+  "data_gb": 15,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "15GB Data (12GB 5G) + (3GB 5G/4G)",
+   "Uncapped 5G Speed, All-Day Long",
+   "Hotspot Enabled (Shared Quota)",
+   "90 Days Validity"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "UNI5G WOW PADU 35",
+  "category": "mobile_prepaid",
+  "monthly_price": 35,
+  "currency": "MYR",
+  "data_gb": 1000,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "1000GB Data 800GB 5G + 200GB 4G/5G",
+   "5G: Best Effort 4G: 5Mbps",
+   "10GB Hotspot (5G/4G)",
+   "30-Days Validity"
+  ],
+  "promotion_badge": "Free 50GB 5G Hotspot"
+ },
+ {
+  "title": "UNI5G WOW PADU 25",
+  "category": "mobile_prepaid",
+  "monthly_price": 25,
+  "currency": "MYR",
+  "data_gb": 100,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "100GB Data. 70GB 5G + 30GB 5G/4G",
+   "5G: Best Effort 4G: 5Mbps",
+   "Hotspot Enabled (Shared Quota)",
+   "30-Days Validity"
+  ],
+  "promotion_badge": "Free Tealive vouchers worth RM120"
+ },
+ {
+  "title": "UNI5G WOW PADU 10",
+  "category": "mobile_prepaid",
+  "monthly_price": 10,
+  "currency": "MYR",
+  "data_gb": 20,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "20GB Data (20GB 4G/5G)",
+   "5G: Best Effort 4G: 5Mbps",
+   "Hotspot Enabled (Shared Quota)",
+   "7-Days Validity"
+  ],
+  "promotion_badge": "Free Tealive vouchers worth RM120"
+ },
+ {
+  "title": "UNI5G WOW PADU 50",
+  "category": "mobile_prepaid",
+  "monthly_price": 50,
+  "currency": "MYR",
+  "data_gb": 1000,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "1000GB Data (10GB 4G/5G) (990GB 5G) 100GB for Mobile Legend & PUBG",
+   "5G: Best Effort 4G: 7Mbps",
+   "Hotspot Enabled (Shared Quota)",
+   "30-Days Validity"
+  ],
+  "promotion_badge": "Free 50GB 5G Hotspot"
+ }
+]

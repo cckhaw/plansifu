@@ -1,7 +1,7 @@
 import { renderPageText } from "../browser";
 import { scrapeTargets } from "../extract";
 import type { CrawlPageReport, ScrapedPlan } from "../../../src/types/database";
-import type { ProviderScraper, ScrapeResult } from "../types";
+import type { ProviderScraper, ScrapeResult, ScrapeTarget } from "../types";
 import { todo } from "../parse-utils";
 import { t } from "./define";
 
@@ -54,10 +54,17 @@ export function parseStarhubPostpaid(text: string): ScrapedPlan[] {
   return plans;
 }
 
+/** The two ordinary pages (declared as targets so capture.ts / try.ts can reach them). */
+const restTargets: ScrapeTarget[] = [
+  t.pre("https://www.starhub.com/personal/mobile/starhub-prepaid.html", todo("StarHub")),
+  t.bb("https://www.starhub.com/personal/broadband.html", todo("StarHub")),
+];
+
 export const starhub: ProviderScraper = {
   name: "StarHub",
   country: "SG",
   website: "https://www.starhub.com",
+  targets: restTargets,
   async scrape(): Promise<ScrapeResult> {
     const started = Date.now();
     const pages: CrawlPageReport[] = [];
@@ -74,14 +81,7 @@ export const starhub: ProviderScraper = {
     postpaidPage.ms = Date.now() - started;
     pages.push(postpaidPage);
 
-    const rest = await scrapeTargets(
-      [
-        t.pre("https://www.starhub.com/personal/mobile/starhub-prepaid.html", todo("StarHub")),
-        t.bb("https://www.starhub.com/personal/broadband.html", todo("StarHub")),
-      ],
-      "SG",
-      "StarHub",
-    );
+    const rest = await scrapeTargets(restTargets, "SG", "StarHub");
     pages.push(...rest.pages);
     return { plans: [...postpaid, ...rest.plans], complete: !postpaidPage.error && postpaid.length > 0 && rest.complete, pages };
   },

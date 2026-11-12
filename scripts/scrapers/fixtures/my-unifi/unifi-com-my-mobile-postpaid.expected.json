@@ -1,0 +1,50 @@
+[
+ {
+  "title": "UNI5G Postpaid 39",
+  "category": "mobile_postpaid",
+  "monthly_price": 39,
+  "currency": "MYR",
+  "data_gb": 50,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "RM0.15 per SMS",
+   "Hotspot available (up to 50GB)"
+  ],
+  "promotion_badge": "Free Upgrade 250GB (4G+5G) Data"
+ },
+ {
+  "title": "UNI5G Postpaid 69",
+  "category": "mobile_postpaid",
+  "monthly_price": 69,
+  "currency": "MYR",
+  "data_gb": 500,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "RM0.15 per SMS",
+   "Hotspot available (up to 500GB)"
+  ],
+  "promotion_badge": "Free Upgrade 500GB (5G/4G) Data"
+ },
+ {
+  "title": "UNI5G Postpaid 99",
+  "category": "mobile_postpaid",
+  "monthly_price": 99,
+  "currency": "MYR",
+  "data_gb": -1,
+  "speed_mbps": null,
+  "talktime_mins": -1,
+  "sms_count": null,
+  "contract_months": 0,
+  "features": [
+   "RM0.15 per SMS",
+   "Hotspot available (up to 100GB)"
+  ],
+  "promotion_badge": "Free Upgrade 100GB (4G+5G) Data"
+ }
+]

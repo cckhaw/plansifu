@@ -1,6 +1,0 @@
-{
- "url": "https://maxxonline.sg",
- "html": "<!DOCTYPE html><html lang=\"en\"><head>\n    <title>Radware Page</title>\n    </head>\n  <body>\n    <div class=\"container\">\n      <div class=\"content\">\n        <p class=\"verify-message\">\n          Verifying your browser before proceeding...\n        </p>\n      </div>\n    </div>\n    <div class=\"incident-id\">\n      <p>\n        <span class=\"bold\">Incident ID:</span>\n        5b404933-eewm-40db-bffc-39d3396a03c7\n      </p>\n    </div>\n</body></html>",
- "text": "Verifying your browser before proceeding...\nIncident ID:\n5b404933-eewm-40db-bffc-39d3396a03c7",
- "feeds": []
-}

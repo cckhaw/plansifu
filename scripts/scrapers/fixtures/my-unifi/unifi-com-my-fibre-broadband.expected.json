@@ -1,0 +1,89 @@
+[
+ {
+  "title": "Unifi Home 100 Mbps",
+  "category": "broadband",
+  "monthly_price": 89,
+  "currency": "MYR",
+  "data_gb": null,
+  "speed_mbps": 100,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 24,
+  "features": [
+   "100Mbps/50Mbps",
+   "Wi-Fi 6 Combo Box",
+   "24 Hrs Service Guarantee"
+  ],
+  "promotion_badge": "Limited Time: RM10 Off + 3 Months Free! · RRP RM99 regular"
+ },
+ {
+  "title": "Unifi Home 300 Mbps",
+  "category": "broadband",
+  "monthly_price": 129,
+  "currency": "MYR",
+  "data_gb": null,
+  "speed_mbps": 300,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 24,
+  "features": [
+   "300Mbps/50Mbps",
+   "Wi-Fi 6 Combo Box",
+   "24 Hrs Service Guarantee"
+  ],
+  "promotion_badge": "Limited Time: RM10 Off + 3 Months Free! · RRP RM139 regular"
+ },
+ {
+  "title": "Unifi Home 500 Mbps",
+  "category": "broadband",
+  "monthly_price": 149,
+  "currency": "MYR",
+  "data_gb": null,
+  "speed_mbps": 500,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 24,
+  "features": [
+   "500Mbps/100Mbps",
+   "Wi-Fi 6 Combo Box",
+   "24 Hrs Service Guarantee"
+  ],
+  "promotion_badge": "Limited Time: RM10 Off + 3 Months Free! · RRP RM159 regular"
+ },
+ {
+  "title": "Unifi Home 1 Gbps",
+  "category": "broadband",
+  "monthly_price": 249,
+  "currency": "MYR",
+  "data_gb": null,
+  "speed_mbps": 1000,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 24,
+  "features": [
+   "1Gbps/500Mbps",
+   "Wi-Fi 7 Combo Box",
+   "12 Business Hours Service Restoration",
+   "Premium services"
+  ],
+  "promotion_badge": "Save RM40 · RRP RM289 regular"
+ },
+ {
+  "title": "Unifi Home 2 Gbps",
+  "category": "broadband",
+  "monthly_price": 319,
+  "currency": "MYR",
+  "data_gb": null,
+  "speed_mbps": 2000,
+  "talktime_mins": null,
+  "sms_count": null,
+  "contract_months": 24,
+  "features": [
+   "2Gbps/1Gbps",
+   "Wi-Fi 7 Combo Box",
+   "12 Business Hours Service Restoration",
+   "Premium services"
+  ],
+  "promotion_badge": null
+ }
+]
