@@ -1,0 +1,20 @@
+[
+ {
+  "coverage": "165+ countries",
+  "data_gb": -1,
+  "data_note": null,
+  "validity_days": 30,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "Auto top-up",
+   "Works in 165+ countries"
+  ],
+  "title": "Unlimited / 30 days",
+  "price": 49.99,
+  "currency": "USD",
+  "destination_key": "global"
+ }
+]

@@ -1,0 +1,12 @@
+import { readFileSync } from "fs";
+import { ESIM_BRANDS } from "../brands";
+import { ESIM_DESTINATIONS } from "../../../src/lib/esim-destinations";
+import { clean } from "../clean";
+const [brand, key, file] = process.argv.slice(2);
+const b = ESIM_BRANDS.find((x) => x.name === brand)!;
+const d = ESIM_DESTINATIONS.find((x) => x.key === key)!;
+const page = JSON.parse(readFileSync(file, "utf8"));
+const raw = b.parse(page, d);
+const { rows, dropped } = clean(raw, d, page.url);
+for (const r of rows) console.log(`${r.title} | ${r.coverage} | gb=${r.data_gb} ${r.data_note ?? ""} ${r.validity_days}d | ${r.price} ${r.currency} | v=${r.voice_included} s=${r.sms_included} | ${r.perks.join("; ")}`);
+console.log(rows.length, "rows", dropped);

@@ -1,0 +1,165 @@
+[
+ {
+  "coverage": "150+ countries",
+  "data_gb": 70,
+  "data_note": null,
+  "validity_days": 360,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "Free eSIM included",
+   "Flexible start date"
+  ],
+  "title": "70GB / 360 days",
+  "price": 89.9,
+  "currency": "USD",
+  "destination_key": "global"
+ },
+ {
+  "coverage": "150+ countries",
+  "data_gb": 50,
+  "data_note": "plus free 50gb",
+  "validity_days": 30,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "Free eSIM included",
+   "Flexible start date",
+   "Bonus: FREE 50GB"
+  ],
+  "title": "50GB / 30 days",
+  "price": 59.9,
+  "currency": "USD",
+  "destination_key": "global"
+ },
+ {
+  "coverage": "150+ countries",
+  "data_gb": 100,
+  "data_note": null,
+  "validity_days": 360,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "Free eSIM included",
+   "Flexible start date"
+  ],
+  "title": "100GB / 360 days",
+  "price": 175.9,
+  "currency": "USD",
+  "destination_key": "global"
+ },
+ {
+  "coverage": "150+ countries",
+  "data_gb": 40,
+  "data_note": null,
+  "validity_days": 270,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "Free eSIM included",
+   "Flexible start date"
+  ],
+  "title": "40GB / 270 days",
+  "price": 104,
+  "currency": "USD",
+  "destination_key": "global"
+ },
+ {
+  "coverage": "150+ countries",
+  "data_gb": 20,
+  "data_note": null,
+  "validity_days": 180,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "Free eSIM included",
+   "Flexible start date"
+  ],
+  "title": "20GB / 180 days",
+  "price": 71.9,
+  "currency": "USD",
+  "destination_key": "global"
+ },
+ {
+  "coverage": "150+ countries",
+  "data_gb": 8,
+  "data_note": null,
+  "validity_days": 90,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "Free eSIM included",
+   "Flexible start date"
+  ],
+  "title": "8GB / 90 days",
+  "price": 39.9,
+  "currency": "USD",
+  "destination_key": "global"
+ },
+ {
+  "coverage": "150+ countries",
+  "data_gb": 50,
+  "data_note": null,
+  "validity_days": 7,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "Free eSIM included",
+   "Flexible start date"
+  ],
+  "title": "50GB / 7 days",
+  "price": 30,
+  "currency": "USD",
+  "destination_key": "global"
+ },
+ {
+  "coverage": "150+ countries",
+  "data_gb": 200,
+  "data_note": null,
+  "validity_days": 360,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "Free eSIM included",
+   "Flexible start date"
+  ],
+  "title": "200GB / 360 days",
+  "price": 199,
+  "currency": "USD",
+  "destination_key": "global"
+ },
+ {
+  "coverage": "150+ countries",
+  "data_gb": 300,
+  "data_note": null,
+  "validity_days": 360,
+  "voice_included": null,
+  "sms_included": null,
+  "voice_sms_note": null,
+  "phone_number": null,
+  "perks": [
+   "Free eSIM included",
+   "Flexible start date"
+  ],
+  "title": "300GB / 360 days",
+  "price": 299,
+  "currency": "USD",
+  "destination_key": "global"
+ }
+]

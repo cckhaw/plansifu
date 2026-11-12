@@ -73,3 +73,13 @@ All "Get Deal" buttons point to `/api/redirect?plan_id=<id>`, which logs the cli
 ## Scripts
 
 `npm run dev | build | start | lint | typecheck | scrape`
+
+## 4. Importing pages the crawler cannot reach (M1, Maxx)
+
+`m1.com.sg` and `maxxonline.sg` show a CAPTCHA to datacenter networks (GitHub, Vercel), so they are imported from your own browser:
+
+1. Open `https://<your site>/import?key=<CRAWL_REPORT_KEY>` and drag **Send to PlanSifu** to your bookmarks bar (once).
+2. Open each listed page on the provider's site, wait for the plans to load, and click the bookmark (allow the pop-up the first time). Keep the import window open.
+3. Press **Check** to preview the parsed plans, then **Save to PlanSifu**. If a page cannot be sent, use "or upload" with a saved copy (Ctrl+S, "Webpage, HTML only").
+
+If every page of a provider is supplied, plans that no longer appear are deactivated; otherwise existing plans stay as they are. The parsers for these two providers live in `scripts/scrapers/sources/` and are written against real captured pages ("Download the captured pages" on the import page saves them as a file).

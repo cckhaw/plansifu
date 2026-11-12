@@ -22,6 +22,7 @@ inspired by CompareHero.my.
   PlanCard, DealBadge, ProviderLogo
 - `src/lib` — Supabase clients, currency helpers, plan queries, filtering, seed data
 - `src/types/database.ts` — TS interfaces mirroring the DB tables
+- `/import?key=<CRAWL_REPORT_KEY>` + `/api/import-page` — private page for providers whose sites block the crawler (M1, Maxx): a bookmarklet sends the page you are looking at in your own browser here, the provider's own parsers read it (`scripts/scrapers/import-pages.ts`, sources in `import-sources.ts` / `sources/`), and Save upserts the plans. Partial imports never deactivate plans.
 - `scripts/scrapers` — Node scraping scripts (`db-upsert.ts`, `run-scrapers.ts`, `extract.ts`);
   providers are declared with `defineProvider` in `providers/*` (add a provider = add a row with its plan-page URLs)
 - `supabase/migrations` — SQL migrations (numbered `NN_name.sql`)
