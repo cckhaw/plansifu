@@ -83,3 +83,13 @@ All "Get Deal" buttons point to `/api/redirect?plan_id=<id>`, which logs the cli
 3. Press **Check** to preview the parsed plans, then **Save to PlanSifu**. If a page cannot be sent, use "or upload" with a saved copy (Ctrl+S, "Webpage, HTML only").
 
 If every page of a provider is supplied, plans that no longer appear are deactivated; otherwise existing plans stay as they are. The parsers for these two providers live in `scripts/scrapers/sources/` and are written against real captured pages ("Download the captured pages" on the import page saves them as a file).
+
+## 5. Vercel housekeeping
+
+- Preview deployments are switched off for the project (Vercel: `previewDeploymentsDisabled`), so only pushes to `main` build.
+- `.github/workflows/prune-deployments.yml` deletes every deployment except the latest production one after each successful
+  production deploy (and weekly as a safety net; "Run workflow" with `dry_run` = true only lists them). It needs the repository
+  secret `VERCEL_TOKEN`. The script (`scripts/ops/prune-deployments.mjs`) refuses to delete anything unless the newest production
+  deployment is ready and serves the live domain, and it uses fixed project/team ids rather than `VERCEL_PROJECT_ID`.
+  Because only one deployment is kept, there is nothing to roll back to in Vercel: fix forward by pushing to `main`.
+- The Travel eSIM crawl removes providers that are no longer in `scripts/esim/brands.ts` (e.g. a dropped brand) from the database.

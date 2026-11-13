@@ -1,0 +1,128 @@
+[
+ {
+  "title": "M1 All-In-1 Top Up 750GB / 30 days",
+  "category": "mobile_prepaid",
+  "monthly_price": 24,
+  "currency": "SGD",
+  "data_gb": 750,
+  "speed_mbps": null,
+  "talktime_mins": 5000,
+  "sms_count": 400,
+  "contract_months": 0,
+  "features": [
+   "Valid for 30 days",
+   "30GB APAC Roaming Data",
+   "15GB International Roaming Data",
+   "700 IDD 033 Calls to APAC",
+   "Unlimited Incoming Calls"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "M1 All-In-1 Top Up with IDD 1000GB / 4 weeks",
+  "category": "mobile_prepaid",
+  "monthly_price": 26,
+  "currency": "SGD",
+  "data_gb": 1000,
+  "speed_mbps": null,
+  "talktime_mins": 5000,
+  "sms_count": 400,
+  "contract_months": 0,
+  "features": [
+   "Valid for 4 weeks",
+   "10GB (Bangladesh, China, India, Thailand)",
+   "Up to 1,200 IDD 033 mins (Bangladesh 500 mins , India 1,200 mins , China 1,200 mins , Indonesia 500 mins , Philippines 100 mins , Malaysia 600 mins)",
+   "Unlimited Incoming Calls"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "M1 All-In-1 Top Up 750GB / 12 weeks",
+  "category": "mobile_prepaid",
+  "monthly_price": 58,
+  "currency": "SGD",
+  "data_gb": 750,
+  "speed_mbps": null,
+  "talktime_mins": 5000,
+  "sms_count": 400,
+  "contract_months": 0,
+  "features": [
+   "Valid for 12 weeks",
+   "5GB (Bangladesh, China, India, Thailand)",
+   "400 IDD 033 mins (Bangladesh, China, India, Indonesia, Malaysia, Thailand)",
+   "Unlimited Incoming Calls"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "M1 All-In-1 Top Up 600GB / 30 days",
+  "category": "mobile_prepaid",
+  "monthly_price": 14,
+  "currency": "SGD",
+  "data_gb": 600,
+  "speed_mbps": null,
+  "talktime_mins": 500,
+  "sms_count": 50,
+  "contract_months": 0,
+  "features": [
+   "Valid for 30 days",
+   "20GB APAC Roaming Data",
+   "8GB International Roaming Data",
+   "Unlimited Local Incoming Calls",
+   "500 Mins IDD 033 Calls to APAC"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "M1 All-In-1 Top Up 84GB / 4 weeks",
+  "category": "mobile_prepaid",
+  "monthly_price": 16,
+  "currency": "SGD",
+  "data_gb": 84,
+  "speed_mbps": null,
+  "talktime_mins": 500,
+  "sms_count": 300,
+  "contract_months": 0,
+  "features": [
+   "Valid for 4 weeks",
+   "3GB (Bangladesh, China, India, Thailand)",
+   "200 IDD 033 Mins (Bangladesh, China, India, Indonesia, Malaysia, Thailand)",
+   "Unlimited Incoming Calls"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "M1 Power 2.5GB / 30 days",
+  "category": "mobile_prepaid",
+  "monthly_price": 19,
+  "currency": "SGD",
+  "data_gb": 2.5,
+  "speed_mbps": null,
+  "talktime_mins": 1000,
+  "sms_count": 300,
+  "contract_months": 0,
+  "features": [
+   "Valid for 30 days",
+   "$5 IDD/Global SMS",
+   "30 Days Free Incoming Calls"
+  ],
+  "promotion_badge": null
+ },
+ {
+  "title": "M1 Power 5GB / 30 days",
+  "category": "mobile_prepaid",
+  "monthly_price": 30,
+  "currency": "SGD",
+  "data_gb": 5,
+  "speed_mbps": null,
+  "talktime_mins": 1000,
+  "sms_count": 400,
+  "contract_months": 0,
+  "features": [
+   "Valid for 30 days",
+   "$10 IDD/Global SMS",
+   "30 Days Free Incoming Calls"
+  ],
+  "promotion_badge": null
+ }
+]

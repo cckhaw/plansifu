@@ -5,7 +5,7 @@ import { selectByName } from "../scrapers/select";
 import { ESIM_DESTINATIONS, type EsimDestination } from "../../src/lib/esim-destinations";
 import type { CrawlPageReport, CrawlWarning } from "../../src/types/database";
 import { ESIM_BRANDS, candidateUrls, type EsimBrand } from "./brands";
-import { refreshFxRates, upsertEsimPlans, type EsimRow } from "./db";
+import { refreshFxRates, removeRetiredEsimProviders, upsertEsimPlans, type EsimRow } from "./db";
 import { clean } from "./clean";
 
 const CONCURRENCY = Number(process.env.SCRAPE_CONCURRENCY ?? 4);
@@ -117,6 +117,12 @@ async function main() {
   for (const key of ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY"]) {
     if (!process.env[key]) throw new Error(`${key} must be set`);
   }
+  // Brands dropped from the list (e.g. Truely, which never crawled successfully) are removed from the database too.
+  const retired = await removeRetiredEsimProviders(ESIM_BRANDS.map((b) => b.name)).catch((err) => {
+    console.warn(`Could not remove retired brands: ${errorMessage(err)}`);
+    return [] as string[];
+  });
+  if (retired.length) console.log(`Removed retired Travel eSIM brands: ${retired.join(", ")}`);
   const brands = selectByName(only, ESIM_BRANDS, "Travel eSIM brand");
   const destinations = onlyDest?.length ? ESIM_DESTINATIONS.filter((d) => onlyDest.includes(d.key)) : ESIM_DESTINATIONS;
   if (!brands.length) {

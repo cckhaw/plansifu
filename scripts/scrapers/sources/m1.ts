@@ -1,4 +1,4 @@
-import { clean, contractMonths, dataGb, dom, plan, price, speedMbps, todo } from "../parse-utils";
+import { clean, contractMonths, dataGb, dom, plan, price, speedMbps } from "../parse-utils";
 import type { PageData, RawPlan, ScrapeTarget } from "../types";
 
 /**
@@ -109,9 +109,62 @@ export function parseM1Broadband(page: PageData): RawPlan[] {
   return out;
 }
 
+/**
+ * Prepaid page (the "M-card top-up" page, which is where M1 lists its prepaid bundles): every bundle is a
+ * `.tile-carousel-container` with a title ("$24 All-In-1 Top Up", "Power $19") and a bullet list. A card is a plan when
+ * its bullets state a data allowance; call-credit bundles ("Super$15": IDD/local credit, no data) and plain
+ * "Main Balance" top-ups are not data plans and are skipped. The price is the bundle price in the title, and its validity
+ * (30 days, 4 weeks, 12 weeks) is part of the plan name because the bundles differ mostly in how long they last.
+ */
+export function parseM1Prepaid(page: PageData): RawPlan[] {
+  const $ = dom(page);
+  const out: RawPlan[] = [];
+  const seen = new Set<string>();
+  $(".tile-carousel-container").each((_, el) => {
+    const card = $(el);
+    const heading = clean(card.find(".tile-carousel-font").first().text());
+    const lis = card.find(".tile-carousel-description li").map((_, li) => clean($(li).text())).get().filter(Boolean);
+    const monthly = price(heading);
+    if (!heading || monthly === null || lis.length === 0) return;
+    if (lis.some((l) => /main balance/i.test(l))) return;
+
+    const dataLine = lis.find((l) => dataGb(l) !== null && !/roaming|idd/i.test(l));
+    const data = dataLine ? dataGb(dataLine) : null;
+    if (data === null) return;
+
+    const validityLine = lis.find((l) => /\b(days?|weeks?)\b.*\bvalid|valid.*\b(days?|weeks?)\b/i.test(l));
+    const vm = validityLine?.match(/(\d+)\s*(day|week)s?/i);
+    const validityDays = vm ? Number(vm[1]) * (/week/i.test(vm[2]) ? 7 : 1) : undefined;
+    const validityLabel = vm ? `${vm[1]} ${vm[2].toLowerCase()}${vm[1] === "1" ? "" : "s"}` : undefined;
+
+    const mins = lis.find((l) => /local (outgoing )?calls|minutes local calls/i.test(l))?.match(/([\d,]+)\s*(mins|minutes)/i)?.[1];
+    const sms = lis.find((l) => /local sms/i.test(l))?.match(/([\d,]+)\s*Local SMS/i)?.[1];
+
+    const name = clean(heading.replace(/\$\s?\d[\d.,]*/g, " ")).replace(/all-in-1 top ?up/i, "All-In-1 Top Up");
+    const title = `M1 ${name} ${dataLine!.match(/\d[\d.,]*\s?(?:TB|GB|MB)/i)?.[0].replace(/\s+/g, "")}${validityLabel ? ` / ${validityLabel}` : ""}`;
+    if (seen.has(title.toLowerCase())) return;
+    seen.add(title.toLowerCase());
+
+    out.push(
+      plan({
+        title,
+        monthly_price: monthly,
+        data_gb: data,
+        talktime_mins: mins ? Number(mins.replace(/,/g, "")) : undefined,
+        sms_count: sms ? Number(sms.replace(/,/g, "")) : undefined,
+        contract_months: 0,
+        features: [
+          ...(validityDays ? [`Valid for ${validityLabel}`] : []),
+          ...lis.filter((l) => l !== dataLine && l !== validityLine && !/local sms|local (outgoing )?calls|minutes local calls/i.test(l)),
+        ].slice(0, 6),
+      }),
+    );
+  });
+  return out;
+}
+
 export const M1_TARGETS: ScrapeTarget[] = [
   { url: "https://www.m1.com.sg/personal/sim-plan", category: "mobile_postpaid", parse: parseM1SimOnly },
-  // Prepaid page: no real capture yet (send it with the bookmarklet and the parser can be written).
-  { url: "https://www.m1.com.sg/mobile/prepaid-plans", category: "mobile_prepaid", parse: todo("M1 prepaid") },
+  { url: "https://www.m1.com.sg/mobile/prepaid-plans/m-card/top-up", category: "mobile_prepaid", parse: parseM1Prepaid },
   { url: "https://www.m1.com.sg/home-broadband", category: "broadband", parse: parseM1Broadband },
 ];
