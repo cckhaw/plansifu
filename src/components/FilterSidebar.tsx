@@ -35,7 +35,7 @@ export function FilterSidebar({ filters, onChange, providers, currency, priceCei
   const select = "menu rounded-lg bg-fill-strong py-1.5 pl-3 text-[15px] font-medium outline-none";
 
   return (
-    <aside aria-label="Filters" className={bare ? "" : "lg:sticky lg:top-20"}>
+    <aside aria-label="Filters" className={bare ? "" : "scroll-soft lg:sticky lg:top-24 lg:-mx-2 lg:max-h-[calc(100dvh-7rem)] lg:overflow-y-auto lg:overscroll-contain lg:px-2 lg:pb-4 lg:pt-1"}>
       <div className="mb-3 flex items-center justify-between px-1">
         <h2 className="text-[22px] font-bold tracking-tight">Filters</h2>
         <button onClick={onReset} className="press text-[15px] font-medium text-accent">Reset</button>
