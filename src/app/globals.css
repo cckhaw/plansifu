@@ -326,6 +326,12 @@ select.menu {
   padding-right: 32px;
 }
 
+/* A slim scrollbar for panels that scroll on their own (the desktop filter list). */
+.scroll-soft {
+  scrollbar-width: thin;
+  scrollbar-color: var(--fill-strong) transparent;
+}
+
 .no-scrollbar {
   scrollbar-width: none;
 }
