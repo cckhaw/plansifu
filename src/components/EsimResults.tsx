@@ -1,10 +1,8 @@
-import { formatPrice } from "@/lib/currency";
+import { ESIM_CURRENCY, formatPrice, type DisplayCurrency } from "@/lib/currency";
 import type { EsimRowView } from "@/lib/esim";
-import type { Country } from "@/types/database";
-import { COUNTRIES } from "@/lib/currency";
 import { ProviderLogo } from "./ProviderLogo";
 
-const money = (n: number | null, currency: "MYR" | "SGD") => (n === null ? "—" : formatPrice(Math.round(n * 100) / 100, currency));
+const money = (n: number | null, currency: DisplayCurrency) => (n === null ? "—" : formatPrice(Math.round(n * 100) / 100, currency));
 
 function dataLabel(r: EsimRowView): string {
   if (r.unlimited) return "Unlimited";
@@ -53,8 +51,8 @@ function Perks({ perks, limit = 4 }: { perks: string[]; limit?: number }) {
 
 const href = (r: EsimRowView) => `/api/redirect?plan_id=${r.plan.id}`;
 
-export function EsimResults({ rows, country, bestGbId, cheapestId }: { rows: EsimRowView[]; country: Country; bestGbId: string | null; cheapestId: string | null }) {
-  const currency = COUNTRIES[country].currency;
+export function EsimResults({ rows, bestGbId, cheapestId }: { rows: EsimRowView[]; bestGbId: string | null; cheapestId: string | null }) {
+  const currency = ESIM_CURRENCY;
   const tags = (r: EsimRowView) => (
     <>
       {r.plan.id === bestGbId && <span className="rounded-full bg-good-tint px-2 py-0.5 text-[10px] font-bold text-good">Best per GB</span>}

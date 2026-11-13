@@ -1,22 +1,22 @@
-import type { Country, EsimPlanWithProvider } from "@/types/database";
-import { COUNTRIES } from "./currency";
+import type { EsimPlanWithProvider } from "@/types/database";
+import { ESIM_CURRENCY } from "./currency";
 import { convert, type FxRates } from "./fx";
 
 export type EsimSort = "gb" | "price" | "day" | "data";
 
 export interface EsimRowView {
   plan: EsimPlanWithProvider;
-  /** Price converted to the selected currency (null if the brand's currency is unknown). */
+  /** Price converted to USD, the one currency every eSIM comparison uses (null if the brand's currency is unknown). */
   price: number | null;
   unlimited: boolean;
-  /** Converted price per GB; null for unlimited or unknown data. */
+  /** USD price per GB; null for unlimited or unknown data. */
   perGb: number | null;
-  /** Converted price per day of validity. */
+  /** USD price per day of validity. */
   perDay: number | null;
 }
 
-export function toRowView(plan: EsimPlanWithProvider, country: Country, rates: FxRates): EsimRowView {
-  const price = convert(Number(plan.price), plan.currency, COUNTRIES[country].currency, rates);
+export function toRowView(plan: EsimPlanWithProvider, rates: FxRates): EsimRowView {
+  const price = convert(Number(plan.price), plan.currency, ESIM_CURRENCY, rates);
   const unlimited = plan.data_gb !== null && Number(plan.data_gb) < 0;
   const gb = plan.data_gb === null ? null : Number(plan.data_gb);
   return {

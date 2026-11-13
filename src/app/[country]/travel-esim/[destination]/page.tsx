@@ -7,7 +7,7 @@ import { Footer } from "@/components/Footer";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { FaqSection } from "@/components/seo/FaqSection";
 import { JsonLdProduct } from "@/components/seo/JsonLdProduct";
-import { COUNTRIES, formatPrice } from "@/lib/currency";
+import { COUNTRIES, ESIM_CURRENCY, formatPrice } from "@/lib/currency";
 import { getEsimDestinationCounts, getEsimPlans, getFxRates, toRowView } from "@/lib/esim";
 import { destinationByKey, ESIM_DESTINATIONS } from "@/lib/esim-destinations";
 import { esimFaqs, esimIntro, shortName, summarize } from "@/lib/esim-seo";
@@ -29,7 +29,7 @@ async function load(p: Props["params"]) {
   const destination = destinationByKey(ds);
   if (!country || !destination) return null;
   const [plans, { rates, updatedAt }] = await Promise.all([getEsimPlans(destination.key), getFxRates()]);
-  const rows = plans.map((pl) => toRowView(pl, country, rates));
+  const rows = plans.map((pl) => toRowView(pl, rates));
   return { country, destination, rows, updatedAt, summary: summarize(rows) };
 }
 
@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!d) return { robots: { index: false } };
   const { country, destination, summary } = d;
   const place = shortName(destination);
-  const cur = COUNTRIES[country].currency;
+  const cur = ESIM_CURRENCY;
   const from = summary.low !== null ? `From ${formatPrice(round2(summary.low), cur)}` : undefined;
   return buildMetadata({
     country,
@@ -64,7 +64,7 @@ export default async function TravelEsimDestinationPage({ params }: Props) {
   if (!d) notFound();
   const { country, destination, rows, updatedAt, summary } = d;
   const place = shortName(destination);
-  const cur = COUNTRIES[country].currency;
+  const cur = ESIM_CURRENCY;
   const counts = await getEsimDestinationCounts();
   const path = `${kindPath(country, "travel-esim")}/${destination.key}`;
   const faqs = esimFaqs(country, destination, summary);
@@ -93,7 +93,7 @@ export default async function TravelEsimDestinationPage({ params }: Props) {
         <EsimExplorer country={country} dest={destination.key} rows={rows} counts={counts} />
 
         <p className="mt-6 px-1 text-xs leading-relaxed text-label-3">
-          Prices are converted to {cur} at indicative daily exchange rates{updatedAt ? ` (updated ${new Date(updatedAt).toISOString().slice(0, 10)})` : ""}; you pay in the brand&apos;s checkout currency, so the final amount can differ slightly.
+          Every price is converted to {cur} at indicative daily exchange rates so brands that charge in other currencies can be compared{updatedAt ? ` (updated ${new Date(updatedAt).toISOString().slice(0, 10)})` : ""}; you pay in the brand&apos;s checkout currency, so the final amount can differ slightly.
           Cost per GB = price ÷ total data; unlimited plans are compared on price and cost per day. Plan details are collected automatically from each brand&apos;s site every week: confirm before you buy.
         </p>
 

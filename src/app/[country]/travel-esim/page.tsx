@@ -6,7 +6,7 @@ import { Footer } from "@/components/Footer";
 import { ChevronIcon } from "@/components/Icons";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { FaqSection } from "@/components/seo/FaqSection";
-import { COUNTRIES, formatPrice } from "@/lib/currency";
+import { COUNTRIES, ESIM_CURRENCY, formatPrice } from "@/lib/currency";
 import { getEsimPlans, getFxRates, toRowView } from "@/lib/esim";
 import { ESIM_DESTINATIONS } from "@/lib/esim-destinations";
 import { shortName, summarize } from "@/lib/esim-seo";
@@ -38,11 +38,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function TravelEsimIndex({ params }: Props) {
   const country = countryOfSlug((await params).country);
   if (!country) notFound();
-  const cur = COUNTRIES[country].currency;
+  const cur = ESIM_CURRENCY;
   const { rates } = await getFxRates();
   const cards = await Promise.all(
     ESIM_DESTINATIONS.map(async (d) => {
-      const s = summarize((await getEsimPlans(d.key)).map((p) => toRowView(p, country, rates)));
+      const s = summarize((await getEsimPlans(d.key)).map((p) => toRowView(p, rates)));
       return { d, s };
     }),
   );

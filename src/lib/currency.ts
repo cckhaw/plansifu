@@ -9,8 +9,16 @@ export function parseCountry(v: string | string[] | undefined): Country {
   return v === "SG" ? "SG" : "MY";
 }
 
-export function formatPrice(amount: number, currency: Currency): string {
-  const symbol = currency === "MYR" ? "RM" : "S$";
+/** Currencies a price can be shown in: the two market currencies, and USD for the Travel eSIM comparison. */
+export type DisplayCurrency = Currency | "USD";
+
+/** Travel eSIM brands price in many currencies (USD, EUR, GBP, SGD...), so every eSIM comparison is converted to USD. */
+export const ESIM_CURRENCY = "USD" as const;
+
+const SYMBOL: Record<DisplayCurrency, string> = { MYR: "RM", SGD: "S$", USD: "US$" };
+
+export function formatPrice(amount: number, currency: DisplayCurrency): string {
+  const symbol = SYMBOL[currency];
   const value = Number.isInteger(amount) ? String(amount) : amount.toFixed(2);
   return `${symbol}${value}`;
 }
