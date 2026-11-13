@@ -7,7 +7,7 @@ import { Hero } from "@/components/Hero";
 import { HeroCarousel } from "@/components/HeroCarousel";
 import { PhoneIcon, PlaneIcon, SimIcon, WifiIcon } from "@/components/Icons";
 import { PickCarousel } from "@/components/PickCarousel";
-import { COUNTRIES, formatData, formatPrice, formatSpeed } from "@/lib/currency";
+import { COUNTRIES, ESIM_CURRENCY, formatData, formatPrice, formatSpeed } from "@/lib/currency";
 import { filterAndSort, getEsimPlans, getFxRates, toRowView } from "@/lib/esim";
 import { RESTRICTED, buildPicks, planSlide, type HeroSlide, type PickGroup } from "@/lib/picks";
 import { getPlans } from "@/lib/plans";
@@ -35,10 +35,10 @@ const first = (groups: PickGroup[], id: string) => groups.find((g) => g.id === i
 
 async function esimSlide(country: Country): Promise<HeroSlide | null> {
   const [plans, { rates }] = await Promise.all([getEsimPlans("japan"), getFxRates()]);
-  const { rows } = filterAndSort(plans.map((p) => toRowView(p, country, rates)), { all: false, voice: false, number: false, minGb: 0, brand: null }, "gb");
+  const { rows } = filterAndSort(plans.map((p) => toRowView(p, rates)), { all: false, voice: false, number: false, minGb: 0, brand: null }, "gb");
   const best = rows.find((r) => r.perGb !== null && r.price !== null);
   if (!best || best.perGb === null || best.price === null) return null;
-  const currency = COUNTRIES[country].currency;
+  const currency = ESIM_CURRENCY;
   const p = best.plan;
   return {
     id: "esim-japan",

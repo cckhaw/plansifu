@@ -39,7 +39,7 @@ async function scrapeBrand(b: EsimBrand, destinations: EsimDestination[]): Promi
           tried.push(`${short(url)}: no plan page`);
           continue;
         }
-        const raw = b.parse({ url, html: rendered.html, text, feeds: rendered.feeds }, d);
+        const raw = b.parse({ url, html: rendered.html, text, feeds: rendered.feeds, states: rendered.states }, d);
         const { rows, dropped } = clean(raw, d, url);
         Object.assign(page, { raw_count: raw.length, kept_count: rows.length, dropped, ms: Date.now() - started });
         if (rows.length === 0) {

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { COUNTRIES, formatPrice } from "@/lib/currency";
+import { COUNTRIES, formatPrice, type DisplayCurrency } from "@/lib/currency";
 import { RESTRICTED } from "@/lib/picks";
 import { kindPath, type Kind } from "@/lib/routes";
 import type { Country, PlanWithProvider } from "@/types/database";
@@ -27,7 +27,7 @@ const year = () => new Date().getFullYear();
 export interface PlanStats {
   count: number;
   providers: string[];
-  currency: "MYR" | "SGD";
+  currency: DisplayCurrency;
   low: number | null;
   high: number | null;
 }
@@ -85,7 +85,7 @@ export function buildKeywords(opts: { country: Country; kind: Kind; qualifier?: 
   return [
     `${q}${noun} ${place.toLowerCase()}`,
     `best ${q}${noun} ${place.toLowerCase()}`,
-    `compare ${q}${noun} ${COUNTRIES[opts.country].currency}`,
+    `compare ${q}${noun} ${opts.kind === "travel-esim" ? "USD" : COUNTRIES[opts.country].currency}`,
     ...(opts.providers ?? []).slice(0, 5).map((p) => `${p} ${q}${noun}`),
   ];
 }

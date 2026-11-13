@@ -34,7 +34,7 @@ export function EsimExplorer({ country, dest, rows, counts }: { country: Country
             {shown.length} plan{shown.length === 1 ? "" : "s"} from {new Set(shown.map((r) => r.plan.provider.name)).size} brands
             {hidden > 0 && ` · typical-trip plans (1–20 GB, or unlimited up to 15 days); ${hidden} larger or longer hidden`}
           </p>
-          <EsimResults rows={shown} country={country} bestGbId={bestGb?.plan.id ?? null} cheapestId={cheapest?.plan.id ?? null} />
+          <EsimResults rows={shown} bestGbId={bestGb?.plan.id ?? null} cheapestId={cheapest?.plan.id ?? null} />
         </>
       )}
     </section>

@@ -1,3 +1,4 @@
+import type { DisplayCurrency } from "@/lib/currency";
 import { absoluteUrl } from "@/lib/seo-helpers";
 import { JsonLd } from "./JsonLd";
 
@@ -7,7 +8,7 @@ export interface ProductLdProps {
   description: string;
   /** Path of the page, e.g. /my/postpaid */
   path: string;
-  currency: "MYR" | "SGD";
+  currency: DisplayCurrency;
   /** Cheapest and dearest monthly price on the page, and how many plans are listed. */
   low: number;
   high: number;

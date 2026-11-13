@@ -8,6 +8,9 @@ export function todo(provider: string): PageParser {
   };
 }
 
+/** Every DOM the page showed: the final one first, then the other tab states (see PageData.states). */
+export const domStates = (page: PageData): CheerioAPI[] => [page.html, ...(page.states ?? [])].map((h) => load(h));
+
 /** `load(page.html)` - the DOM to run selectors on. */
 export const dom = (page: PageData): CheerioAPI => load(page.html);
 

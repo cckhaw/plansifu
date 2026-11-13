@@ -14,7 +14,7 @@ export const esimExpectedPath = (fixture: string) => fixture.replace(/\.json$/, 
 export function saveEsimFixture(brand: string, destinationKey: string, page: PageData): string {
   const file = esimFixturePath(brand, destinationKey);
   mkdirSync(path.dirname(file), { recursive: true });
-  writeFileSync(file, JSON.stringify({ ...page, html: trimHtml(page.html) }, null, 1) + "\n");
+  writeFileSync(file, JSON.stringify({ ...page, html: trimHtml(page.html), ...(page.states?.length ? { states: page.states.map(trimHtml) } : {}) }, null, 1) + "\n");
   return file;
 }
 

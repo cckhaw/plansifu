@@ -41,7 +41,7 @@ export async function scrapeTarget(
     if (BOT_WALL.test(text.slice(0, 800))) throw new Error("blocked by the site's bot check on the CI network (CAPTCHA or 403 page)");
     if (text.length < 300) throw new Error(`page rendered only ${text.length} characters (blocked or not loaded)`);
 
-    const raw = target.parse({ url: target.url, html: rendered.html, text, feeds: rendered.feeds });
+    const raw = target.parse({ url: target.url, html: rendered.html, text, feeds: rendered.feeds, states: rendered.states });
     if (raw.length === 0 && !target.expectEmpty) {
       throw new Error(`parser found no plans in ${text.length} characters of page text (the site's layout may have changed)`);
     }

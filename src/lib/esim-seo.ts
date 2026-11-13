@@ -1,5 +1,5 @@
 import type { Faq } from "@/components/seo/JsonLdFaq";
-import { COUNTRIES, formatData, formatPrice } from "@/lib/currency";
+import { ESIM_CURRENCY, formatData, formatPrice } from "@/lib/currency";
 import type { EsimDestination } from "@/lib/esim-destinations";
 import { dedupeRows, isTypicalTrip, type EsimRowView } from "@/lib/esim-rank";
 import { faqsFor } from "@/lib/faqs";
@@ -8,7 +8,7 @@ import type { Country } from "@/types/database";
 /** Short name without the bracket: "Indonesia (Bali)" -> "Indonesia", "Europe (multi-country)" -> "Europe". */
 export const shortName = (d: EsimDestination) => d.name.replace(/ \(.*\)/, "");
 
-const money = (n: number, c: Country) => formatPrice(Math.round(n * 100) / 100, COUNTRIES[c].currency);
+const money = (n: number) => formatPrice(Math.round(n * 100) / 100, ESIM_CURRENCY);
 
 export interface EsimSummary {
   count: number;
@@ -20,7 +20,7 @@ export interface EsimSummary {
   cheapestUnlimited: EsimRowView | null;
 }
 
-/** Facts from the live plans, in the visitor's currency. Typical-trip plans only for "best per GB" so a 200GB bulk pack cannot win. */
+/** Facts from the live plans, in USD. Typical-trip plans only for "best per GB" so a 200GB bulk pack cannot win. */
 export function summarize(rowsIn: EsimRowView[]): EsimSummary {
   const rows = dedupeRows(rowsIn).filter((r) => r.price !== null);
   const typical = rows.filter(isTypicalTrip);
@@ -37,15 +37,15 @@ export function summarize(rowsIn: EsimRowView[]): EsimSummary {
   };
 }
 
-const describe = (r: EsimRowView, c: Country) => `${r.plan.provider.name}'s ${formatData(r.plan.data_gb)}${r.plan.validity_days ? ` / ${r.plan.validity_days}-day` : ""} plan at ${money(r.price!, c)}`;
+const describe = (r: EsimRowView) => `${r.plan.provider.name}'s ${formatData(r.plan.data_gb)}${r.plan.validity_days ? ` / ${r.plan.validity_days}-day` : ""} plan at ${money(r.price!)}`;
 
 /** An intro paragraph that is specific to this destination and always matches the table. */
 export function esimIntro(country: Country, d: EsimDestination, s: EsimSummary): string {
   const place = shortName(d);
   if (!s.count) return `We are collecting travel eSIM plans for ${place}. Check back after the next weekly update.`;
-  const parts = [`PlanSifu compares ${s.count} travel eSIM plans for ${place} from ${s.brands.length} brands, priced from ${money(s.low!, country)} to ${money(s.high!, country)} (converted to ${COUNTRIES[country].currency}).`];
-  if (s.bestPerGb) parts.push(`The lowest cost per GB on a typical trip plan is ${describe(s.bestPerGb, country)}, about ${money(s.bestPerGb.perGb!, country)} per GB.`);
-  if (s.cheapestUnlimited) parts.push(`For unlimited data, the cheapest short-trip option is ${describe(s.cheapestUnlimited, country)}.`);
+  const parts = [`PlanSifu compares ${s.count} travel eSIM plans for ${place} from ${s.brands.length} brands, priced from ${money(s.low!)} to ${money(s.high!)} (converted to USD).`];
+  if (s.bestPerGb) parts.push(`The lowest cost per GB on a typical trip plan is ${describe(s.bestPerGb)}, about ${money(s.bestPerGb.perGb!)} per GB.`);
+  if (s.cheapestUnlimited) parts.push(`For unlimited data, the cheapest short-trip option is ${describe(s.cheapestUnlimited)}.`);
   return parts.join(" ");
 }
 
@@ -56,7 +56,7 @@ export function esimFaqs(country: Country, d: EsimDestination, s: EsimSummary): 
   if (s.bestPerGb || s.cheapest) {
     out.push({
       q: `What is the cheapest travel eSIM for ${place}?`,
-      a: `${s.bestPerGb ? `Right now the lowest cost per GB is ${describe(s.bestPerGb, country)} (about ${money(s.bestPerGb.perGb!, country)} per GB). ` : ""}${s.cheapest ? `The cheapest plan overall for a typical trip is ${describe(s.cheapest, country)}. ` : ""}Prices change, so check the table above, which is updated weekly.`,
+      a: `${s.bestPerGb ? `Right now the lowest cost per GB is ${describe(s.bestPerGb)} (about ${money(s.bestPerGb.perGb!)} per GB). ` : ""}${s.cheapest ? `The cheapest plan overall for a typical trip is ${describe(s.cheapest)}. ` : ""}Prices change, so check the table above, which is updated weekly.`,
     });
   }
   out.push({

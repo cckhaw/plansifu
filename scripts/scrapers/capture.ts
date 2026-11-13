@@ -24,7 +24,7 @@ async function capture(url: string, relay: boolean): Promise<PageData> {
     return { url, html: p.html, text: cleanPageText(p.text), feeds: [] };
   }
   const r = await renderPage(url, { minChars: 800, mode: "nodes", feeds: true });
-  return { url, html: r.html, text: cleanPageText(r.text), feeds: r.feeds };
+  return { url, html: r.html, text: cleanPageText(r.text), feeds: r.feeds, states: r.states };
 }
 
 async function main() {

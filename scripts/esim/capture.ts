@@ -31,7 +31,7 @@ async function main() {
             console.log(`  ${b.name} ${key}: no plan page at ${url}`);
             continue;
           }
-          const page = { url, html: r.html, text, feeds: r.feeds };
+          const page = { url, html: r.html, text, feeds: r.feeds, states: r.states };
           // A 404 page can look like a plan page (it contains a price-like string): only keep pages the parser reads plans from.
           let found = 0;
           try {

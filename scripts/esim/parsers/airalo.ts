@@ -1,4 +1,4 @@
-import { dom, lines, price } from "../../scrapers/parse-utils";
+import { domStates, lines, price } from "../../scrapers/parse-utils";
 import { esimPlan, type EsimParser, type RawEsimPlan } from "../types";
 
 /**
@@ -9,8 +9,8 @@ import { esimPlan, type EsimParser, type RawEsimPlan } from "../types";
  * The country list/other pages (e.g. /global-esim, a category listing) have no package buttons and give no plans.
  */
 export const airalo: EsimParser = (page) => {
-  const $ = dom(page);
   const out: RawEsimPlan[] = [];
+  const seenLabels = new Set<string>();
 
   const n = /(\d+)\s+Countries and Networks/i.exec(page.text);
   const coverage = n ? `${n[1]} countries` : null;
@@ -26,27 +26,33 @@ export const airalo: EsimParser = (page) => {
       ...extra,
     });
 
-  $('[data-testid="package-grouped-packages_package-button"]').each((_, el) => {
-    const label = ($(el).attr("aria-label") ?? "").trim();
-    const m = /^Select\s+([\d.,]+)\s*(GB|MB|TB)(?:\s*-\s*(\d+)\s*SMS)?(?:\s*-\s*(\d+)\s*Mins?)?\s*-\s*(\d+)\s*days?\s+for\s+(.+?)\s+([A-Z]{3})\.?$/i.exec(label);
-    if (!m) return;
-    const amount = parseFloat(m[1].replace(/,/g, ""));
-    const unit = m[2].toUpperCase();
-    const gb = unit === "MB" ? amount / 1000 : unit === "TB" ? amount * 1000 : amount;
-    const p = price(m[6]);
-    if (p === null) return;
-    const sms = m[3] ? Number(m[3]) : null;
-    const mins = m[4] ? Number(m[4]) : null;
-    const withVoice = sms !== null || mins !== null;
-    out.push(
-      base(Number(m[5]), gb, `${m[1]}${unit}`, p, m[7].toUpperCase(), {
+  // The store swaps this list when the "Data" / "Data / Calls / Texts" tab is selected, so read every tab state the renderer saw.
+  for (const $ of domStates(page)) {
+    $('[data-testid="package-grouped-packages_package-button"]').each((_, el) => {
+      const label = ($(el).attr("aria-label") ?? "").trim();
+      if (seenLabels.has(label)) return;
+      const m = /^Select\s+([\d.,]+)\s*(GB|MB|TB)(?:\s*-\s*(\d+)\s*SMS)?(?:\s*-\s*(\d+)\s*Mins?)?\s*-\s*(\d+)\s*days?\s+for\s+(.+?)\s+([A-Z]{3})\.?$/i.exec(label);
+      if (!m) return;
+      seenLabels.add(label);
+      const amount = parseFloat(m[1].replace(/,/g, ""));
+      const unit = m[2].toUpperCase();
+      const gb = unit === "MB" ? amount / 1000 : unit === "TB" ? amount * 1000 : amount;
+      const p = price(m[6]);
+      if (p === null) return;
+      const sms = m[3] ? Number(m[3]) : null;
+      const mins = m[4] ? Number(m[4]) : null;
+      const withVoice = sms !== null || mins !== null;
+      const plan = base(Number(m[5]), gb, `${m[1]}${unit}`, p, m[7].toUpperCase(), {
         voice_included: withVoice ? mins !== null : false,
         sms_included: withVoice ? sms !== null : false,
         voice_sms_note: withVoice ? [sms !== null ? `${sms} SMS` : "", mins !== null ? `${mins} minutes` : ""].filter(Boolean).join(" + ") : null,
-        phone_number: withVoice ? true : null,
-      }),
-    );
-  });
+        // The page lists minutes and SMS but never says the plan comes with a phone number, so it is not claimed.
+        phone_number: null,
+      });
+      // A data-only and a data + calls plan of the same size are different products with different prices.
+      out.push(withVoice ? { ...plan, title: `${plan.title} + calls & SMS` } : plan);
+    });
+  }
 
   // Unlimited packages: "<N> days", "Unlimited", "GB", price, currency code.
   const L = lines(page);

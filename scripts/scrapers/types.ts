@@ -9,6 +9,8 @@ export interface PageData {
   text: string;
   /** JSON responses the page loaded that contain prices (the site's own plan data). */
   feeds: { url: string; body: string; prices: number }[];
+  /** The DOM in the page's other tab states (see renderPage). A parser for a tabbed page reads `html` and each of these. */
+  states?: string[];
 }
 
 /** Turns one rendered page into raw plans. Must be deterministic and make no network or model calls. */

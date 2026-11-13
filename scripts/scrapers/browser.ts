@@ -1,4 +1,4 @@
-import type { Browser } from "playwright";
+import type { Browser, Locator } from "playwright";
 
 /** One shared headless Chromium per process; each page gets its own isolated context. */
 let browserPromise: Promise<Browser> | null = null;
@@ -51,6 +51,12 @@ export interface RenderResult {
   html: string;
   /** JSON responses the page loaded that carry prices. */
   feeds: DataFeed[];
+  /**
+   * The DOM as it was before any tab was clicked and after each tab click. A page that swaps its plan list when a tab is
+   * selected (data / data + calls / unlimited ...) only shows the last tab in `html`; the other tabs' plans are in these.
+   * Empty when the page has no tabs or they changed nothing.
+   */
+  states: string[];
 }
 
 const PRICE_EVIDENCE = /(?:RM|S?\$)\s?\d|"[A-Za-z_]*(?:price|fee|rental|charge)[A-Za-z_]*"\s*:\s*"?\d/gi;
@@ -89,7 +95,7 @@ const readText = (page: import("playwright").Page, mode: TextMode) =>
 export async function renderPage(url: string, opts: RenderOptions = {}): Promise<RenderResult> {
   const { minChars = 800, mode = "nodes", relay = false } = opts;
   const browser = await getBrowser();
-  if (relay) return { ...(await renderViaRelay(browser, url)), feeds: [] };
+  if (relay) return { ...(await renderViaRelay(browser, url)), feeds: [], states: [] };
   const context = await browser.newContext({
     userAgent:
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
@@ -136,6 +142,12 @@ export async function renderPage(url: string, opts: RenderOptions = {}): Promise
 
     let text = await readText(page, mode);
     const seen = new Set(text.split("\n"));
+    const states: string[] = [];
+    const snapshot = async () => {
+      const h = await page.content().catch(() => "");
+      if (h && !states.includes(h)) states.push(h);
+    };
+    await snapshot(); // the tab that is open by default
     /** Lines that appeared since the last read, labelled so the model knows where they came from. */
     const takeNew = async (label: string) => {
       const extra = (await readText(page, mode)).split("\n").filter((l) => l.trim() && !seen.has(l));
@@ -147,20 +159,50 @@ export async function renderPage(url: string, opts: RenderOptions = {}): Promise
 
     // Tabbed pages may only build the active tab's content: click the other tabs and keep what appears.
     const tabs = page.locator('[role="tab"], [data-bs-toggle="tab"], [data-toggle="tab"], .nav-tabs a, .nav-tabs button');
-    const count = Math.min(await tabs.count().catch(() => 0), 10);
-    for (let i = 0; i < count; i++) {
-      const tab = tabs.nth(i);
-      if (!(await tab.isVisible().catch(() => false))) continue;
+    const clicked = new Set<string>();
+    const labelOf = async (tab: Locator) =>
+      ((await tab.innerText({ timeout: 1000 }).catch(() => "")) || "").replace(/\s+/g, " ").trim().slice(0, 60);
+    /** Click one tab and record what it revealed. Returns false when it turned out to be a link, not a tab. */
+    const pressTab = async (tab: Locator, label: string): Promise<boolean> => {
       const before = page.url().split("#")[0];
       await tab.click({ timeout: 2000 }).catch(() => undefined);
       await page.waitForTimeout(600);
       if (!stillHere(before)) {
-        await page.goBack().catch(() => undefined); // it was a link, not a tab
-        continue;
+        await page.goBack().catch(() => undefined);
+        return false;
       }
-      // Label what the tab revealed so the model knows e.g. "SUPPLEMENTARY LINE" plans from "PRINCIPAL LINE" ones.
-      const label = ((await tab.innerText({ timeout: 1000 }).catch(() => "")) || "").replace(/\s+/g, " ").trim().slice(0, 60);
       await takeNew(`Content that appears when the tab "${label}" is selected`);
+      await snapshot();
+      return true;
+    };
+    // Pass 1: click every tab once.
+    const count = Math.min(await tabs.count().catch(() => 0), 14);
+    for (let i = 0; i < count; i++) {
+      const tab = tabs.nth(i);
+      if (!(await tab.isVisible().catch(() => false))) continue;
+      const label = await labelOf(tab);
+      if (clicked.has(label)) continue;
+      clicked.add(label);
+      await pressTab(tab, label);
+    }
+    // Pass 2: pages with two rows of tabs (e.g. "Data | Data / Calls / Texts" above "Unlimited | Fixed data") show
+    // only the row that belongs to the selected top tab, so press each sub-row tab under each top tab.
+    const lists = page.locator('[role="tablist"]');
+    const listCount = Math.min(await lists.count().catch(() => 0), 4);
+    if (listCount >= 2) {
+      const top = lists.nth(0).locator('[role="tab"]');
+      const topCount = Math.min(await top.count().catch(() => 0), 6);
+      for (let i = 0; i < topCount; i++) {
+        const topTab = top.nth(i);
+        if (!(await topTab.isVisible().catch(() => false))) continue;
+        if (!(await pressTab(topTab, await labelOf(topTab)))) continue;
+        const sub = lists.nth(1).locator('[role="tab"]');
+        const subCount = Math.min(await sub.count().catch(() => 0), 6);
+        for (let j = 0; j < subCount; j++) {
+          const subTab = sub.nth(j);
+          if (await subTab.isVisible().catch(() => false)) await pressTab(subTab, await labelOf(subTab));
+        }
+      }
     }
 
     // "Show more plans" buttons: press them until they stop revealing anything.
@@ -197,7 +239,9 @@ export async function renderPage(url: string, opts: RenderOptions = {}): Promise
       .sort((a, b) => b.prices - a.prices)
       .slice(0, MAX_FEEDS)
       .map((f) => ({ ...f, body: f.body.slice(0, MAX_FEED_CHARS) }));
-    return { text, html, feeds };
+    // States are only worth keeping when a tab actually changed the page.
+    const others = states.length > 1 ? states.filter((s) => s !== html) : [];
+    return { text, html, feeds, states: others };
   } finally {
     await context.close().catch(() => undefined);
   }
