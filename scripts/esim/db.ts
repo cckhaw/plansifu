@@ -9,6 +9,24 @@ export interface EsimRow extends Omit<RawEsimPlan, "perks"> {
   affiliate_url: string;
 }
 
+/**
+ * Remove Travel eSIM providers (country "GL") that are no longer in the brand list, e.g. a brand that was dropped because it
+ * could never be crawled. Their plans go with them (foreign keys cascade), and they stop showing up in the crawl report.
+ * Returns the names removed.
+ */
+export async function removeRetiredEsimProviders(currentBrandNames: string[]): Promise<string[]> {
+  if (currentBrandNames.length === 0) return [];
+  const db = getAdminClient();
+  const keep = new Set(currentBrandNames.map((n) => n.toLowerCase()));
+  const { data, error } = await db.from("providers").select("id, name").eq("country", "GL");
+  if (error) throw error;
+  const retired = (data ?? []).filter((p) => !keep.has(String(p.name).toLowerCase()));
+  if (!retired.length) return [];
+  const { error: delErr } = await db.from("providers").delete().in("id", retired.map((p) => p.id as string));
+  if (delErr) throw delErr;
+  return retired.map((p) => String(p.name));
+}
+
 export interface EsimUpsertStats {
   count: number;
   previousCount: number;

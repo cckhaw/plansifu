@@ -1,0 +1,35 @@
+name: Prune old deployments
+
+# Keeps only the latest production deployment in Vercel. Runs after every successful production deploy, weekly as a
+# safety net, and on demand (use dry_run to see what would be deleted).
+on:
+  deployment_status:
+  schedule:
+    - cron: "41 3 * * 0"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "true = only list what would be deleted"
+        required: false
+        default: "false"
+
+concurrency:
+  group: prune-deployments
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  prune:
+    # For deployment_status only react to a finished production deploy; the other triggers always run.
+    if: ${{ github.event_name != 'deployment_status' || (github.event.deployment_status.state == 'success' && github.event.deployment.environment == 'Production') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Delete every deployment except the latest production one
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: node scripts/ops/prune-deployments.mjs
