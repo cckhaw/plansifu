@@ -36,7 +36,7 @@ async function main() {
             tried.push(`${url}: no plan page`);
             continue;
           }
-          const raw = b.parse({ url, html: r.html, text, feeds: r.feeds }, d);
+          const raw = b.parse({ url, html: r.html, text, feeds: r.feeds, states: r.states }, d);
           const { rows, dropped } = clean(raw, d, url);
           if (!rows.length) {
             tried.push(`${url}: ${raw.length ? "all plans filtered" : "no plans"}`);

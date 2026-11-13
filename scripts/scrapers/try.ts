@@ -24,7 +24,7 @@ async function main() {
       let page: PageData | null = null;
       if (live) {
         const r = await renderPage(t.url, { minChars: 800, mode: "nodes", feeds: true });
-        page = { url: t.url, html: r.html, text: cleanPageText(r.text), feeds: r.feeds };
+        page = { url: t.url, html: r.html, text: cleanPageText(r.text), feeds: r.feeds, states: r.states };
       } else {
         page = loadFixture(providerKey(p), t.url);
         if (!page) {

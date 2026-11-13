@@ -48,7 +48,7 @@ export function trimHtml(html: string): string {
 export function saveFixture(provider: string, page: PageData): string {
   const file = fixturePath(provider, page.url);
   mkdirSync(path.dirname(file), { recursive: true });
-  const trimmed: PageData = { ...page, html: trimHtml(page.html) };
+  const trimmed: PageData = { ...page, html: trimHtml(page.html), ...(page.states?.length ? { states: page.states.map(trimHtml) } : {}) };
   writeFileSync(file, JSON.stringify(trimmed, null, 1) + "\n");
   return file;
 }
